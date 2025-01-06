@@ -3,16 +3,27 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1>Register</h1>
-
+    <h1 class="text-3xl">Register</h1>
+    <br/>
     {{ form_errors(registrationForm) }}
 
     {{ form_start(registrationForm) }}
+        {{ form_row(registrationForm.FirstName) }}
+        {{ form_row(registrationForm.Name) }}
         {{ form_row(registrationForm.Mail) }}
         {{ form_row(registrationForm.plainPassword, {
             label: 'Password'
         }) }}
         {{ form_row(registrationForm.agreeTerms) }}
+        {{ form_row(registrationForm.IsOrganizer) }}
+
+        {# for future adaptation of organizer adding new organizer from the registration form  #}
+{#        {% if is_granted('ROLE_ORGANIZER') %}#}
+{#            {{ form_row(form.IsOrganizer) }}#}
+{#        {% else %}#}
+{#            {{ form_widget(form.IsOrganizer, {'type': 'hidden'}) }}#}
+{#        {% endif %}#}
+
 
         <button type="submit" class="btn">Register</button>
     {{ form_end(registrationForm) }}

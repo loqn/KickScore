@@ -10,7 +10,7 @@ use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Table(name: 'T_USER_USR')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-#[UniqueEntity(fields: ['Mail'], message: 'There is already an account with this Mail')]
+#[UniqueEntity(fields: ['mail'], message: 'There is already an account with this Mail')]
 class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
@@ -19,22 +19,22 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(name: 'TEA_ID')]
-    private ?int $TeamId = null;
+    private ?Team $team = null;
 
     #[ORM\Column(name: 'USR_FNAME',length: 32, nullable: true)]
     private ?string $FirstName = null;
 
     #[ORM\Column(name: 'USR_NAME',length: 32, nullable: true)]
-    private ?string $Name = null;
+    private ?string $name = null;
 
     #[ORM\Column(name: 'USR_EMAIL', length: 32)]
-    private ?string $Mail = null;
+    private ?string $mail = null;
 
     #[ORM\Column (name: 'USR_ISORG', type: 'boolean')]
-    private ?bool $IsOrganizer = null;
+    private ?bool $isOrganizer = null;
 
-    #[ORM\Column(name: 'USR_PASSWORD',length: 32)]
-    private ?string $Password = null;
+    #[ORM\Column(name: 'USR_PASSWORD',length: 255)]
+    private ?string $password = null;
 
     public function getId(): ?int
     {
@@ -55,67 +55,67 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getName(): ?string
     {
-        return $this->Name;
+        return $this->name;
     }
 
-    public function setName(?string $Name): static
+    public function setName(?string $name): static
     {
-        $this->Name = $Name;
+        $this->name = $name;
 
         return $this;
     }
 
     public function getMail(): ?string
     {
-        return $this->Mail;
+        return $this->mail;
     }
 
-    public function setMail(string $Mail): static
+    public function setMail(string $mail): static
     {
-        $this->Mail = $Mail;
+        $this->mail = $mail;
 
         return $this;
     }
 
-    public function isOrganisator(): ?bool
+    public function isOrganizer(): ?bool
     {
-        return $this->IsOrganizer;
+        return $this->isOrganizer;
     }
 
-    public function setOrganisator(bool $IsOrganisator): static
+    public function setIsOrganizer(bool $isOrganizer): static
     {
-        $this->IsOrganizer = $IsOrganisator;
+        $this->isOrganizer = $isOrganizer;
 
         return $this;
     }
 
     public function getPassword(): ?string
     {
-        return $this->Password;
+        return $this->password;
     }
 
-    public function setPassword(string $Password): static
+    public function setPassword(string $password): static
     {
-        $this->Password = $Password;
+        $this->password = $password;
 
         return $this;
     }
 
-    public function getTeamId(): ?int
+    public function getTeam(): ?Team
     {
-        return $this->TeamId;
+        return $this->team;
     }
 
-    public function setTeamId(int $TeamId): static
+    public function setTeam(Team $team): static
     {
-        $this->TeamId = $TeamId;
+        $this->team = $team;
 
         return $this;
     }
 
     public function getRoles(): array
     {
-        return $this->IsOrganizer ? ['ROLE_ORGANIZER'] : ['ROLE_USER'];
+        return $this->isOrganizer ? ['ROLE_ORGANIZER'] : ['ROLE_USER'];
     }
 
     public function eraseCredentials(): void
@@ -124,6 +124,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getUserIdentifier(): string
     {
-        return $this->Mail;
+        return $this->mail;
     }
 }

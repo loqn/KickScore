@@ -6,6 +6,9 @@ doctrine:
         # either here or in the DATABASE_URL env var (see .env file)
         #server_version: '16'
 
+        # IMPORTANT : only for local dev with mariadb (loan)
+        driver: 'pdo_mysql'
+
         profiling_collect_backtrace: '%kernel.debug%'
         use_savepoints: true
     orm:
