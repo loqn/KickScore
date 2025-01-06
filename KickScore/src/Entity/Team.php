@@ -5,6 +5,7 @@ namespace App\Entity;
 use App\Repository\TeamRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Table(name: 'T_TEAM_TEA')]
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
 class Team
 {

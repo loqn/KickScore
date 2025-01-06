@@ -4,10 +4,14 @@ namespace App\Entity;
 
 use App\Repository\UserRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
+use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
+use Symfony\Component\Security\Core\User\UserInterface;
 
 #[ORM\Table(name: 'T_USER_USR')]
 #[ORM\Entity(repositoryClass: UserRepository::class)]
-class User
+#[UniqueEntity(fields: ['Mail'], message: 'There is already an account with this Mail')]
+class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -26,8 +30,8 @@ class User
     #[ORM\Column(name: 'USR_EMAIL', length: 32)]
     private ?string $Mail = null;
 
-    #[ORM\Column (name: 'USR_ISORG')]
-    private ?bool $IsOrganisator = null;
+    #[ORM\Column (name: 'USR_ISORG', type: 'boolean')]
+    private ?bool $IsOrganizer = null;
 
     #[ORM\Column(name: 'USR_PASSWORD',length: 32)]
     private ?string $Password = null;
@@ -75,12 +79,12 @@ class User
 
     public function isOrganisator(): ?bool
     {
-        return $this->IsOrganisator;
+        return $this->IsOrganizer;
     }
 
     public function setOrganisator(bool $IsOrganisator): static
     {
-        $this->IsOrganisator = $IsOrganisator;
+        $this->IsOrganizer = $IsOrganisator;
 
         return $this;
     }
@@ -107,5 +111,19 @@ class User
         $this->TeamId = $TeamId;
 
         return $this;
+    }
+
+    public function getRoles(): array
+    {
+        return $this->IsOrganizer ? ['ROLE_ORGANIZER'] : ['ROLE_USER'];
+    }
+
+    public function eraseCredentials(): void
+    {
+    }
+
+    public function getUserIdentifier(): string
+    {
+        return $this->Mail;
     }
 }
