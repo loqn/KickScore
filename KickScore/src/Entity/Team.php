@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\TeamRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
 
 #[ORM\Table(name: 'T_TEAM_TEA')]
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
@@ -11,7 +14,7 @@ class Team
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(name: 'TEA_ID')]
+    #[ORM\Column(name: 'TEA_ID', type: "integer")]
     private ?int $id = null;
 
     #[ORM\ManyToOne(targetEntity: Championship::class)]
@@ -38,6 +41,17 @@ class Team
 
     #[ORM\Column(name: 'TEA_POINTS', nullable: true)]
     private ?int $points = null;
+
+    /**
+     * @var Collection<int, Member>
+     */
+    #[ORM\OneToMany(targetEntity: Member::class, mappedBy: 'team')]
+    private Collection $members;
+
+    public function __construct()
+    {
+        $this->members = new ArrayCollection();
+    }
 
     public function getId(): ?int
     {
@@ -136,6 +150,36 @@ class Team
     public function setPoints(?int $points): static
     {
         $this->points = $points;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Member>
+     */
+    public function getMembers(): Collection
+    {
+        return $this->members;
+    }
+
+    public function addMember(Member $member): static
+    {
+        if (!$this->members->contains($member)) {
+            $this->members->add($member);
+            $member->setTeam($this);
+        }
+
+        return $this;
+    }
+
+    public function removeMember(Member $member): static
+    {
+        if ($this->members->removeElement($member)) {
+            // set the owning side to null (unless already changed)
+            if ($member->getTeam() === $this) {
+                $member->setTeam(null);
+            }
+        }
 
         return $this;
     }

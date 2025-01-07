@@ -3,9 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\ORM\Mapping\OneToMany;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -17,10 +17,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(name: 'USR_ID')]
+    #[ORM\Column(name: 'USR_ID', type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(name: 'TEA_ID')]
+    #[ORM\ManyToOne(targetEntity: Team::class)]
+    #[ORM\JoinColumn(name: 'TEA_ID', referencedColumnName: 'TEA_ID', nullable: true)]
     private ?Team $team = null;
 
     #[ORM\Column(name: 'USR_FNAME',length: 32, nullable: true)]
@@ -43,7 +44,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function __construct()
     {
-        $this->organizedChampionships = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->organizedChampionships = new ArrayCollection();
     }
 
     public function getOrganizedChampionships(): Collection
