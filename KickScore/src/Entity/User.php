@@ -39,6 +39,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'USR_PASSWORD',length: 255)]
     private ?string $password = null;
 
+    #[ORM\OneToOne(targetEntity: Member::class, mappedBy: 'user')]
+    private ?Member $member = null;
+
     #[ORM\OneToMany(targetEntity: Championship::class, mappedBy: 'organizer')]
     private Collection $organizedChampionships;
 
