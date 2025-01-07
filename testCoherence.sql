@@ -4,32 +4,6 @@ USE etu_matchabrier;
 -- Vérifier la connexion en listant les tables
 SHOW TABLES;
 
--- Exécuter une requête simple
-SELECT COUNT(*) FROM T_USER_USR;
-
--- Insérer des utilisateurs dans T_USER_USR
-INSERT INTO T_USER_USR (USR_ID, USR_FNAME, USR_NAME, USR_EMAIL, USR_PASSWORD) VALUES 
-(1, 'test','Alice', 'alice@example.com', 'password123'),
-(2, 'test', 'bob@example.com', 'securepass'),
-(3, 'test', 'charlie@example.com', 'mypassword');
-
--- Insérer des équipes dans T_TEAM_TEA
-INSERT INTO T_TEAM_TEA (TEA_ID, TEA_NAME, TEA_STRUCTURE, TEA_GAMESPLAYED, TEA_WIN, TEA_LOSS, TEA_POINTS) VALUES 
-(1, 'Team Red', 'Professional', 10, 6, 4, 18),
-(2, 'Team Blue', 'Amateur', 8, 3, 5, 9),
-(3, 'Team Green', 'Professional', 12, 8, 4, 24);
-
--- Insérer des championnats dans T_CHAMPIONSHIP_CHP
-INSERT INTO T_CHAMPIONSHIP_CHP (CHP_ID, CHP_NAME) VALUES 
-(1, 'National Championship'),
-(2, 'Regional Cup');
-
--- Insérer des matchs dans T_MATCH_MAT
-INSERT INTO T_MATCH_MAT (MAT_ID, TEA_ID, MAT_OPPONENT, MAT_SCORE, MAT_DATE) VALUES 
-(1, 1, 'Team Blue', '3-1', '2025-01-01'),
-(2, 1, 'Team Green', '2-2', '2025-01-05'),
-(3, 2, 'Team Red', '1-3', '2025-01-10'),
-(4, 3, 'Team Blue', '4-0', '2025-01-15');
 
 -- Vérifier le résultat avec quelques requêtes simples
 SELECT * FROM T_USER_USR;
@@ -37,38 +11,131 @@ SELECT * FROM T_TEAM_TEA;
 SELECT * FROM T_CHAMPIONSHIP_CHP;
 SELECT * FROM T_MATCH_MAT;
 
-
+DROP PROCEDURE IF EXISTS UserNull;
+DROP PROCEDURE IF EXISTS TeamNull;
+DROP PROCEDURE IF EXISTS MailNotUnique;
 DELIMITER $$
 
-CREATE PROCEDURE DeuxEquipesParRencontre()
+
+CREATE PROCEDURE UserNull()
 BEGIN
-    DECLARE id1 INT;
-    DECLARE id2 INT;
+    DECLARE usr_id INT;
+    DECLARE tea_id INT;
+    DECLARE usr_email VARCHAR(255);
+    DECLARE usr_fname VARCHAR(255);
+    DECLARE usr_name VARCHAR(255);
+    DECLARE usr_isorg boolean;
+    DECLARE usr_password VARCHAR(255);
+    DECLARE done INT DEFAULT 0;
 
-    DECLARE c1 CURSOR FOR SELECT id1, id2 FROM T_MATCH_MAT;
+    DECLARE c CURSOR FOR SELECT * FROM T_USER_USR;
 
-    DECLARE CONTINUE HANDLER FOR NOT FOUND SET id1 = NULL, id2 = NULL;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
 
-    OPEN c1;
+    OPEN c;
 
     boucle_curseur: LOOP
-        FETCH c1 INTO id1, id2;
+        FETCH c INTO usr_ID, tea_ID, usr_fname, usr_name, usr_email, usr_isorg, usr_password;
 
-        IF id1 IS NULL THEN 
+        IF done = 1 THEN 
             LEAVE boucle_curseur;
         END IF;
 
-        IF id1 IS NULL OR id2 IS NULL THEN
-            SELECT 'Test : Une ou plusieurs colonnes sont nulles';
+        IF usr_id IS NULL THEN
+            SELECT 'ERROR: usr_id is null' AS Message;
         END IF;
+
+        IF usr_fname IS NULL THEN
+            SELECT 'ERROR: usr_fname is null' AS Message;
+        END IF;
+
+        IF usr_name IS NULL THEN
+            SELECT 'ERROR: usr_name is null' AS Message;
+        END IF;
+
+        IF usr_email IS NULL THEN
+            SELECT 'ERROR: usr_email is null' AS Message;
+        END IF;
+
+        IF usr_isorg IS NULL THEN
+            SELECT 'ERROR: usr_isorg is null' AS Message;
+        END IF;
+
+        IF usr_password IS NULL THEN
+            SELECT 'ERROR: usr_password is null' AS Message;
+        END IF;
+
     END LOOP boucle_curseur;
 
-    CLOSE c1;
+    CLOSE c;
 END$$
 
-DELIMITER ;
 
-call DeuxEquipesParRencontre();
+CREATE PROCEDURE TeamNull()
+BEGIN
+    DECLARE tea_id INT;
+    DECLARE tea_name VARCHAR(255);
+    DECLARE done INT DEFAULT 0;
+
+
+    DECLARE c CURSOR FOR SELECT tea_ID, tea_name FROM T_TEAM_TEA;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    OPEN c;
+
+    boucle_curseur: LOOP
+        FETCH c INTO tea_ID, tea_name;
+
+        IF done = 1 THEN 
+            LEAVE boucle_curseur;
+        END IF;
+
+        IF tea_id IS NULL THEN
+            SELECT 'ERROR: usr_id is null' AS Message;
+        END IF;
+
+        IF tea_name IS NULL THEN
+            SELECT 'ERROR: usr_fname is null' AS Message;
+        END IF;
+
+    END LOOP boucle_curseur;
+
+    CLOSE c;
+END$$
+
+
+CREATE PROCEDURE MailNotUnique()
+BEGIN
+    DECLARE usr_email VARCHAR(255);
+    DECLARE done INT DEFAULT 0;
+
+    DECLARE c CURSOR FOR SELECT usr_email FROM T_USER_USR;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    OPEN c;
+
+    boucle_curseur: LOOP
+        FETCH c INTO usr_email;
+
+        IF done = 1 THEN
+            LEAVE boucle_curseur;
+        END IF;
+
+        SELECT CONCAT('Processing email: ', usr_email) AS Email_Info;
+
+    END LOOP boucle_curseur;
+
+    -- Fermer le curseur
+    CLOSE c;
+END$$
+
+
+DELIMITER ; 
+
+call UserNull;
+call TeamNull;
 
 ROLLBACK;
 
