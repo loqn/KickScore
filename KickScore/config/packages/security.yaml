@@ -18,9 +18,19 @@ security:
                 secret: '%kernel.secret%'
                 lifetime: 604800
                 path: /
+            switch_user:
+                provider: app_user_provider
+                role: ROLE_ALLOWED_TO_SWITCH
+                parameter: _switch_user
     access_control:
-    # - { path: ^/admin, roles: ROLE_ADMIN }
-    # - { path: ^/profile, roles: ROLE_USER }
+     - { path: ^/admin, roles: ROLE_ADMIN }
+     - { path: ^/org, roles: ROLE_ORGANIZER }
+     - { path: ^/profile, roles: ROLE_USER }
+    role_hierarchy:
+        ROLE_ADMIN: ROLE_USER, ROLE_ALLOWED_TO_SWITCH, ROLE_ORGANIZER
+        ROLE_ORGANIZER: ROLE_USER, ROLE_ALLOWED_TO_SWITCH
+        ROLE_USER: IS_AUTHENTICATED_FULLY
+        ROLE_PUBLIC: IS_AUTHENTICATED_ANONYMOUSLY
 
 when@test:
     security:

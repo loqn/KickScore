@@ -31,6 +31,18 @@
                     </a>
                 </div>
             {% endif %}
+            {% if is_granted('ROLE_ORGANIZER') %}
+                <div class="mt-4">
+                    <a href="toset" class="bg-blue-500 hover:bg-blue-700 transition ease-in duration-150 text-white font-bold py-2 px-4 rounded">
+                        Créer un championnat
+                    </a>
+                </div>
+                <div class="mt-4">
+                    <a href="{{ path("app_control_panel") }}" class="bg-blue-500 hover:bg-blue-700 transition ease-in duration-150 text-white font-bold py-2 px-4 rounded">
+                        Panneau de contrôle
+                    </a>
+                </div>
+            {% endif %}
         </div>
 
         <!-- Right panel - Content -->
