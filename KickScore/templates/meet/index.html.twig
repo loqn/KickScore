@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MeetController!{% endblock %}
+{% block title %}Création - KickScore{% endblock %}
 
 {% block body %}
 <style>
@@ -8,77 +8,234 @@
     .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
 </style>
 
-<div class="bg-gray-100 flex items-center justify-center min-h-screen">
+<div class="bg-gray-100 flex flex-col items-center justify-center min-h-screen">
 
-    <form class="bg-white p-6 rounded-lg shadow-md w-full max-w-sm">
-        <h2 class="text-2xl font-bold mb-4 text-gray-700">Create a new Championship/match</h2>
-        
+    <div id="top-form" class="bg-white p-6 rounded-lg shadow-md w-full max-w-sm">
+        <h2 class="text-2xl font-bold mb-4 text-gray-700" id="title">Création</h2>
+        <div class="space-y-2 mb-4">
+            <p class="font-medium">Que souhaitez-vous créer ?</p>
+            <div class="flex gap-4">
+                <div id="select_btnMatch" class="w-full bg-blue-100 text-center hover:cursor-pointer rounded-lg py-2 px-4 transition ease-in duration-200 hover:bg-blue-200 focus:ring focus:ring-blue-200">Match</div>
+                <div id="select_btnChampionship" class="w-full bg-blue-100 text-center hover:cursor-pointer center rounded-lg py-2 px-4 transition ease-in duration-200 border-blue-300 hover:bg-blue-200 focus:ring focus:ring-blue-200">Championnat</div>
+            </div>
+        </div>
+    </div>
+
+    <form id="form" class="hidden bg-white p-6 rounded-lg shadow-md w-full max-w-sm" method="post" action="{{ path('app_meet_create') }}">
+
         <!-- Name Input -->
-        <div class="mb-4">
-            <label for="name" class="block text-gray-700 font-medium mb-2">Name</label>
-            <input type="text" id="name" name="name" placeholder="meet's name"
+        <div class="mb-4 hidden" id="name">
+            <label for="name" class="block text-gray-700 font-medium mb-2">Nom</label>
+            <input type="text" id="name" name="name" placeholder="Nom du championnat"
                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
 
-        <!-- Main Select -->
-        <div class="mb-4">
-            <label for="isMatch" class="block text-gray-700 font-medium mb-2">is it a match ? </label>
-            <select id="isMatch" name="isMatch" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="">-- please select an option --</option>
-                <option value="NO"> NO </option>
-                <option value="YES"> YES </option>
-                
+        <!---------- Match ----------->
+
+        <!-- Date -->
+        <div class="mb-4 hidden flex justify-center items-center flex-col" id="date">
+            <label for="date" class="block text-gray-700 font-medium mb-2">Date du match</label>
+            <input type="datetime-local" id="dateInput" name="date" placeholder="Date du match"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <div id="date_verifyBtn" class="w-1/2 bg-blue-100 text-center hover:cursor-pointer center rounded-lg py-2 px-4 transition ease-in duration-200 border-blue-300 hover:bg-blue-200 focus:ring focus:ring-blue-200 mt-2">Vérifier</div>
+        </div>
+
+        <div class="w-full flex justify-center">
+            <p class="font-medium hidden text-green-500" id="date_valid"></p>
+        </div>
+
+        <!-- Select championship  -->
+        <div id="champ" class="mb-4 hidden">
+            <label for="champ" class="block text-gray-700 font-medium mb-2">Compétition</label>
+            <select id="champ" name="champ" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                {% for championship in championships %}
+                    <option value="{{ championship.id }}">{{ championship.name }}</option>
+                {% endfor %}
             </select>
         </div>
 
-        <!-- Second Select (initially hidden) -->
-        <div id="type" class="mb-4 hidden">
-            <label for="type" class="block text-gray-700 font-medium mb-2">match type</label>
-            <select id="type" name="type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option value="option1">1 V 1</option>
-                <option value="option2">2 V 2</option>
-                <option value="option3">3 V 3</option>
+        <!-- Select team green  -->
+        <div id="greenTeam" class="mb-4 hidden">
+            <label for="greenTeam" class="block text-gray-700 font-medium mb-2">Équipe verte</label>
+            <select id="greenTeamSelect" name="greenTeam" class="w-full px-3 py-2 border bg-green-200 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option disabled selected value=""> -- Choisir équipe verte -- </option>
+                {% for team in teams %}
+                    <option value="{{ team.id }}">{{ team.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Select team blue  -->
+        <div id="blueTeam" class="mb-4 hidden">
+            <label for="blueTeam" class="block text-gray-700 font-medium mb-2">Équipe bleue</label>
+            <select id="blueTeamSelect" name="blueTeam" class="w-full px-3 py-2 border bg-blue-200 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option disabled selected value=""> -- Choisir équipe bleue -- </option>
+                {% for team in teams %}
+                    <option value="{{ team.id }}">{{ team.name }}</option>
+                {% endfor %}
             </select>
         </div>
 
         <div id="greenscore" class="mb-4 hidden">
-            <label for="greenscore" class="block text-gray-700 font-medium mb-2">greenscore</label>
-            <input type="number" id="greenscore" name="greenscore" placeholder="the green score"
+            <label for="greenscore" class="block text-gray-700 font-medium mb-2">Buts vert</label>
+            <input type="number" id="greenscore" name="greenscore" placeholder="Insérer buts des verts"
                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
 
         <div id="bluescore" class="mb-4 hidden">
-            <label for="bluescore" class="block text-gray-700 font-medium mb-2">bluescore</label>
-            <input type="number" id="bluescore" name="bluescore" placeholder="the blue score"
+            <label for="bluescore" class="block text-gray-700 font-medium mb-2">Buts bleus</label>
+            <input type="number" id="bluescore" name="bluescore" placeholder="Insérer buts des bleus"
                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
         </div>
 
+        <input type="hidden" name="addType" value="" id="addType">
+
 
         <!-- Submit Button -->
-        <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-            Send
+        <button type="submit" class="bg-blue-500 hidden transition ease-in duration-200 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Créer
         </button>
     </form>
 
     <script>
-        document.getElementById('isMatch').addEventListener('change', function() {
-            var typeContainer = document.getElementById('type');
+        document.querySelector('button[type="submit"]').addEventListener('click', (event) => {
+            document.getElementById('addType').value = selected;
+        });
+
+        //date check for match
+        let dateBtn = document.getElementById('date_verifyBtn');
+        dateBtn.addEventListener('click', (event) => {
+            console.log("date clicked verify");
+            let date = document.getElementById('dateInput').value;
+            if (new Date(date) < new Date()) {
+                console.log("Date invalide pour un futur match.");
+                document.getElementById('greenscore').classList.remove('hidden');
+                document.getElementById('bluescore').classList.remove('hidden');
+            } else {
+                console.log("Date valide pour un futur match.");
+                document.getElementById('date_valid').classList.remove('hidden');
+                document.getElementById('date_valid').innerHTML = "Date valide pour un futur match.";
+                setTimeout(() => {
+                    document.getElementById('date_valid').classList.add('hidden');
+                }, 5000);
+            }
+            document.querySelector('button[type="submit"]').classList.remove('hidden');
+        })
+
+        //view form
+        let selected = null;
+
+        document.getElementById('select_btnMatch').addEventListener('click', function(event) {
+            selected = 'MATCH';
+            console.log('Selected:', selected);
+            document.getElementById('select_btnChampionship').classList.remove('bg-blue-300');
+            document.getElementById('select_btnChampionship').classList.add('bg-blue-100');
+            event.target.classList.remove('bg-blue-100');
+            event.target.classList.add('bg-blue-300');
+            document.querySelector('button[type="submit"]').classList.add('hidden');
+            document.getElementById('form').classList.remove('hidden');
+            document.getElementById('top-form').classList.add('mb-6');
+            document.body.dispatchEvent(new Event('change'));
+        });
+
+        document.getElementById('select_btnChampionship').addEventListener('click', function(event) {
+            selected = 'CHAMPIONSHIP';
+            console.log('Selected:', selected);
+            document.getElementById('select_btnMatch').classList.remove('bg-blue-300');
+            document.getElementById('select_btnMatch').classList.add('bg-blue-100');
+            event.target.classList.remove('bg-blue-100');
+            event.target.classList.add('bg-blue-300');
+            document.querySelector('button[type="submit"]').classList.remove('hidden');
+            document.getElementById('form').classList.remove('hidden');
+            document.getElementById('top-form').classList.add('mb-6');
+            document.body.dispatchEvent(new Event('change'));
+        });
+
+        let greenTeamContainer = document.getElementById('greenTeam');
+        let blueTeamContainer = document.getElementById('blueTeam');
+
+        document.body.addEventListener('change', () => {
             var greenContainer = document.getElementById('greenscore');
             var blueContainer = document.getElementById('bluescore');
+            var champContainer = document.getElementById('champ');
+            var nameContainer = document.getElementById('name');
+            var dateContainer = document.getElementById('date');
+
+
+            var title = document.getElementById('title');
+
+            if (this.value !== null) {
+                console.log('Nothing selected');
+                nameContainer.classList.remove('hidden');
+            } else {
+                console.log('Something selected');
+                nameContainer.classList.add('hidden');
+            }
 
             console.log('Selected value:', this.value);
-            if (this.value === 'YES') {
-                typeContainer.classList.remove('hidden');
-                greenContainer.classList.remove('hidden');
-                blueContainer.classList.remove('hidden');
-
-            } else {
-                typeContainer.classList.add('hidden');
+            if (selected === 'MATCH') {
+                // greenContainer.classList.remove('hidden');
+                // blueContainer.classList.remove('hidden');
+                champContainer.classList.remove('hidden');
+                greenTeamContainer.classList.remove('hidden');
+                blueTeamContainer.classList.remove('hidden');
+                nameContainer.classList.add('hidden');
+                dateContainer.classList.remove('hidden');
+                title.innerHTML = "Créer un nouveau match";
+            } else if (selected === 'CHAMPIONSHIP') {
+                console.log('Championship selected');
                 greenContainer.classList.add('hidden');
                 blueContainer.classList.add('hidden');
+                greenTeamContainer.classList.add('hidden');
+                blueTeamContainer.classList.add('hidden');
+                champContainer.classList.add('hidden');
+                nameContainer.classList.remove('hidden');
+                title.innerHTML = "Créer un nouveau championnat";
+            }
+        });
+
+        const greenTeamSelect = document.getElementById('greenTeamSelect');
+        const blueTeamSelect = document.getElementById('blueTeamSelect');
+
+        greenTeamSelect.addEventListener('change', () => {
+            console.log('green team selected');
+            const blueTeamOptions = blueTeamSelect.querySelectorAll('option');
+            console.log("Selected green team: " + greenTeamSelect.value);
+
+            blueTeamOptions.forEach((option, index) => {
+                if (index !== 0) { // Skip le placeholder
+                    option.disabled = false;
+                }
+            });
+
+            const selectedGreenTeam = greenTeamSelect.value;
+            if (selectedGreenTeam) {
+                const matchingOption = Array.from(blueTeamOptions).find(option => option.value === selectedGreenTeam);
+                if (matchingOption) {
+                    matchingOption.disabled = true;
+                }
+            }
+        });
+
+        blueTeamSelect.addEventListener('change', () => {
+            console.log('blue team selected');
+            const greenTeamOptions = greenTeamSelect.querySelectorAll('option');
+            console.log("Selected blue team: " + blueTeamSelect.value);
+
+            greenTeamOptions.forEach((option, index) => {
+                if (index !== 0) { // Skip le placeholder
+                    option.disabled = false;
+                }
+            });
+
+            const selectedBlueTeam = blueTeamSelect.value;
+            if (selectedBlueTeam) {
+                const matchingOption = Array.from(greenTeamOptions).find(option => option.value === selectedBlueTeam);
+                if (matchingOption) {
+                    matchingOption.disabled = true;
+                }
             }
         });
     </script>
-    
 </div>
 {% endblock %}

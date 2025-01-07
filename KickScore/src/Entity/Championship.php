@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ChampionshipRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'T_CHAMPIONSHIP_CHP')]
@@ -17,9 +18,32 @@ class Championship
     #[ORM\Column(name: "CHP_NAME", length: 32, nullable: true)]
     private ?string $Name = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'organizedChampionships')]
     #[ORM\JoinColumn(name: 'USR_ID', referencedColumnName: 'USR_ID')]
     private ?User $organizer = null;
+
+    //the list of all the match
+    #[ORM\OneToMany(targetEntity: Versus::class, mappedBy: 'championship')]
+    private Collection $matches;
+
+    public function __construct()
+    {
+        $this->matches = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function getMatches(): Collection
+    {
+        return $this->matches;
+    }
+
+    public function addMatch(Versus $match): static
+    {
+        if (!$this->matches->contains($match)) {
+            $this->matches[] = $match;
+            $match->setChampionship($this);
+        }
+        return $this;
+    }
 
     public function getId(): ?int
     {

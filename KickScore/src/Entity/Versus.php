@@ -15,11 +15,11 @@ class Versus
     #[ORM\Column(name: 'MAT_ID')]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: Team::class)]  // CORRECT
     #[ORM\JoinColumn(name: 'TEA_ID', referencedColumnName: 'TEA_ID')]
     private ?Team $blueTeam = null;
 
-    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\ManyToOne(targetEntity: Team::class)]  // CORRECT
     #[ORM\JoinColumn(name: 'TEA_ID_MAT_TEAMGREEN', referencedColumnName: 'TEA_ID')]
     private ?Team $greenTeam = null;
 
@@ -32,29 +32,45 @@ class Versus
     #[ORM\Column(name: 'MAT_DATE', type: Types::DATE_MUTABLE, nullable: true)]
     private ?\DateTimeInterface $date = null;
 
+    #[ORM\ManyToOne(targetEntity: Championship::class, inversedBy: 'matches')]
+    #[ORM\JoinColumn(name: 'CHP_ID', referencedColumnName: 'CHP_ID')]
+    private ?Championship $championship = null;
+
+    public function getChampionship(): ?Championship
+    {
+        return $this->championship;
+    }
+
+    public function setChampionship(?Championship $championship): static
+    {
+        $this->championship = $championship;
+
+        return $this;
+    }
+
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getBlueTeam(): ?int
+    public function getBlueTeam(): ?Team
     {
         return $this->blueTeam;
     }
 
-    public function setBlueTeam(int $blueTeam): static
+    public function setBlueTeam(Team $blueTeam): static
     {
         $this->blueTeam = $blueTeam;
 
         return $this;
     }
 
-    public function getGreenTeam(): ?int
+    public function getGreenTeam(): ?Team
     {
         return $this->greenTeam;
     }
 
-    public function setGreenTeam(int $greenTeam): static
+    public function setGreenTeam(Team $greenTeam): static
     {
         $this->greenTeam = $greenTeam;
 
