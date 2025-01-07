@@ -1,0 +1,84 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello MeetController!{% endblock %}
+
+{% block body %}
+<style>
+    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
+    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
+</style>
+
+<div class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <form class="bg-white p-6 rounded-lg shadow-md w-full max-w-sm">
+        <h2 class="text-2xl font-bold mb-4 text-gray-700">Create a new Championship/match</h2>
+        
+        <!-- Name Input -->
+        <div class="mb-4">
+            <label for="name" class="block text-gray-700 font-medium mb-2">Name</label>
+            <input type="text" id="name" name="name" placeholder="meet's name"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <!-- Main Select -->
+        <div class="mb-4">
+            <label for="isMatch" class="block text-gray-700 font-medium mb-2">is it a match ? </label>
+            <select id="isMatch" name="isMatch" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="">-- please select an option --</option>
+                <option value="NO"> NO </option>
+                <option value="YES"> YES </option>
+                
+            </select>
+        </div>
+
+        <!-- Second Select (initially hidden) -->
+        <div id="type" class="mb-4 hidden">
+            <label for="type" class="block text-gray-700 font-medium mb-2">match type</label>
+            <select id="type" name="type" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option value="option1">1 V 1</option>
+                <option value="option2">2 V 2</option>
+                <option value="option3">3 V 3</option>
+            </select>
+        </div>
+
+        <div id="greenscore" class="mb-4 hidden">
+            <label for="greenscore" class="block text-gray-700 font-medium mb-2">greenscore</label>
+            <input type="number" id="greenscore" name="greenscore" placeholder="the green score"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+        <div id="bluescore" class="mb-4 hidden">
+            <label for="bluescore" class="block text-gray-700 font-medium mb-2">bluescore</label>
+            <input type="number" id="bluescore" name="bluescore" placeholder="the blue score"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
+
+
+        <!-- Submit Button -->
+        <button type="submit" class="w-full bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+            Send
+        </button>
+    </form>
+
+    <script>
+        document.getElementById('isMatch').addEventListener('change', function() {
+            var typeContainer = document.getElementById('type');
+            var greenContainer = document.getElementById('greenscore');
+            var blueContainer = document.getElementById('bluescore');
+
+            console.log('Selected value:', this.value);
+            if (this.value === 'YES') {
+                typeContainer.classList.remove('hidden');
+                greenContainer.classList.remove('hidden');
+                blueContainer.classList.remove('hidden');
+
+            } else {
+                typeContainer.classList.add('hidden');
+                greenContainer.classList.add('hidden');
+                blueContainer.classList.add('hidden');
+            }
+        });
+    </script>
+    
+</div>
+{% endblock %}
