@@ -3,7 +3,9 @@
 namespace App\Entity;
 
 use App\Repository\UserRepository;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\ORM\Mapping\OneToMany;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 use Symfony\Component\Security\Core\User\PasswordAuthenticatedUserInterface;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -35,6 +37,19 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\Column(name: 'USR_PASSWORD',length: 255)]
     private ?string $password = null;
+
+    #[ORM\OneToMany(targetEntity: Championship::class, mappedBy: 'organizer')]
+    private Collection $organizedChampionships;
+
+    public function __construct()
+    {
+        $this->organizedChampionships = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function getOrganizedChampionships(): Collection
+    {
+        return $this->organizedChampionships;
+    }
 
     public function getId(): ?int
     {

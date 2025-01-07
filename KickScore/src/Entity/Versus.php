@@ -15,11 +15,13 @@ class Versus
     #[ORM\Column(name: 'MAT_ID')]
     private ?int $id = null;
 
-    #[ORM\Column (name: 'TEA_ID')]
-    private ?int $idBlueTeam = null;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'TEA_ID', referencedColumnName: 'TEA_ID')]
+    private ?Team $blueTeam = null;
 
-    #[ORM\Column (name: 'TEA_ID_MAT_TEAMGREEN')]
-    private ?int $idGreenTeam = null;
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'TEA_ID_MAT_TEAMGREEN', referencedColumnName: 'TEA_ID')]
+    private ?Team $greenTeam = null;
 
     #[ORM\Column(name: 'MAT_GREENSCORE', nullable: true)]
     private ?int $greenScore = null;
@@ -35,26 +37,26 @@ class Versus
         return $this->id;
     }
 
-    public function getIdBlueTeam(): ?int
+    public function getBlueTeam(): ?int
     {
-        return $this->idBlueTeam;
+        return $this->blueTeam;
     }
 
-    public function setIdBlueTeam(int $idBlueTeam): static
+    public function setBlueTeam(int $blueTeam): static
     {
-        $this->idBlueTeam = $idBlueTeam;
+        $this->blueTeam = $blueTeam;
 
         return $this;
     }
 
-    public function getIdGreenTeam(): ?int
+    public function getGreenTeam(): ?int
     {
-        return $this->idGreenTeam;
+        return $this->greenTeam;
     }
 
-    public function setIdGreenTeam(int $idGreenTeam): static
+    public function setGreenTeam(int $greenTeam): static
     {
-        $this->idGreenTeam = $idGreenTeam;
+        $this->greenTeam = $greenTeam;
 
         return $this;
     }

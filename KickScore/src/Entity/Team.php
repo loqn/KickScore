@@ -14,8 +14,9 @@ class Team
     #[ORM\Column(name: 'TEA_ID')]
     private ?int $id = null;
 
-    #[ORM\Column(name: 'CHP_ID', nullable: true)]
-    private ?int $championshipId = null;
+    #[ORM\ManyToOne(targetEntity: Championship::class)]
+    #[ORM\JoinColumn(name: 'CHP_ID', referencedColumnName: 'CHP_ID', nullable: true)]
+    private ?Championship $championship = null;
 
     #[ORM\Column(name: 'TEA_NAME', length: 32)]
     private ?string $name = null;
@@ -43,14 +44,14 @@ class Team
         return $this->id;
     }
 
-    public function getChampionshipId(): ?int
+    public function getChampionship(): ?Championship
     {
-        return $this->championshipId;
+        return $this->championship;
     }
 
-    public function setChampionshipId(?int $championshipId): static
+    public function setChampionship(?Championship $championship): static
     {
-        $this->championshipId = $championshipId;
+        $this->championship = $championship;
 
         return $this;
     }
