@@ -4,6 +4,8 @@ namespace App\Controller;
 use App\Entity\Member;
 use App\Entity\Team;
 use App\Entity\User;
+use Doctrine\Common\Collections\ArrayCollection;
+use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
@@ -17,6 +19,11 @@ class TeamController extends AbstractController
     public function index(EntityManagerInterface $entityManager,Request $request): Response
     {
         $players = $entityManager->getRepository(User::class)->findAll();
+
+        if ($this->isGranted('ROLE_ORGANIZER')) {
+            $this->addFlash('error', 'Organizers can\'t create teams.');
+            return $this->redirectToRoute('app_root');
+        }
 
         return $this->render('team/index.html.twig', [
             'controller_name' => 'TeamController',
@@ -58,6 +65,7 @@ class TeamController extends AbstractController
             $member->setFname($this->getUser()->getFirstName());
             $member->setName($this->getUser()->getName());
             $member->setEmail($this->getUser()->getMail());
+            $this->getUser()->setTeam($team);
             $team->addMember($member);
         }
 
@@ -65,6 +73,37 @@ class TeamController extends AbstractController
         $entityManager->flush();
         $this->addFlash('success', 'team added successfully');
         return $this->redirectToRoute('app_team_edit', ['id' => $team->getId()]);
+    }
+
+    #[Route('/edit/add_member', name: 'app_team_add_member', methods: ['POST'])]
+    public function addMember(EntityManagerInterface $entityManager, Request $request, LoggerInterface $logger): Response
+    {
+        $user = $this->getUser();
+        if (!$user) {
+            throw $this->createAccessDeniedException('User not found');
+        }
+        $team = $user->getTeam();
+        if (!$team) {
+            $logger->alert('User has no team');
+            throw $this->createAccessDeniedException('You don\'t have a team');
+        }
+        $userData = json_decode($request->request->get('to_add'), true);
+        $to_add = new ArrayCollection([$userData]);
+        foreach($to_add as $temp_mbr) {
+            $temp_email = $temp_mbr['email'];
+            if (!$entityManager->getRepository(Member::class)->findOneBy(['email' => $temp_email])) {
+                $member = new Member();
+                $member->setTeam($team);
+                $member->setFname($temp_mbr['fname']);
+                $member->setName($temp_mbr['name']);
+                $member->setEmail($temp_email);
+                $team->addMember($member);
+                $entityManager->persist($member);
+            }
+        }
+        $entityManager->flush();
+        $this->addFlash('success', $to_add->count().'member(s) were added successfully');
+        return $this->redirectToRoute('app_team_edit', ['id' => $this->getUser()->getTeam()->getId()]);
     }
 
     #[Route('/edit/{id}', name: 'app_team_edit')]
@@ -78,4 +117,6 @@ class TeamController extends AbstractController
             'team' => $team
         ]);
     }
+
+
 }
