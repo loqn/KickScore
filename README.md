@@ -16,3 +16,4 @@ user@host$~/KickScore/ symfony serve
 À chaque modification du CSS (dans `/assets`) ou du JavaScript, il faudra recompiler pour intégrer les éventuels changements.
 
 Le serveur Symfony ira automatiquement récupérer les changements dans `/public` sans avoir besoin d'être relancé.
+
