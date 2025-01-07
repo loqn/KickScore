@@ -17,6 +17,10 @@ class Championship
     #[ORM\Column(name: "CHP_NAME", length: 32, nullable: true)]
     private ?string $Name = null;
 
+    #[ORM\ManyToOne(targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'USR_ID', referencedColumnName: 'USR_ID')]
+    private ?User $organizer = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -30,6 +34,18 @@ class Championship
     public function setName(?string $Name): static
     {
         $this->Name = $Name;
+
+        return $this;
+    }
+
+    public function getOrganizer(): ?User
+    {
+        return $this->organizer;
+    }
+
+    public function setOrganizer(?User $organizer): static
+    {
+        $this->organizer = $organizer;
 
         return $this;
     }
