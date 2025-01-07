@@ -2,20 +2,25 @@
 
 namespace App\Controller;
 
-use App\Entity\Team;
-use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use App\Entity\Player; // Add this import if not already present
+use App\Entity\Team; // Add this import if not already present
+use App\Entity\User;
 use Symfony\Component\HttpFoundation\Response;
-use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Doctrine\ORM\EntityManagerInterface;
+use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class TeamController extends AbstractController
 {
     #[Route('/team', name: 'app_team')]
-    public function index(): Response
+    public function index(EntityManagerInterface $entityManager,Request $request): Response
     {
+        $players = $entityManager->getRepository(User::class)->findAll();
+
         return $this->render('team/index.html.twig', [
             'controller_name' => 'TeamController',
+            'players' => $players
         ]);
     }
 
@@ -48,6 +53,7 @@ class TeamController extends AbstractController
         $team->setPoints($points);
         $team->setGamePlayed($gameplayed);
 
+        // get all the players registered
 
         // Handle match-specific data if it's a match
         $entityManager->persist($team);
