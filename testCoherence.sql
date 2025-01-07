@@ -1,6 +1,6 @@
 -- Se connecter à une base spécifique
 USE etu_matchabrier;
-
+/*
 -- Vérifier la connexion en listant les tables
 SHOW TABLES;
 
@@ -10,12 +10,14 @@ SELECT * FROM T_USER_USR;
 SELECT * FROM T_TEAM_TEA;
 SELECT * FROM T_CHAMPIONSHIP_CHP;
 SELECT * FROM T_MATCH_MAT;
+*/
 
 DROP PROCEDURE IF EXISTS UserNull;
 DROP PROCEDURE IF EXISTS TeamNull;
 DROP PROCEDURE IF EXISTS MailNotUnique;
 DROP PROCEDURE IF EXISTS ScoresNegatifs;
 DROP PROCEDURE IF EXISTS RencontresIdentiques;
+DROP PROCEDURE IF EXISTS MemberNull;
 DELIMITER $$
 
 
@@ -39,42 +41,49 @@ BEGIN
     boucle_curseur: LOOP
         FETCH c INTO usr_ID, tea_ID, usr_fname, usr_name, usr_email, usr_isorg, usr_password;
 
-        IF done = 1 THEN 
+        IF done = 1 THEN
             LEAVE boucle_curseur;
         END IF;
 
-        /*case 
-          when usr_id IS NULL then SELECT 'ERROR: usr_id is null in user' AS Message;
-          when 
-          else 
-        end;*/
-
         IF usr_id IS NULL THEN
-            SELECT 'ERROR: usr_id is null in user' AS Message;
+            SIGNAL SQLSTATE '45000' 
+                SET MESSAGE_TEXT = 'ERROR: usr_id is null in user', 
+                    MYSQL_ERRNO = 1001;
         END IF;
 
         IF usr_fname IS NULL THEN
-            SELECT 'ERROR: usr_fname is null in user' AS Message;
+            SIGNAL SQLSTATE '45000' 
+                SET MESSAGE_TEXT = 'ERROR: usr_fname is null in user', 
+                    MYSQL_ERRNO = 1002;
         END IF;
 
         IF usr_name IS NULL THEN
-            SELECT 'ERROR: usr_name is null in user' AS Message;
+            SIGNAL SQLSTATE '45000' 
+                SET MESSAGE_TEXT = 'ERROR: usr_name is null in user', 
+                    MYSQL_ERRNO = 1003;
         END IF;
 
         IF usr_email IS NULL THEN
-            SELECT 'ERROR: usr_email is null in user' AS Message;
+            SIGNAL SQLSTATE '45000' 
+                SET MESSAGE_TEXT = 'ERROR: usr_email is null in user', 
+                    MYSQL_ERRNO = 1004;
         END IF;
 
         IF usr_isorg IS NULL THEN
-            SELECT 'ERROR: usr_isorg is null in user' AS Message;
+            SIGNAL SQLSTATE '45000' 
+                SET MESSAGE_TEXT = 'ERROR: usr_isorg is null in user', 
+                    MYSQL_ERRNO = 1005;
         END IF;
 
         IF usr_password IS NULL THEN
-            SELECT 'ERROR: usr_password is null in user' AS Message;
+            SIGNAL SQLSTATE '45000' 
+                SET MESSAGE_TEXT = 'ERROR: usr_password is null in user', 
+                    MYSQL_ERRNO = 1006;
         END IF;
 
     END LOOP boucle_curseur;
 
+    select "test 1 passed : No necessary attribute missing in user." as test1;
     CLOSE c;
 END$$
 
@@ -100,15 +109,20 @@ BEGIN
         END IF;
 
         IF tea_id2 IS NULL THEN
-            SELECT 'ERROR: TEA_ID is null in team' AS Message;
+            SIGNAL SQLSTATE '45000' 
+                SET MESSAGE_TEXT = 'ERROR: TEA_ID is null in team', 
+                    MYSQL_ERRNO = 1007;
         END IF;
 
         IF tea_name2 IS NULL THEN
-            SELECT 'ERROR: TEA_NAME is null in team' AS Message;
+            SIGNAL SQLSTATE '45000' 
+                SET MESSAGE_TEXT = 'ERROR: TEA_NAME is null in team', 
+                    MYSQL_ERRNO = 1008;
         END IF;
 
     END LOOP boucle_curseur;
 
+    select "test 2 passed : No necessary attribute missing in team." as test2;
     CLOSE c;
 END$$
 
@@ -142,7 +156,9 @@ BEGIN
                 END IF;
                 
                 IF usr_email = usr_email2 and email_id != email_id2 THEN
-                    SELECT 'ERROR: usr' AS Message;
+                SIGNAL SQLSTATE '45000' 
+                    SET MESSAGE_TEXT = 'ERROR: Two matchs with the same teams', 
+                        MYSQL_ERRNO = 1009;
                 END IF;
 
             END LOOP boucle_curseur2;
@@ -151,6 +167,8 @@ BEGIN
     END LOOP boucle_curseur;
 
     CLOSE c;
+
+    select "test 3 passed : All mails are unique." as test3;
 END$$
 
 CREATE PROCEDURE ScoresNegatifs()
@@ -174,7 +192,9 @@ BEGIN
         END IF;
 
         IF greenScore < 0 THEN
-            SELECT 'ERROR: green score < 0' AS Message;
+            SIGNAL SQLSTATE '45000' 
+                SET MESSAGE_TEXT = 'ERROR: TEA_ID is null in team ERROR: green score < 0', 
+                    MYSQL_ERRNO = 1010;
         END IF;
 
         IF blueScore < 0 THEN
@@ -183,6 +203,7 @@ BEGIN
 
     END LOOP boucle_curseur;
 
+    select "test 4 passed : No negative score." as test4;
     CLOSE c;
 END$$
 
@@ -218,18 +239,65 @@ BEGIN
             END IF;
 
             IF id_tea_blue = id_tea_green and id_mat1 != id_mat2 THEN
-                LEAVE boucle_curseur2;
+                SIGNAL SQLSTATE '45000' 
+                SET MESSAGE_TEXT = 'ERROR: TEA_ID is null in team ERROR: green score < 0', 
+                    MYSQL_ERRNO = 1010;
             END IF;
 
         END LOOP boucle_curseur2;
         
-
+    select "test 5 passed : No match with the same teams but." as test5;
     END LOOP boucle_curseur;
 
     CLOSE c;
 END$$
 
+CREATE PROCEDURE MemberNull()
+BEGIN
+    DECLARE mem_id INT;
+    DECLARE mem_fname2 VARCHAR(255);
+    DECLARE mem_name2 VARCHAR(255);
+    DECLARE mem_email2 VARCHAR(255);
+    DECLARE done INT DEFAULT 0;
 
+    DECLARE c CURSOR FOR SELECT MEM_ID, MEM_FNAME, MEM_NAME, MEM_EMAIL FROM T_MEMBER_MEM;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    OPEN c;
+
+    boucle_curseur: LOOP
+        FETCH c INTO mem_id, mem_fname2, mem_name2, mem_email2;
+
+        IF done = 1 THEN
+            LEAVE boucle_curseur;
+        END IF;
+
+        IF mem_fname2 IS NULL THEN
+            SIGNAL SQLSTATE '45000' 
+                SET MESSAGE_TEXT = 'ERROR: mem_fname is null in member', 
+                    MYSQL_ERRNO = 1011;
+        END IF;
+
+        IF mem_name2 IS NULL THEN
+            SIGNAL SQLSTATE '45000' 
+                SET MESSAGE_TEXT = 'ERROR: mem_name is null in member', 
+                    MYSQL_ERRNO = 1012;
+        END IF;
+
+        IF mem_email2 IS NULL THEN
+            SIGNAL SQLSTATE '45000' 
+                SET MESSAGE_TEXT = 'ERROR: mem_email is null in member', 
+                    MYSQL_ERRNO = 1013;
+        END IF;
+
+    END LOOP boucle_curseur;
+
+    select "test 6 passed : No necessary attribute missing in team" as test6;
+
+
+    CLOSE c;
+END$$
 
 DELIMITER ; 
 
@@ -242,6 +310,6 @@ call TeamNull;
 call MailNotUnique;
 call ScoresNegatifs;
 call RencontresIdentiques;
+call MemberNull;
 
-ROLLBACK;
 
