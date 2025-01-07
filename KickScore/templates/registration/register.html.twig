@@ -3,28 +3,52 @@
 {% block title %}Register{% endblock %}
 
 {% block body %}
-    <h1 class="text-3xl">Register</h1>
-    <br/>
-    {{ form_errors(registrationForm) }}
+    <div class="max-w-md mx-auto p-6">
+        <h1 class="text-3xl font-bold mb-6 text-center">Création d'un compte</h1>
 
-    {{ form_start(registrationForm) }}
-        {{ form_row(registrationForm.FirstName) }}
-        {{ form_row(registrationForm.Name) }}
-        {{ form_row(registrationForm.Mail) }}
-        {{ form_row(registrationForm.plainPassword, {
-            label: 'Password'
-        }) }}
-        {{ form_row(registrationForm.agreeTerms) }}
-        {{ form_row(registrationForm.IsOrganizer) }}
+        {{ form_errors(registrationForm) }}
 
-        {# for future adaptation of organizer adding new organizer from the registration form  #}
-{#        {% if is_granted('ROLE_ORGANIZER') %}#}
-{#            {{ form_row(form.IsOrganizer) }}#}
-{#        {% else %}#}
-{#            {{ form_widget(form.IsOrganizer, {'type': 'hidden'}) }}#}
-{#        {% endif %}#}
+        {{ form_start(registrationForm, {'attr': {'class': 'flex flex-col space-y-4'}}) }}
+        <div class="flex flex-col space-y-1">
+            {{ form_label(registrationForm.FirstName, null, {'label_attr': {'class': 'text-sm font-medium'}}) }}
+            {{ form_widget(registrationForm.FirstName, {'attr': {'class': 'px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500'}}) }}
+            {{ form_errors(registrationForm.FirstName, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+        </div>
 
+        <div class="flex flex-col space-y-1">
+            {{ form_label(registrationForm.Name, null, {'label_attr': {'class': 'text-sm font-medium'}}) }}
+            {{ form_widget(registrationForm.Name, {'attr': {'class': 'px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500'}}) }}
+            {{ form_errors(registrationForm.Name, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+        </div>
 
-        <button type="submit" class="btn">Register</button>
-    {{ form_end(registrationForm) }}
+        <div class="flex flex-col space-y-1">
+            {{ form_label(registrationForm.Mail, null, {'label_attr': {'class': 'text-sm font-medium'}}) }}
+            {{ form_widget(registrationForm.Mail, {'attr': {'class': 'px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500'}}) }}
+            {{ form_errors(registrationForm.Mail, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+        </div>
+
+        <div class="flex flex-col space-y-1">
+            {{ form_label(registrationForm.plainPassword, 'Mot de passe', {'label_attr': {'class': 'text-sm font-medium'}}) }}
+            {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'px-3 py-2 border rounded focus:ring-2 focus:ring-blue-500 focus:border-blue-500'}}) }}
+            {{ form_errors(registrationForm.plainPassword, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+        </div>
+
+        <div class="hidden">
+            {{ form_widget(registrationForm.IsOrganizer, {'attr': {'class': 'rounded border-gray-300 text-blue-600 focus:ring-blue-500'}}) }}
+            {{ form_label(registrationForm.IsOrganizer, null, {'label_attr': {'class': 'text-sm font-medium'}}) }}
+            {{ form_errors(registrationForm.IsOrganizer, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
+        </div>
+
+        {# Keep the commented part for future reference #}
+        {#{% if is_granted('ROLE_ORGANIZER') %}#}
+        {#    {{ form_row(form.IsOrganizer) }}#}
+        {#{% else %}#}
+        {#    {{ form_widget(form.IsOrganizer, {'type': 'hidden'}) }}#}
+        {#{% endif %}#}
+
+        <button type="submit" class="w-full bg-blue-500 hover:bg-blue-700 transition ease-in duration-150 text-white font-bold py-2 px-4 rounded mt-6">
+            Register
+        </button>
+        {{ form_end(registrationForm) }}
+    </div>
 {% endblock %}

@@ -19,40 +19,32 @@ class RegistrationFormType extends AbstractType
     {
         $builder
             ->add('Mail')
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue([
-                        'message' => 'You should agree to our terms.',
-                    ]),
-                ],
-            ])
             ->add('FirstName', null, [
-                'label' => 'First name',
-                'attr' => ['placeholder' => 'Enter your first name'],
+                'label' => 'Prénom',
+                'attr' => ['placeholder' => 'Insérer votre prénom...'],
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter your first name',
+                        'message' => 'Veuillez insérer votre prénom.',
                     ]),
                     new Length([
                         'min' => 2,
-                        'minMessage' => 'Your first name should be at least {{ limit }} characters',
+                        'minMessage' => 'Votre prénom doit être de  {{ limit }} caractères minimum.',
                         'max' => 32,
                     ]),
                 ],
             ])
             ->add('Name', null, [
-                'label' => 'Last name',
-                'attr' => ['placeholder' => 'Enter your last name'],
+                'label' => 'Nom de famille',
+                'attr' => ['placeholder' => 'Insérer votre nom de famille...'],
                 'required' => true,
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter your last name',
+                        'message' => 'Veuillez insérer votre nom de famille.',
                     ]),
                     new Length([
                         'min' => 2,
-                        'minMessage' => 'Your last name should be at least {{ limit }} characters',
+                        'minMessage' => 'Votre nom de famille doit être de {{ limit }} caractères minimum.',
                         'max' => 32,
                     ]),
                 ],
@@ -64,11 +56,11 @@ class RegistrationFormType extends AbstractType
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Please enter a password',
+                        'message' => 'Veuillez insérer un mot de passe.',
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Your password should be at least {{ limit }} characters',
+                        'minMessage' => 'Votre mot de passe doit être de {{ limit }} caractères minimum.',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),
