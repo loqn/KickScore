@@ -2,9 +2,12 @@
 
 namespace App\Controller;
 
+use App\Entity\Team;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\Request;
+use Doctrine\ORM\EntityManagerInterface;
 
 class TeamController extends AbstractController
 {
@@ -20,35 +23,36 @@ class TeamController extends AbstractController
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
         if ($this->isGranted('ROLE_ORGANIZER')) {
-            throw $this->createAccessDeniedException("organizers can't create meets.");
+            throw $this->createAccessDeniedException("organizers can't create teams.");
         }
         // Get form data
         $name = $request->request->get('name');
-        $isMatch = $request->request->get('isMatch') === 'YES';
+        $structure = $request->request->get('structure');
+        $win = $request->request->get('win');
+        $draw = $request->request->get('draw');
+        $lose = $request->request->get('lose');
+
         if (empty($name)) {
             $this->addFlash('error', 'Name is required.');
-            return $this->redirectToRoute('app_meet');
+            return $this->redirectToRoute('app_team');
         }
-        // Create championship
-        $championship = new Championship();
-        $championship->setName($name);
-        $championship->setIsMatch($isMatch);
+        // Create team
+        $team = new Team();
+        $team->setName($name);
+        $team->setStructure($structure);
+        $team->setWin($win);
+        $team->setDraw($draw);
+        $team->setLose($lose);
+        $points = 3*$win + $draw;
+        $gameplayed = $win + $draw + $lose;
+        $team->setPoints($points);
+        $team->setGamePlayed($gameplayed);
+
+
         // Handle match-specific data if it's a match
-        if ($isMatch) {
-            $matchType = $request->request->get('type');
-            $greenScore = $request->request->get('greenscore');
-            $blueScore = $request->request->get('bluescore');
-            if (!$matchType || !$greenScore || !$blueScore) {
-                $this->addFlash('error', 'All match fields are required when creating a match.');
-                return $this->redirectToRoute('app_meet');
-            }
-            $championship->setMatchType($matchType);
-            $championship->setGreenScore((int) $greenScore);
-            $championship->setBlueScore((int) $blueScore);
-        }
-        $entityManager->persist($championship);
+        $entityManager->persist($team);
         $entityManager->flush();
-        $this->addFlash('success', 'Championship created successfully!');
-        return $this->redirectToRoute('app_meet');
+        $this->addFlash('success', 'team added successfully');
+        return $this->redirectToRoute('app_team');
     }
 }
