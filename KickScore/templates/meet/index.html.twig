@@ -180,6 +180,8 @@
             document.getElementById('import').classList.add('hidden');
             document.getElementById('form').classList.remove('hidden');
             document.getElementById('top-form').classList.add('mb-6');
+            document.getElementById('formImport').classList.add('hidden');
+
             //show the date section
             document.getElementById('date').classList.remove('hidden');
             document.body.dispatchEvent(new Event('change'));
@@ -194,19 +196,8 @@
             event.target.classList.add('bg-blue-300');
             document.querySelector('button[type="submit"]').classList.add('hidden');
             document.getElementById('form').classList.remove('hidden');
-<<<<<<< HEAD
             document.getElementById("date").classList.remove('hidden');
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
             document.getElementById('import').classList.add('hidden');
-=======
-            document.getElementById("date").classList.remove('hidden');
->>>>>>> 4b61edb (added championship view for organizer, finished user crud)
-=======
-            document.getElementById('import').classList.add('hidden');
->>>>>>> 16ad426 (import fixed)
->>>>>>> import
             document.getElementById('top-form').classList.add('mb-6');
             document.body.dispatchEvent(new Event('change'));
         });
@@ -218,22 +209,15 @@
             document.getElementById('select_btnMatch').classList.add('bg-blue-100');
             event.target.classList.remove('bg-blue-100');
             event.target.classList.add('bg-blue-300');
-<<<<<<< HEAD
-=======
-<<<<<<< HEAD
-<<<<<<< HEAD
             //select the import section 
             document.getElementById('import').classList.remove('hidden');
-=======
->>>>>>> import
             document.getElementById("date").classList.add('hidden');
+            //hide the championship section
+            document.getElementById('champ').classList.add('hidden');
             document.querySelector('button[type="submit"]').classList.remove('hidden');
-            document.getElementById('form').classList.remove('hidden');
->>>>>>> 4b61edb (added championship view for organizer, finished user crud)
-=======
             //select the import section 
-            document.getElementById('import').classList.remove('hidden');
->>>>>>> 16ad426 (import fixed)
+            //hide the form import 
+            document.getElementById('formImport').classList.add('hidden');
             document.getElementById('top-form').classList.add('mb-6');
             document.body.dispatchEvent(new Event('change'));
         });
