@@ -19,6 +19,7 @@ class RootController extends AbstractController
     }
 
     #[Route('/match', name: 'app_match_list')]
+    
     public function matchList(EntityManagerInterface $entityManager): Response
     {
         $championships = $entityManager->getRepository(Championship::class)->findAll();

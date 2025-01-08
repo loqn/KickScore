@@ -28,3 +28,11 @@ Lancez les commandes suivantes pour exécuter les tests :
 user@host$~/KickScore/ export MYSQL_PWD=XmXp2QKR
 user@host$~/KickScore/ mysql -u etu_matchabrier -h info-titania etu_matchabrier < testCoherence.sql
 ```
+
+## Conventions de codage, code PHP
+
+Afin de rendre le code aéré et moins lourd visuellement, nous avons séparé les méthodes d'un saut de ligne.
+Le code est exclusivemement en anglais, mis à part certains textes quin apparaîtront sur l'application.
+Afin de rendre le code le plus maintenable possible, nous avons attribué un à trois commentaires pour chaque méthode.
+Nous avons, dans le but d'uniformiser notre programme, utilisé la convention de nommage Camel Case pour chaque méthode et pour chaque attribut.
+Nous avons également placé rigoureusement des exceptions afin d'éviter le logiciel de planter.
