@@ -1,18 +1,3 @@
-/*
--- Se connecter à une base spécifique
-USE etu_matchabrier;
-
--- Vérifier la connexion en listant les tables
-SHOW TABLES;
-
-
--- Vérifier le résultat avec quelques requêtes simples
-SELECT * FROM T_USER_USR;
-SELECT * FROM T_TEAM_TEA;
-SELECT * FROM T_CHAMPIONSHIP_CHP;
-SELECT * FROM T_MATCH_MAT;
-*/
-
 DROP PROCEDURE IF EXISTS UserNull;
 DROP PROCEDURE IF EXISTS TeamNull;
 DROP PROCEDURE IF EXISTS MailNotUnique;
@@ -25,6 +10,7 @@ DELIMITER $$
 
 CREATE PROCEDURE UserNull()
 BEGIN
+
     DECLARE my_usr_id INT;
     DECLARE my_usr_email VARCHAR(255);
     DECLARE my_usr_fname VARCHAR(255);
@@ -40,6 +26,7 @@ BEGIN
     OPEN c;
 
     boucle_curseur: LOOP
+    
         FETCH c INTO my_usr_ID, my_usr_fname, my_usr_name, my_usr_email, my_usr_isorg, my_usr_password;
 
         IF done = 1 THEN
@@ -84,8 +71,9 @@ BEGIN
 
     END LOOP boucle_curseur;
 
-    select "test 1 passed : No necessary attribute missing in user." as test1;
+    SELECT "test 1 passed : No necessary attribute missing in user." AS test1;
     CLOSE c;
+
 END$$
 
 
@@ -123,13 +111,15 @@ BEGIN
 
     END LOOP boucle_curseur;
 
-    select "test 2 passed : No necessary attribute missing in team." as test2;
+    SELECT "test 2 passed : No necessary attribute missing in team." AS test2;
     CLOSE c;
+
 END$$
 
 
 CREATE PROCEDURE MailNotUnique()
 BEGIN
+
     DECLARE my_email_id INT;
     DECLARE my_email_id2 INT;
     DECLARE my_usr_email VARCHAR(255);
@@ -143,6 +133,7 @@ BEGIN
     OPEN c;
 
     boucle_curseur: LOOP
+
         FETCH c INTO my_email_id, my_usr_email;
 
         IF done = 1 THEN
@@ -150,6 +141,7 @@ BEGIN
         END IF;
 
             boucle_curseur2: LOOP
+
                 FETCH c INTO my_email_id2, my_usr_email2;
 
                 IF done = 1 THEN
@@ -157,23 +149,24 @@ BEGIN
                 END IF;
                 
                 IF my_usr_email = my_usr_email2 and my_email_id != my_email_id2 THEN
-                SIGNAL SQLSTATE '45000' 
-                    SET MESSAGE_TEXT = 'ERROR: Two matchs with the same teams', 
-                        MYSQL_ERRNO = 1009;
+                    SIGNAL SQLSTATE '45000' 
+                        SET MESSAGE_TEXT = 'ERROR: Two matchs with the same teams', 
+                            MYSQL_ERRNO = 1009;
                 END IF;
 
             END LOOP boucle_curseur2;
     
-
     END LOOP boucle_curseur;
 
     CLOSE c;
     select "test 3 passed : All mails are unique." as test3;
+
 END$$
 
 
 CREATE PROCEDURE ScoresNegatifs()
 BEGIN
+
     DECLARE my_greenScore INT;
     DECLARE my_blueScore INT;
     DECLARE done INT DEFAULT 0;
@@ -204,13 +197,15 @@ BEGIN
 
     END LOOP boucle_curseur;
 
-    select "test 4 passed : No negative score." as test4;
+    SELECT "test 4 passed : No negative score." AS test4;
     CLOSE c;
+
 END$$
 
 
 CREATE PROCEDURE RencontresIdentiques()
 BEGIN
+
     DECLARE my_id_tea_blue INT;
     DECLARE my_id_tea_green INT;
     DECLARE my_id_mat1 INT;
@@ -246,11 +241,12 @@ BEGIN
             END IF;
 
         END LOOP boucle_curseur2;
-        
-    select "test 5 passed : No match with the same teams but." as test5;
+
     END LOOP boucle_curseur;
 
+    SELECT "test 5 passed : No match with the same teams but." AS test5;    
     CLOSE c;
+
 END$$
 
 
