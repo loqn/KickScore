@@ -36,3 +36,27 @@ Le code est exclusivemement en anglais, mis à part certains textes quin appara�
 Afin de rendre le code le plus maintenable possible, nous avons attribué un à trois commentaires pour chaque méthode.
 Nous avons, dans le but d'uniformiser notre programme, utilisé la convention de nommage Camel Case pour chaque méthode et pour chaque attribut.
 Nous avons également placé rigoureusement des exceptions afin d'éviter le logiciel de planter.
+
+## Convention de codage, procédure stockée en SQL
+
+IF, THEN, ENDIF, DECLARE, LOOP en majucule // Attributs et opérateurs logiques en minuscule 
+-> Créer du contraste et améliore la lisibilité
+
+Espaces : 
+ - Entre chaque condition
+ - Entre chaque boucle
+ - Après le début et la fin des boucles
+ - Deux en haut de chaque procédure
+ - Après le début du begin des procédures
+ -> Aérer le code
+
+Code et commentaires en anglais
+-> Améliorer la maintenabilité
+
+1 à 3 commentaires par fonction / méthode
+-> Améliorer la maintenabilité sans surcharger
+
+Camel case
+-> Eviter les caractères spéciaux et unifier la convention de nommage
+
+
