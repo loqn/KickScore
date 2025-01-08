@@ -1,0 +1,27 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Sélectionner un championnat{% endblock %}
+
+{% block body %}
+<div class="container mt-5">
+    <h1 class="mb-4">Sélectionner un championnat</h1>
+
+    <form method="post" action="{{ path('download_orga') }}">
+        <div class="form-group mb-3">
+            <label for="championship">Championnats</label>
+            <select name="championship" id="championship" class="form-control">
+                <option value="">-- Sélectionnez un championnat --</option>
+                {% for championship in championships %}
+                    <option value="{{ championship.id }}" {% if championship.id == select %}selected{% endif %}>
+                        {{ championship.name }}
+                    </option>
+                {% endfor %}
+            </select>
+           
+            <input type="hidden" name="_csrf_token" value="{{ csrf_token('export') }}">
+            <button type="submit" style="position: fixed; bottom: 16px; right: 16px; padding: 20px 40px; background-color: blue; color: white; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
+            Télécharger</button>
+        </div>
+    </form>
+</div>
+{% endblock %}
