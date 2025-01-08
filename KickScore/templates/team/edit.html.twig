@@ -23,9 +23,14 @@
                                  </span>
                                 <span class="text-sm text-gray-600">{{ member.email }}</span>
                             </div>
-                            <button class="bg-blue-500 transition ease-in duration-200 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                Informations
-                            </button>
+                            {% if is_granted('ROLE_ORGANIZER')%}
+                            <form action="{{ path('app_team_remove_member', {'id': member.id}) }}" method="post">
+                                <input type="hidden" name="_token" value="{{ csrf_token('remove' ~ member.id) }}">
+                                <button class="bg-blue-500 transition ease-in duration-200 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                    Supprimer
+                                </button>
+                            </form>
+                            {% endif %}
                         </li>
                     {% endfor %}
                 </ul>
@@ -81,10 +86,6 @@
             div.appendChild(span1);
             div.appendChild(span2);
             li.appendChild(div);
-            const btn = document.createElement('button');
-            btn.classList.add('bg-blue-500', 'transition', 'ease-in', 'duration-200', 'text-white', 'py-2', 'px-4', 'rounded-lg', 'hover:bg-blue-600', 'focus:outline-none', 'focus:ring-2', 'focus:ring-blue-500');
-            btn.textContent = 'Informations';
-            li.appendChild(btn);
             ul.appendChild(li);
             const hiddenInput = document.querySelector('input[name="to_add"]');
             hiddenInput.value += JSON.stringify(user);

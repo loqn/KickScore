@@ -17,8 +17,8 @@ class Team
     #[ORM\Column(name: 'TEA_ID', type: "integer")]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Championship::class)]
-    #[ORM\JoinColumn(name: 'CHP_ID', referencedColumnName: 'CHP_ID', nullable: true)]
+    #[ORM\ManyToOne(targetEntity: Championship::class, inversedBy: 'teams')]
+    #[ORM\JoinColumn(name: 'CHP_ID', referencedColumnName: 'CHP_ID')]
     private ?Championship $championship = null;
 
     #[ORM\Column(name: 'TEA_NAME', length: 32)]

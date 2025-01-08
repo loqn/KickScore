@@ -1,13 +1,79 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Edit User{% endblock %}
+{% block title %}Modifier l'utilisateur - KickScore{% endblock %}
 
 {% block body %}
-    <h1>Edit User</h1>
+    <div class="h-[calc(100vh-2rem)]">
+        <div class="h-full bg-gradient-to-br from-slate-50 to-white rounded-xl p-8">
+            <div class="max-w-3xl mx-auto">
+                <div class="mb-8 flex items-center justify-between">
+                    <h1 class="text-3xl font-bold text-slate-800">
+                        Modifier l'utilisateur
+                        <span class="block mt-1 text-lg text-slate-600 font-normal">
+                            Modification des informations du compte
+                        </span>
+                    </h1>
 
-    {{ include('user/_form.html.twig', {'button_label': 'Update'}) }}
+                    <div class="space-x-3">
+                        <a href="{{ path('app_user_index') }}"
+                           class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-medium">
+                            Retour à la liste
+                        </a>
+                    </div>
+                </div>
 
-    <a href="{{ path('app_user_index') }}">back to list</a>
+                <div class="bg-white rounded-lg shadow-sm border border-slate-200">
+                    <div class="p-6">
+                        <div class="max-w-2xl">
+                            <form action="{{ path('app_user_edit', {'id': user.id}) }}" method="post" class="space-y-6">
+                                <input type="hidden" name="token" value="{{ csrf_token('edit-user') }}">
 
-    {{ include('user/_delete_form.html.twig') }}
+                                <div>
+                                    <label for="firstName" class="block text-sm font-medium text-slate-700 mb-1">Prénom</label>
+                                    <input type="text" id="firstName" name="firstName"
+                                           value="{{ user.FirstName }}"
+                                           class="block w-full rounded-md border-slate-200 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+
+                                <div>
+                                    <label for="name" class="block text-sm font-medium text-slate-700 mb-1">Nom</label>
+                                    <input type="text" id="name" name="name"
+                                           value="{{ user.name }}"
+                                           class="block w-full rounded-md border-slate-200 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+
+                                <div>
+                                    <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                                    <input type="email" id="email" name="email"
+                                           value="{{ user.mail }}"
+                                           class="block w-full rounded-md border-slate-200 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+
+                                {% if is_granted('ROLE_ORGANIZER') %}
+                                    <div>
+                                        <label for="isOrganizer" class="block text-sm font-medium text-slate-700 mb-1">
+                                            <input type="checkbox" id="isOrganizer" name="isOrganizer"
+                                                   {% if user.isOrganizer %}checked{% endif %}
+                                                   class="rounded border-slate-200 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                            Rôle Organisateur
+                                        </label>
+                                    </div>
+                                {% endif %}
+
+                                <div class="p-6 bg-slate-50 rounded-b-lg flex items-center space-x-3">
+                                    <button type="submit"
+                                            class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm">
+                                        Enregistrer les modifications
+                                    </button>
+                                    {% if is_granted('ROLE_ORGANIZER') %}
+                                        {{ include('user/_delete_form.html.twig') }}
+                                    {% endif %}
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 {% endblock %}
