@@ -46,7 +46,6 @@
             <label for="date" class="block text-gray-700 font-medium mb-2">Date du match</label>
             <input type="datetime-local" id="dateInput" name="date" placeholder="Date du match"
                    class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-            <div id="date_verifyBtn" class="w-1/2 bg-blue-100 text-center hover:cursor-pointer center rounded-lg py-2 px-4 transition ease-in duration-200 border-blue-300 hover:bg-blue-200 focus:ring focus:ring-blue-200 mt-2">Vérifier</div>
         </div>
 
         <div class="w-full flex justify-center">
@@ -66,7 +65,7 @@
         <!-- Select team green  -->
         <div id="greenTeam" class="mb-4 hidden">
             <label for="greenTeam" class="block text-gray-700 font-medium mb-2">Équipe verte</label>
-            <select id="greenTeamSelect" name="greenTeam" class="w-full px-3 py-2 border bg-green-200 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <select required id="greenTeamSelect" name="greenTeam" class="w-full px-3 py-2 border bg-green-200 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option disabled selected value=""> -- Choisir équipe verte -- </option>
                 {% for team in teams %}
                     <option value="{{ team.id }}">{{ team.name }}</option>
@@ -77,13 +76,17 @@
         <!-- Select team blue  -->
         <div id="blueTeam" class="mb-4 hidden">
             <label for="blueTeam" class="block text-gray-700 font-medium mb-2">Équipe bleue</label>
-            <select id="blueTeamSelect" name="blueTeam" class="w-full px-3 py-2 border bg-blue-200 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+            <select required id="blueTeamSelect" name="blueTeam" class="w-full px-3 py-2 border bg-blue-200 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                 <option disabled selected value=""> -- Choisir équipe bleue -- </option>
                 {% for team in teams %}
                     <option value="{{ team.id }}">{{ team.name }}</option>
                 {% endfor %}
             </select>
         </div>
+
+        <!-- verification -->
+        <div id="date_verifyBtn" class="w-full bg-blue-100 text-center hover:cursor-pointer center rounded-lg py-2 px-4 transition ease-in duration-200 border-blue-300 hover:bg-blue-200 focus:ring focus:ring-blue-200 mt-2">Vérifier</div>
+
 
         <div id="greenscore" class="mb-4 hidden">
             <label for="greenscore" class="block text-gray-700 font-medium mb-2">Buts vert</label>
@@ -205,6 +208,10 @@
 
         document.getElementById('select_btnChampionship').addEventListener('click', function(event) {
             selected = 'CHAMPIONSHIP';
+            //deactivate the required attribute blue team
+            document.getElementById('blueTeamSelect').removeAttribute('required');
+            document.getElementById('greenTeamSelect').removeAttribute('required');
+
             console.log('Selected:', selected);
             document.getElementById('select_btnMatch').classList.remove('bg-blue-300');
             document.getElementById('select_btnMatch').classList.add('bg-blue-100');

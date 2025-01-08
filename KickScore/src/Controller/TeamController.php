@@ -39,9 +39,9 @@ class TeamController extends AbstractController
         }
         $name = $request->request->get('name');
         $structure = $request->request->get('structure');
-        $win = $request->request->get('win');
-        $draw = $request->request->get('draw');
-        $lose = $request->request->get('lose');
+        $win = 0;
+        $draw = 0;
+        $lose = 0;
 
         if (empty($name)) {
             $this->addFlash('error', 'Name is required.');
@@ -53,8 +53,10 @@ class TeamController extends AbstractController
         $team->setWin($win);
         $team->setDraw($draw);
         $team->setLose($lose);
-        $points = 3*$win + $draw;
-        $gameplayed = $win + $draw + $lose;
+        $points = 0;
+        $gameplayed = 0;
+        $date = new \DateTime();
+        $team->setCreatedAt($date);
         $team->setPoints($points);
         $team->setGamePlayed($gameplayed);
 
