@@ -4,6 +4,7 @@ DROP PROCEDURE IF EXISTS MailNotUnique;
 DROP PROCEDURE IF EXISTS ScoresNegatifs;
 DROP PROCEDURE IF EXISTS RencontresIdentiques;
 DROP PROCEDURE IF EXISTS MemberNull;
+DROP PROCEDURE IF EXISTS TeamNameNotUnique;
 
 DELIMITER $$
 
@@ -120,8 +121,8 @@ END$$
 CREATE PROCEDURE MailNotUnique()
 BEGIN
 
-    DECLARE my_email_id INT;
-    DECLARE my_email_id2 INT;
+    DECLARE my_usr_id INT;
+    DECLARE my_usr_id2 INT;
     DECLARE my_usr_email VARCHAR(255);
     DECLARE my_usr_email2 VARCHAR(255);
     DECLARE done INT DEFAULT 0;
@@ -134,7 +135,7 @@ BEGIN
 
     boucle_curseur: LOOP
 
-        FETCH c INTO my_email_id, my_usr_email;
+        FETCH c INTO my_usr_id, my_usr_email;
 
         IF done = 1 THEN
             LEAVE boucle_curseur;
@@ -142,13 +143,13 @@ BEGIN
 
             boucle_curseur2: LOOP
 
-                FETCH c INTO my_email_id2, my_usr_email2;
+                FETCH c INTO my_usr_id2, my_usr_email2;
 
                 IF done = 1 THEN
                     LEAVE boucle_curseur2;
                 END IF;
                 
-                IF my_usr_email = my_usr_email2 and my_email_id != my_email_id2 THEN
+                IF my_usr_email = my_usr_email2 and my_usr_id != my_usr_id2 THEN
                     SIGNAL SQLSTATE '45000' 
                         SET MESSAGE_TEXT = 'ERROR: Two matchs with the same teams', 
                             MYSQL_ERRNO = 1009;
@@ -290,11 +291,57 @@ BEGIN
         END IF;
 
     END LOOP boucle_curseur;
-    select "test 6 passed : No necessary attribute missing in team" as test6;
+    SELECT "test 6 passed : No necessary attribute missing in team" AS test6;
 
     CLOSE c;
 END$$
 
+
+CREATE PROCEDURE TeamNameNotUnique()
+BEGIN
+
+    DECLARE my_team_id1 INT;
+    DECLARE my_team_id2 INT;
+    DECLARE my_team_name1 VARCHAR(255);
+    DECLARE my_team_name2 VARCHAR(255);
+    DECLARE done INT DEFAULT 0;
+
+    DECLARE c CURSOR FOR SELECT TEA_ID, TEA_NAME FROM T_TEAM_TEA;
+
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET done = 1;
+
+    OPEN c;
+
+    boucle_curseur: LOOP
+
+        FETCH c INTO my_team_id1, my_team_name1;
+
+        IF done = 1 THEN
+            LEAVE boucle_curseur;
+        END IF;
+
+            boucle_curseur2: LOOP
+
+                FETCH c INTO my_team_id2, my_team_name2;
+
+                IF done = 1 THEN
+                    LEAVE boucle_curseur2;
+                END IF;
+                
+                IF my_team_name1 = my_team_name2 and my_team_id1 != my_team_id2 THEN
+                    SIGNAL SQLSTATE '45000' 
+                        SET MESSAGE_TEXT = 'ERROR: Two matchs with the same teams', 
+                            MYSQL_ERRNO = 1014;
+                END IF;
+
+            END LOOP boucle_curseur2;
+    
+    END LOOP boucle_curseur;
+
+    CLOSE c;
+    select "test 7 passed : All team names are unique." as test3;
+
+END$$
 
 DELIMITER ; 
 
@@ -304,3 +351,4 @@ call MailNotUnique;
 call ScoresNegatifs;
 call RencontresIdentiques;
 call MemberNull;
+call TeamNameNotUnique;
