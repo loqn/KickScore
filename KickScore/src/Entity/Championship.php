@@ -26,9 +26,39 @@ class Championship
     #[ORM\OneToMany(targetEntity: Versus::class, mappedBy: 'championship')]
     private Collection $matches;
 
+    #[ORM\OneToMany(targetEntity: Team::class, mappedBy: 'championship')]
+    private Collection $teams;
+
     public function __construct()
     {
         $this->matches = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->teams = new \Doctrine\Common\Collections\ArrayCollection();
+    }
+
+    public function getTeams(): Collection
+    {
+        return $this->teams;
+    }
+
+    public function addTeam(Team $team): static
+    {
+        if (!$this->teams->contains($team)) {
+            $this->teams[] = $team;
+            $team->setChampionship($this);
+        }
+        return $this;
+    }
+
+    public function removeTeam(Team $team): static
+    {
+        if ($this->teams->removeElement($team)) {
+            // set the owning side to null (unless already changed)
+            if ($team->getChampionship() === $this) {
+                $team->setChampionship(null);
+            }
+        }
+
+        return $this;
     }
 
     public function getMatches(): Collection
