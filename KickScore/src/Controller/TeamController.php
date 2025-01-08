@@ -37,11 +37,12 @@ class TeamController extends AbstractController
         if ($this->isGranted('ROLE_ORGANIZER')) {
             throw $this->createAccessDeniedException("organizers can't create teams.");
         }
+        if ($entityManager->getRepository(Team::class)->findOneBy(['name' => $request->request->get('name')])) {
+            $this->addFlash('error', 'Team name already exists.');
+            return $this->redirectToRoute('app_team');
+        }
         $name = $request->request->get('name');
         $structure = $request->request->get('structure');
-        $win = $request->request->get('win');
-        $draw = $request->request->get('draw');
-        $lose = $request->request->get('lose');
 
         if (empty($name)) {
             $this->addFlash('error', 'Name is required.');
@@ -50,11 +51,11 @@ class TeamController extends AbstractController
         $team = new Team();
         $team->setName($name);
         $team->setStructure($structure);
-        $team->setWin($win);
-        $team->setDraw($draw);
-        $team->setLose($lose);
-        $points = 3*$win + $draw;
-        $gameplayed = $win + $draw + $lose;
+        $team->setWin(0);
+        $team->setDraw(0);
+        $team->setLose(0);
+        $points = 0;
+        $gameplayed = 0;
         $team->setPoints($points);
         $team->setGamePlayed($gameplayed);
 

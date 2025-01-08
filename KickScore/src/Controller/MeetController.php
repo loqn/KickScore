@@ -31,7 +31,6 @@ class MeetController extends AbstractController
     }
 
     #[Route('/meet/import', name: 'app_meet_import', methods: ['POST'])]
-    #[Route('/meet/import', name: 'app_meet_import', methods: ['POST'])]
     public function import(Request $request, EntityManagerInterface $entityManager): Response
     {
         if (!$this->isGranted('ROLE_ORGANIZER')) {
@@ -142,6 +141,20 @@ class MeetController extends AbstractController
                 if ($request->request->get('greenscore') != "" && $request->request->get('bluescore') != "") {
                     $match->setGreenScore($request->request->get('greenscore'));
                     $match->setBlueScore($request->request->get('bluescore'));
+                    if ($match->getGreenScore() > $match->getBlueScore()) {
+                        $greenTeam->setWin($greenTeam->getWin() + 1);
+                        $blueTeam->setLose($blueTeam->getLose() + 1);
+                        $greenTeam->setPoints($greenTeam->getPoints() + 3);
+                    } elseif ($match->getGreenScore() < $match->getBlueScore()) {
+                        $blueTeam->setWin($blueTeam->getWin() + 1);
+                        $greenTeam->setLose($greenTeam->getLose() + 1);
+                        $blueTeam->setPoints($blueTeam->getPoints() + 3);
+                    } else {
+                        $greenTeam->setDraw($greenTeam->getDraw() + 1);
+                        $blueTeam->setDraw($blueTeam->getDraw() + 1);
+                        $greenTeam->setPoints($greenTeam->getPoints() + 1);
+                        $blueTeam->setPoints($blueTeam->getPoints() + 3);
+                    }
                 }
                 $match->setDate(new \DateTime($request->request->get('date')));
                 $entityManager->persist($match);
