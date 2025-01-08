@@ -4,6 +4,7 @@
 
 {% block body %}
 <div class="container mt-5">
+
     <h1 class="mb-4">Sélectionner un championnat</h1>
 
     <form method="post" action="{{ path('download_orga') }}">
@@ -23,5 +24,11 @@
             Télécharger</button>
         </div>
     </form>
+ 
 </div>
+    <style>
+        form{
+            margin-left: 20em; 
+        }
+   </style>
 {% endblock %}
