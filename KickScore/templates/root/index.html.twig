@@ -43,26 +43,12 @@
                                class="px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
                                 Panneau de contrôle
                             </a>
-                            <!-- Button to export Championship Matches -->
-                            <form action="{{ path('export_orga') }}" method="POST";>
-                                <input type="hidden" name="_csrf_token" value="{{ csrf_token('export') }}">
-                                <button type="submit" style="position: fixed; bottom: 16px; right: 16px; padding: 20px 40px; background-color: blue; color: white; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-                                Export
-                                </button>
-                            </form>
                         {% elseif is_granted('ROLE_USER') and not is_granted('ROLE_ORGANIZER') %}
                             {% if app.user.team %}
                                 <a href="{{ path('app_team_edit', {id: app.user.team.id}) }}"
                                    class="px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
                                     Mon équipe
                                 </a>
-                                <!-- Button to export Team Matches -->
-                                <form action="{{ path('export_user') }}" method="POST" onsubmit="return confirm('Télécharger vos données ?');">
-                                    <input type="hidden" name="_csrf_token" value="{{ csrf_token('export') }}">
-                                    <button type="submit" style="position: fixed; bottom: 16px; right: 16px; padding: 20px 40px; background-color: blue; color: white; font-weight: bold; border-radius: 8px; box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);">
-                                    Export
-                                    </button>
-                                </form>
                             {% else %}
                                 <a href="{{ path('app_team') }}"
                                    class="px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
