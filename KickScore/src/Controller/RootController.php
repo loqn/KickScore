@@ -2,7 +2,7 @@
 
 namespace App\Controller;
 
-use App\Entity\Versus;
+use App\Entity\Championship;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,11 +21,11 @@ class RootController extends AbstractController
     #[Route('/match', name: 'app_match_list')]
     public function matchList(EntityManagerInterface $entityManager): Response
     {
-        $matches = $entityManager->getRepository(Versus::class)->findAll();
+        $championships = $entityManager->getRepository(Championship::class)->findAll();
 
         return $this->render('match/match.html.twig', [
             'controller_name' => 'RootController',
-            'matches' => $matches
+            'championships' => $championships
         ]);
     }
 }
