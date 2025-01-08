@@ -19,3 +19,5 @@ Dû au hachage du mot de passe, qui peut être très long, et mail qui peuvent �
 - Modification de `security.yaml` pour mettre en place l'authentification en `app_user_provider`.
 - Modification des Entity pour relier les clés par les entités correspondantes (et non plus par les id).
 - Légère modulation de l'UI TWIG avec bouton de connection/déconnection en fonction du statut sur la page racine.
+
+--> Lier le user (null) a un membre (s'il rejoint l'équipe qu'il créé)

@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+use App\Entity\Versus;
+use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
@@ -16,14 +18,14 @@ class RootController extends AbstractController
         ]);
     }
 
-    #[Route('/org/control_panel', name: 'app_control_panel')]
-    public function controlPanel(): Response
+    #[Route('/match', name: 'app_match_list')]
+    public function matchList(EntityManagerInterface $entityManager): Response
     {
-        if (!$this->getUser()->isOrganizer()) {
-            return $this->redirectToRoute('app_root');
-        }
-        return $this->render('org/control_panel.html.twig', [
+        $matches = $entityManager->getRepository(Versus::class)->findAll();
+
+        return $this->render('match/match.html.twig', [
             'controller_name' => 'RootController',
+            'matches' => $matches
         ]);
     }
 }

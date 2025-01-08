@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Championship;
 use App\Entity\Team;
-use App\Entity\User;
 use App\Entity\Versus;
 use Doctrine\ORM\EntityManagerInterface;
 use Psr\Log\LoggerInterface;
@@ -36,7 +35,6 @@ class MeetController extends AbstractController
         if (!$this->isGranted('ROLE_ORGANIZER')) {
             throw $this->createAccessDeniedException('Only organizers can create meets.');
         }
-
         $addType = $request->request->get('addType');
         if (empty($addType)) {
             $this->addFlash('error', 'Name is required.');
@@ -44,8 +42,6 @@ class MeetController extends AbstractController
         }
         switch ($addType) {
             case "CHAMPIONSHIP":
-
-                $logger->error('Championship creation requested.');
                 $name = $request->request->get('name');
                 $championship = new Championship();
                 $championship->setName($name);
@@ -53,7 +49,6 @@ class MeetController extends AbstractController
                 $entityManager->persist($championship);
                 break;
             case "MATCH":
-                $logger->error('Match creation requested.');
                 $match = new Versus();
                 $numChamp = $request->request->get('champ');
                 $championship = $entityManager->getRepository(Championship::class)->find($numChamp);
@@ -73,10 +68,15 @@ class MeetController extends AbstractController
                 $championship->addMatch($match);
                 $match->setGreenTeam($greenTeam);
                 $match->setBlueTeam($blueTeam);
+                if ($request->request->get('greenscore') != "" && $request->request->get('bluescore') != "") {
+                    $match->setGreenScore($request->request->get('greenscore'));
+                    $match->setBlueScore($request->request->get('bluescore'));
+                }
+                $match->setDate(new \DateTime($request->request->get('date')));
                 $entityManager->persist($match);
                 break;
         }
-        $logger->error('Persisting changes.');
+        $logger->debug('Persisting changes.');
         $entityManager->flush();
         $this->addFlash('success', 'Championship created successfully!');
         return $this->redirectToRoute('app_meet');

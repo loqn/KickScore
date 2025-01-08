@@ -1,0 +1,125 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Mon équipe - KickScore{% endblock %}
+
+{% block body %}
+
+<div class="bg-gray-100 flex items-center justify-center min-h-screen">
+
+    <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-4xl">
+        <h2 class="text-2xl font-bold mb-6 text-gray-700">Équipe {{ team.name }}</h2>
+        <div class="flex flex-col lg:flex-row gap-6">
+            <div class="flex-1">
+                <h3 class="text-xl font-bold mb-4 text-gray-700">Membres</h3>
+                <ul class="space-y-3">
+                    {% for member in team.members %}
+                        <li class="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-100 transition ease-in duration-200">
+                            <div class="flex flex-col">
+                                <span class="font-medium inline-flex items-center">
+                                    {{ member.fname }} {{ member.name }}
+                                    <svg title="Ce membre est sauvegardé." xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill ml-2" viewBox="0 0 16 16">
+                                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                                    </svg>
+                                 </span>
+                                <span class="text-sm text-gray-600">{{ member.email }}</span>
+                            </div>
+                            <button class="bg-blue-500 transition ease-in duration-200 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+                                Informations
+                            </button>
+                        </li>
+                    {% endfor %}
+                </ul>
+            </div>
+
+            <div class="flex-1">
+                <form method="post" action="{{ path('app_team_add_member') }}" class="w-full">
+                    <h3 class="text-xl font-bold mb-4 text-gray-700">Ajouter un membre</h3>
+                    <div class="space-y-4">
+                        <div class="mb-4">
+                            <label for="fname" class="block font-medium text-gray-700">Prénom</label>
+                            <input type="text" id="player" name="fname" placeholder="Prénom du membre" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="mb-4">
+                            <label for="name" class="block font-medium text-gray-700">Nom</label>
+                            <input type="text" id="player" name="name" placeholder="Nom du membre" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div class="mb-4">
+                            <label for="fname" class="block font-medium text-gray-700">EMail</label>
+                            <input type="email" id="player" name="email" placeholder="EMail du membre" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                        </div>
+                        <div id="addBtn" class="w-full bg-blue-100 text-center hover:cursor-pointer rounded-lg py-2 px-4 transition ease-in duration-200 hover:bg-blue-200 focus:ring focus:ring-blue-200">
+                            Ajouter
+                        </div>
+                        <input type="hidden" name="to_add" value="">
+                        <button type="submit" disabled class="hover:cursor-not-allowed w-full bg-slate-600 transition ease-in duration-200 text-white py-2 px-4 rounded-lg hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 inline-flex items-center justify-center">
+                            Aucun nouveau membre
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill ml-2" viewBox="0 0 16 16">
+                                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                            </svg>
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+    <script>
+
+        const addMemberToTab = (user) => {
+            const ul = document.querySelector('ul');
+            const li = document.createElement('li');
+            li.classList.add('flex', 'items-center', 'justify-between', 'p-3', 'border', 'rounded-lg', 'hover:bg-gray-100', 'transition', 'ease-in', 'duration-200');
+            const div = document.createElement('div');
+            div.classList.add('flex', 'flex-col');
+            const span1 = document.createElement('span');
+            span1.classList.add('font-medium');
+            span1.textContent = `${user.fname} ${user.name}`;
+            const span2 = document.createElement('span');
+            span2.classList.add('text-sm', 'text-gray-600');
+            span2.textContent = user.email;
+            div.appendChild(span1);
+            div.appendChild(span2);
+            li.appendChild(div);
+            const btn = document.createElement('button');
+            btn.classList.add('bg-blue-500', 'transition', 'ease-in', 'duration-200', 'text-white', 'py-2', 'px-4', 'rounded-lg', 'hover:bg-blue-600', 'focus:outline-none', 'focus:ring-2', 'focus:ring-blue-500');
+            btn.textContent = 'Informations';
+            li.appendChild(btn);
+            ul.appendChild(li);
+            const hiddenInput = document.querySelector('input[name="to_add"]');
+            hiddenInput.value += JSON.stringify(user);
+        }
+
+        const addBtn = document.getElementById('addBtn');
+        const submitBtn = document.querySelector('button[type="submit"]');
+        addBtn.addEventListener('click', () => {
+            let count = 0;
+            document.querySelectorAll('form input').forEach(input => {
+                if (input.value !== '') {
+                    count++;
+                }
+            });
+            if (count === 3) {
+                submitBtn.removeAttribute('disabled');
+                submitBtn.classList.remove('bg-slate-600', 'hover:bg-slate-700', 'hover:cursor-not-allowed');
+                submitBtn.classList.add('bg-blue-500', 'hover:bg-blue-600', 'hover:cursor-pointer');
+
+                submitBtn.innerHTML = `Valider les ajouts
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-unlock-fill ml-2" viewBox="0 0 16 16">
+                           <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2"/>
+                    </svg>`;
+
+                addMemberToTab({
+                    fname: document.querySelector('input[name="fname"]').value,
+                    name: document.querySelector('input[name="name"]').value,
+                    email: document.querySelector('input[name="email"]').value
+                });
+
+                document.querySelectorAll('form input').forEach(input => {
+                    if (input.name !== 'to_add')
+                    {input.value = '';}
+                });
+            }
+        });
+    </script>
+{% endblock %}

@@ -3,53 +3,69 @@
 {% block title %}KickScore{% endblock %}
 
 {% block body %}
+    <div class="h-[calc(100vh-2rem)]">
+        <div class="h-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-white rounded-xl p-8">
+            <div class="max-w-3xl text-center space-y-6">
+                {% if not app.user %}
+                    <h1 class="text-5xl font-bold text-slate-800">
+                        Gérez vos championnats
+                        <span class="block mt-2 text-blue-900">
+                            en toute simplicité
+                        </span>
+                    </h1>
+                    <p class="text-xl text-slate-600">
+                        KickScore vous accompagne dans l'organisation de vos tournois de RoboCup.
+                    </p>
+                    <div class="pt-8 flex gap-4 justify-center">
+                        <a href="{{ path('app_register') }}"
+                           class="px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
+                            Commencer
+                        </a>
+                        <a href="{{ path('app_login') }}"
+                           class="px-8 py-4 bg-white text-blue-900 rounded-lg hover:bg-slate-50 transition-colors font-medium text-lg border border-blue-200 shadow-sm">
+                            Se connecter
+                        </a>
+                    </div>
+                {% else %}
+                    <h1 class="text-5xl font-bold text-slate-800">
+                        Bienvenue {{ app.user.FirstName }}
+                        <span class="block mt-2 text-blue-900">
+                            sur KickScore
+                        </span>
+                    </h1>
+                    <div class="pt-8 flex gap-4 justify-center">
+                        {% if is_granted('ROLE_ORGANIZER') %}
+                            <a href="{{ path('app_meet') }}"
+                               class="px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
+                                Création
+                            </a>
+                            <a href="{{ path('app_user_index') }}"
+                               class="px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
+                                Panneau de contrôle
+                            </a>
+                        {% elseif is_granted('ROLE_USER') and not is_granted('ROLE_ORGANIZER') %}
+                            {% if app.user.team %}
+                                <a href="{{ path('app_team_edit', {id: app.user.team.id}) }}"
+                                   class="px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
+                                    Mon équipe
+                                </a>
+                            {% else %}
+                                <a href="{{ path('app_team') }}"
+                                   class="px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
+                                    Créer une équipe
+                                </a>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                {% endif %}
 
-<div class="example-wrapper w-full h-full">
-    <!-- Content wrapper -->
-    <div class="flex flex-row bg-amber-50 w-full h-full">
-
-        <!-- Left panel - Menu -->
-        <div class="bg-red-700 text-white flex-1">
-            <h1 class="text-2xl">KickScore</h1>
-            {% if app.user %}
-                <p> Connecté en tant que {{ app.user.mail }}</p>
-                <div class="mt-4">
-                    <a href="{{ path('app_logout') }}" class="bg-blue-500 hover:bg-blue-700 transition ease-in duration-150 text-white font-bold py-2 px-4 rounded">
-                        Se déconnecter
+                <div class="pt-4 flex justify-center">
+                    <a href="{{ path('app_match_list') }}"
+                       class="px-8 py-4 bg-white text-blue-900 rounded-lg hover:bg-slate-50 transition-colors font-medium text-lg border border-blue-200 shadow-sm">
+                        Voir les matchs
                     </a>
                 </div>
-            {% else %}
-                <p>Vous n'êtes pas connecté.</p>
-                <div class="mt-4">
-                    <a href="{{ path('app_login') }}" class="bg-blue-500 hover:bg-blue-700 transition ease-in duration-150 text-white font-bold py-2 px-4 rounded">
-                        Se connecter
-                    </a>
-                </div>
-                <div class="mt-4">
-                    <a href="{{ path('app_register') }}" class="bg-blue-500 hover:bg-blue-700 transition ease-in duration-150 text-white font-bold py-2 px-4 rounded">
-                        Créer un compte
-                    </a>
-                </div>
-            {% endif %}
-            {% if is_granted('ROLE_ORGANIZER') %}
-                <div class="mt-4">
-                    <a href="{{ path("app_meet") }}" class="bg-blue-500 hover:bg-blue-700 transition ease-in duration-150 text-white font-bold py-2 px-4 rounded">
-                        Créer un championnat
-                    </a>
-                </div>
-                <div class="mt-4">
-                    <a href="{{ path("app_control_panel") }}" class="bg-blue-500 hover:bg-blue-700 transition ease-in duration-150 text-white font-bold py-2 px-4 rounded">
-                        Panneau de contrôle
-                    </a>
-                </div>
-            {% endif %}
+            </div>
         </div>
-
-        <!-- Right panel - Content -->
-        <div class="bg-blue-300 text-white flex-[6]">
-            CCCC
-        </div>
-
     </div>
-</div>
 {% endblock %}

@@ -45,7 +45,7 @@ class Team
     /**
      * @var Collection<int, Member>
      */
-    #[ORM\OneToMany(targetEntity: Member::class, mappedBy: 'team')]
+    #[ORM\OneToMany(targetEntity: Member::class, mappedBy: 'team', cascade: ['persist'])]
     private Collection $members;
 
     public function __construct()

@@ -2,6 +2,15 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    background-color: lightgray;
+@media (max-width: 768px) {
+    nav {
+        transform: translateX(-100%);
+        transition: transform 0.3s ease-in-out;
+    }
+    nav.nav-open {
+        transform: translateX(0);
+    }
+    main {
+        margin-left: 0;
+    }
 }

@@ -27,6 +27,10 @@ class Member
     #[ORM\JoinColumn(name: 'TEA_ID', referencedColumnName: 'TEA_ID', nullable: false)]
     private ?Team $team = null;
 
+    #[ORM\OneToOne(targetEntity: User::class, inversedBy: 'member')]
+    #[ORM\JoinColumn(name: 'USR_ID', referencedColumnName: 'USR_ID', nullable: true)]
+    private ?User $user = null;
+
     public function getId(): ?int
     {
         return $this->id;
@@ -76,6 +80,18 @@ class Member
     public function setTeam(?Team $team): static
     {
         $this->team = $team;
+
+        return $this;
+    }
+
+    public function getUser(): ?User
+    {
+        return $this->user;
+    }
+
+    public function setUser(?User $user): static
+    {
+        $this->user = $user;
 
         return $this;
     }

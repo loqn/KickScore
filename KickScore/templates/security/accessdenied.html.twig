@@ -1,0 +1,26 @@
+{% extends 'base.html.twig' %}
+{% block title %}Accès refusé - KickScore{% endblock %}
+
+{% block body %}
+    <div class="h-[calc(100vh-2rem)]">
+        <div class="h-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-white rounded-xl p-8">
+            <div class="w-full max-w-md text-center">
+                <h1 class="text-4xl font-bold text-slate-800 mb-8">
+                    Accès Refusé
+                    <span class="block mt-2 text-red-600 text-2xl font-medium">
+                        Vous n'avez pas les permissions nécessaires
+                    </span>
+                </h1>
+
+                <div class="p-4 text-red-700 bg-red-100 rounded-lg mb-6">
+                    Vous n'êtes pas autorisé à accéder à cette ressource.
+                </div>
+
+                <a href="{{ path('app_root') }}" 
+                   class="inline-block px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors">
+                    Retour à l'accueil
+                </a>
+            </div>
+        </div>
+    </div>
+{% endblock %}
