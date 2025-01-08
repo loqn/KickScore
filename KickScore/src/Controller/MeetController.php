@@ -40,7 +40,7 @@ class MeetController extends AbstractController
         $file = $request->files->get('file');
         
         if (!$file) {
-            $this->addFlash('error', 'No file uploaded.');
+            $this->addFlash('error', 'Aucun fichier sélectionné.');
             return $this->redirectToRoute('app_meet');
         }
     
@@ -48,7 +48,7 @@ class MeetController extends AbstractController
         $championships = json_decode($jsonData, true);
     
         if (!$championships) {
-            $this->addFlash('error', 'Invalid JSON format.');
+            $this->addFlash('error', 'Format JSON invalide, vérifiez le fichier.');
             return $this->redirectToRoute('app_meet');
         }
     
@@ -92,7 +92,7 @@ class MeetController extends AbstractController
         }
     
         $entityManager->flush();
-        $this->addFlash('success', 'Championships and matches have been imported successfully.');
+        $this->addFlash('success', 'Le(s) championnat(s) ont été importé(s) avec succès.');
         return $this->redirectToRoute('app_meet');
     }
 
@@ -104,23 +104,28 @@ class MeetController extends AbstractController
         }
         $addType = $request->request->get('addType');
         if (empty($addType)) {
-            $this->addFlash('error', 'Name is required.');
+            $this->addFlash('error', 'Le nom est obligatoire.');
             return $this->redirectToRoute('app_meet');
         }
         switch ($addType) {
             case "CHAMPIONSHIP":
                 $name = $request->request->get('name');
+                if (empty($name)) {
+                    $this->addFlash('error', 'Le nom du championnat est obligatoire.');
+                    return $this->redirectToRoute('app_meet');
+                }
                 $championship = new Championship();
                 $championship->setName($name);
                 $championship->setOrganizer($this->getUser());
                 $entityManager->persist($championship);
+                $this->addFlash('success', 'Championnat créé avec succès.');
                 break;
             case "MATCH":
                 $match = new Versus();
                 $numChamp = $request->request->get('champ');
                 $championship = $entityManager->getRepository(Championship::class)->find($numChamp);
                 if (!$championship) {
-                    $this->addFlash('error', 'Championship not found.');
+                    $this->addFlash('error', 'Championnat sélectionné non trouvé.');
                     return $this->redirectToRoute('app_meet');
                 }
                 $greenTeamId = $request->request->get('greenTeam');
@@ -129,7 +134,7 @@ class MeetController extends AbstractController
                 $blueTeamId = $request->request->get('blueTeam');
                 $blueTeam = $entityManager->getRepository(Team::class)->find($blueTeamId);
                 if (!$greenTeam || !$blueTeam) {
-                    $this->addFlash('error', 'Teams not found.');
+                    $this->addFlash('error', 'Équipe(s) manquante(s)');
                     return $this->redirectToRoute('app_meet');
                 }
                 $match->setChampionship($championship);
@@ -157,12 +162,13 @@ class MeetController extends AbstractController
                     }
                 }
                 $match->setDate(new \DateTime($request->request->get('date')));
+                $this->addFlash('success', 'Match créé avec succès.');
                 $entityManager->persist($match);
                 break;
         }
         $logger->debug('Persisting changes.');
         $entityManager->flush();
-        $this->addFlash('success', 'Championship created successfully!');
+
         return $this->redirectToRoute('app_meet');
     }
 }

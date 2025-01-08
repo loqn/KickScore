@@ -15,7 +15,16 @@
 
                 <form method="post" action="{{ path('app_team_create') }}"
                       class="space-y-6 bg-white rounded-lg shadow-sm border border-slate-100 p-6">
-
+                    {% for message in app.flashes('success') %}
+                        <div class="bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 mb-6">
+                            <p class="text-sm font-medium">{{ message }}</p>
+                        </div>
+                    {% endfor %}
+                    {% for message in app.flashes('error') %}
+                        <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 mb-6">
+                            <p class="text-sm font-medium">{{ message }}</p>
+                        </div>
+                    {% endfor %}
                     <!-- Nom de l'équipe -->
                     <div class="space-y-1">
                         <label for="name" class="text-sm font-medium text-slate-700">Nom</label>

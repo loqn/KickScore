@@ -58,7 +58,7 @@ final class UserController extends AbstractController
     {
         if ($request->isMethod('POST')) {
             if (!$this->isCsrfTokenValid('edit-user', $request->request->get('token'))) {
-                $this->addFlash('error', 'Token de sécurité invalide, veuillez réessayer.');
+                $this->addFlash('user_error', 'Token de sécurité invalide, veuillez réessayer.');
                 return $this->redirectToRoute('app_user_edit', ['id' => $user->getId()]);
             }
 
@@ -67,18 +67,17 @@ final class UserController extends AbstractController
                     ->setName($request->request->get('name'))
                     ->setMail($request->request->get('email'));
 
-                // Gérer le rôle organisateur seulement si l'utilisateur est autorisé
                 if ($this->isGranted('ROLE_ORGANIZER')) {
                     $user->setIsOrganizer($request->request->has('isOrganizer'));
                 }
 
                 $entityManager->flush();
 
-                $this->addFlash('success', 'Les modifications ont été enregistrées avec succès.');
+                $this->addFlash('user_success', 'Les modifications ont été enregistrées avec succès.');
                 return $this->redirectToRoute('app_user_index');
 
             } catch (\Exception $e) {
-                $this->addFlash('error', 'Une erreur est survenue lors de la modification.');
+                $this->addFlash('user_error', 'Une erreur est survenue lors de la modification.');
             }
         }
 

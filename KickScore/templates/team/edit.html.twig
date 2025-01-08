@@ -3,124 +3,189 @@
 {% block title %}Mon équipe - KickScore{% endblock %}
 
 {% block body %}
+    <div class="min-h-screen bg-gradient-to-br from-slate-50 to-white p-8">
+        <div class="max-w-4xl mx-auto bg-white rounded-xl shadow-md p-8">
+            <h1 class="text-4xl font-bold text-slate-800 mb-8">
+                Équipe {{ team.name }}
+                <span class="block mt-2 text-blue-900 text-2xl font-medium">
+                    Gestion des membres
+                </span>
+            </h1>
 
-<div class="bg-gray-100 flex items-center justify-center min-h-screen">
-
-    <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-4xl">
-        <h2 class="text-2xl font-bold mb-6 text-gray-700">Équipe {{ team.name }}</h2>
-        <div class="flex flex-col lg:flex-row gap-6">
-            <div class="flex-1">
-                <h3 class="text-xl font-bold mb-4 text-gray-700">Membres</h3>
-                <ul class="space-y-3">
-                    {% for member in team.members %}
-                        <li class="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-100 transition ease-in duration-200">
-                            <div class="flex flex-col">
-                                <span class="font-medium inline-flex items-center">
-                                    {{ member.fname }} {{ member.name }}
-                                    <svg title="Ce membre est sauvegardé." xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill ml-2" viewBox="0 0 16 16">
-                                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
-                                    </svg>
-                                 </span>
-                                <span class="text-sm text-gray-600">{{ member.email }}</span>
+            <div class="grid lg:grid-cols-2 gap-8">
+                {# Liste des membres #}
+                <div class="space-y-6">
+                    <h2 class="text-xl font-bold text-slate-700">Membres</h2>
+                    <div class="space-y-3">
+                        {% for member in team.members %}
+                            <div class="flex items-center justify-between p-4 bg-white border border-slate-200 rounded-lg hover:border-blue-900 transition-colors">
+                                <div class="space-y-1">
+                                    <div class="font-medium text-slate-800 flex items-center">
+                                        {{ member.fname }} {{ member.name }}
+                                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 text-slate-400" viewBox="0 0 16 16" fill="currentColor">
+                                            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                                        </svg>
+                                    </div>
+                                    <div class="text-sm text-slate-500">{{ member.email }}</div>
+                                </div>
+                                {% if is_granted('ROLE_ORGANIZER') %}
+                                    <form action="{{ path('app_team_remove_member', {'id': member.id}) }}" method="post" class="inline">
+                                        <input type="hidden" name="_token" value="{{ csrf_token('remove' ~ member.id) }}">
+                                        <button class="px-4 py-2 text-blue-900 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors font-medium">
+                                            Supprimer
+                                        </button>
+                                    </form>
+                                {% endif %}
                             </div>
-                            {% if is_granted('ROLE_ORGANIZER')%}
-                            <form action="{{ path('app_team_remove_member', {'id': member.id}) }}" method="post">
-                                <input type="hidden" name="_token" value="{{ csrf_token('remove' ~ member.id) }}">
-                                <button class="bg-blue-500 transition ease-in duration-200 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    Supprimer
-                                </button>
-                            </form>
-                            {% endif %}
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
+                        {% endfor %}
+                    </div>
+                </div>
 
-            <div class="flex-1">
-                <form method="post" action="{{ path('app_team_add_member') }}" class="w-full">
-                    <h3 class="text-xl font-bold mb-4 text-gray-700">Ajouter un membre</h3>
-                    <div class="space-y-4">
-                        <div class="mb-4">
-                            <label for="fname" class="block font-medium text-gray-700">Prénom</label>
-                            <input type="text" id="player" name="fname" placeholder="Prénom du membre" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                {# Formulaire d'ajout #}
+                <div class="bg-slate-50 p-6 rounded-xl">
+                    <form method="post" action="{{ path('app_team_add_member') }}" class="space-y-4">
+                        {% for message in app.flashes('success') %}
+                            <div class="bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 mb-6">
+                                <p class="text-sm font-medium">{{ message }}</p>
+                            </div>
+                        {% endfor %}
+                        {% for message in app.flashes('error') %}
+                            <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 mb-6">
+                                <p class="text-sm font-medium">{{ message }}</p>
+                            </div>
+                        {% endfor %}
+                        <h2 class="text-xl font-bold text-slate-700 mb-6">Ajouter un membre</h2>
+
+                        <div class="space-y-1">
+                            <label for="fname" class="text-sm font-medium text-slate-700">Prénom</label>
+                            <input type="text" id="fname" name="fname"
+                                   class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors"
+                                   placeholder="Prénom du membre">
                         </div>
-                        <div class="mb-4">
-                            <label for="name" class="block font-medium text-gray-700">Nom</label>
-                            <input type="text" id="player" name="name" placeholder="Nom du membre" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                        <div class="space-y-1">
+                            <label for="name" class="text-sm font-medium text-slate-700">Nom</label>
+                            <input type="text" id="name" name="name"
+                                   class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors"
+                                   placeholder="Nom du membre">
                         </div>
-                        <div class="mb-4">
-                            <label for="fname" class="block font-medium text-gray-700">EMail</label>
-                            <input type="email" id="player" name="email" placeholder="EMail du membre" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+
+                        <div class="space-y-1">
+                            <label for="email" class="text-sm font-medium text-slate-700">Email</label>
+                            <input type="email" id="email" name="email"
+                                   class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors"
+                                   placeholder="Email du membre">
                         </div>
-                        <div id="addBtn" class="w-full bg-blue-100 text-center hover:cursor-pointer rounded-lg py-2 px-4 transition ease-in duration-200 hover:bg-blue-200 focus:ring focus:ring-blue-200">
+
+                        <div id="addBtn"
+                             class="w-full px-4 py-3 bg-blue-100 text-blue-900 rounded-lg hover:bg-blue-200 transition-colors font-medium text-center cursor-pointer">
                             Ajouter
                         </div>
+
                         <input type="hidden" name="to_add" value="">
-                        <button type="submit" disabled class="hover:cursor-not-allowed w-full bg-slate-600 transition ease-in duration-200 text-white py-2 px-4 rounded-lg hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 inline-flex items-center justify-center">
+
+                        <button type="submit" disabled
+                                class="w-full px-4 py-3 bg-slate-200 text-slate-500 rounded-lg font-medium flex items-center justify-center cursor-not-allowed">
                             Aucun nouveau membre
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill ml-2" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="currentColor" viewBox="0 0 16 16">
                                 <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
                             </svg>
                         </button>
-                    </div>
-                </form>
+                    </form>
+                </div>
             </div>
         </div>
     </div>
-</div>
 
     <script>
+        let membersToAdd = [];
 
         const addMemberToTab = (user) => {
-            const ul = document.querySelector('ul');
-            const li = document.createElement('li');
-            li.classList.add('flex', 'items-center', 'justify-between', 'p-3', 'border', 'rounded-lg', 'hover:bg-gray-100', 'transition', 'ease-in', 'duration-200');
-            const div = document.createElement('div');
-            div.classList.add('flex', 'flex-col');
-            const span1 = document.createElement('span');
-            span1.classList.add('font-medium');
-            span1.textContent = `${user.fname} ${user.name}`;
-            const span2 = document.createElement('span');
-            span2.classList.add('text-sm', 'text-gray-600');
-            span2.textContent = user.email;
-            div.appendChild(span1);
-            div.appendChild(span2);
-            li.appendChild(div);
-            ul.appendChild(li);
+            membersToAdd.push(user);
+
             const hiddenInput = document.querySelector('input[name="to_add"]');
-            hiddenInput.value += JSON.stringify(user);
-        }
+            hiddenInput.value = JSON.stringify(membersToAdd);
+
+            const container = document.querySelector('.space-y-3');
+            const div = document.createElement('div');
+            div.className = 'flex items-center justify-between p-4 bg-white border border-slate-200 rounded-lg hover:border-blue-900 transition-colors';
+
+            const memberHTML = `
+                <div class="space-y-1">
+                    <div class="font-medium text-slate-800 flex items-center">
+                        ${user.fname} ${user.name}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 text-slate-400" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                        </svg>
+                    </div>
+                    <div class="text-sm text-slate-500">${user.email}</div>
+                </div>
+                <button type="button" class="remove-member px-4 py-2 text-blue-900 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors font-medium" data-index="${membersToAdd.length - 1}">
+                    Retirer
+                </button>
+            `;
+
+            div.innerHTML = memberHTML;
+            container.appendChild(div);
+
+            const removeButton = div.querySelector('.remove-member');
+            removeButton.addEventListener('click', function() {
+                const index = parseInt(this.dataset.index);
+                membersToAdd.splice(index, 1);
+                hiddenInput.value = JSON.stringify(membersToAdd);
+                div.remove();
+                updateSubmitButton();
+            });
+
+            updateSubmitButton();
+        };
+
+        const updateSubmitButton = () => {
+            const submitBtn = document.querySelector('button[type="submit"]');
+
+            if (membersToAdd.length > 0) {
+                submitBtn.disabled = false;
+                submitBtn.className = 'w-full px-4 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium flex items-center justify-center cursor-pointer';
+                submitBtn.innerHTML = `
+                    Valider les ajouts
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2"/>
+                    </svg>
+                `;
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.className = 'w-full px-4 py-3 bg-slate-200 text-slate-500 rounded-lg font-medium flex items-center justify-center cursor-not-allowed';
+                submitBtn.innerHTML = `
+                    Aucun nouveau membre
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                    </svg>
+                `;
+            }
+        };
 
         const addBtn = document.getElementById('addBtn');
-        const submitBtn = document.querySelector('button[type="submit"]');
+        const inputs = document.querySelectorAll('form input:not([type="hidden"])');
+
         addBtn.addEventListener('click', () => {
-            let count = 0;
-            document.querySelectorAll('form input').forEach(input => {
-                if (input.value !== '') {
-                    count++;
-                }
-            });
-            if (count === 3) {
-                submitBtn.removeAttribute('disabled');
-                submitBtn.classList.remove('bg-slate-600', 'hover:bg-slate-700', 'hover:cursor-not-allowed');
-                submitBtn.classList.add('bg-blue-500', 'hover:bg-blue-600', 'hover:cursor-pointer');
+            const allFilled = Array.from(inputs).every(input => input.value.trim() !== '');
 
-                submitBtn.innerHTML = `Valider les ajouts
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-unlock-fill ml-2" viewBox="0 0 16 16">
-                           <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2"/>
-                    </svg>`;
+            if (allFilled) {
+                const newMember = {
+                    fname: document.getElementById('fname').value.trim(),
+                    name: document.getElementById('name').value.trim(),
+                    email: document.getElementById('email').value.trim()
+                };
 
-                addMemberToTab({
-                    fname: document.querySelector('input[name="fname"]').value,
-                    name: document.querySelector('input[name="name"]').value,
-                    email: document.querySelector('input[name="email"]').value
-                });
+                addMemberToTab(newMember);
 
-                document.querySelectorAll('form input').forEach(input => {
-                    if (input.name !== 'to_add')
-                    {input.value = '';}
+                // Réinitialiser les champs
+                inputs.forEach(input => {
+                    input.value = '';
                 });
             }
         });
+
+        updateSubmitButton();
     </script>
 {% endblock %}
