@@ -131,4 +131,13 @@ class TeamController extends AbstractController
         $entityManager->flush();
         $this->addFlash('success', 'Member removed successfully');
     }
+    #[Route('/teams/ranking', name: 'app_teams_ranking')]
+    public function ranking(TeamRepository $teamRepository): Response
+    {
+        $teams = $teamRepository->findAllTeamsByPoints();
+        
+        return $this->render('team/ranking.html.twig', [
+            'teams' => $teams
+        ]);
+    }
 }

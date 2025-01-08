@@ -1,0 +1,77 @@
+{# templates/ranking/index.html.twig #}
+{% extends 'base.html.twig' %}
+
+{% block title %}Classement des équipes - KickScore{% endblock %}
+
+{% block body %}
+    <div class="bg-gradient-to-br from-slate-50 to-white min-h-screen">
+        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+            <div class="mb-6 md:mb-8">
+                <div class="flex justify-between items-center">
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">
+                        Classement des équipes
+                        <span class="block mt-1 text-sm sm:text-base md:text-lg text-slate-600 font-normal">
+                            Consultez les performances de chaque équipe
+                        </span>
+                    </h1>
+                    
+                    
+
+
+
+
+                    <select id="championshipSelect" class="block w-1/4 text-center rounded-lg border border-slate-200 bg-white px-4 py-3 pr-10 text-base text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 appearance-none">
+{% for championship in championships %}
+<option value="{{ championship.id }}" {{ selectedChampionshipId == championship.id ? 'selected' : '' }}>
+{{ championship.name }}
+</option>
+{% endfor %}
+</select>
+
+                </div>
+            </div>
+
+            <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-x-auto">
+                <table class="min-w-full divide-y divide-gray-200">
+                    <thead class="bg-gray-50">
+                        <tr>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Équipe</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">MJ</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">V</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">N</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">D</th>
+                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Points</th>
+                        </tr>
+                    </thead>
+                    <tbody class="bg-white divide-y divide-gray-200">
+                        {% for team in teams %}
+                            <tr class="{{ app.user and app.user.team and app.user.team.id == team.id ? 'bg-blue-50' : '' }} hover:bg-gray-50">
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ loop.index }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ team.name }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ team.gamePlayed }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ team.win }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ team.draw }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ team.lose }}</td>
+                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">{{ team.points }}</td>
+                            </tr>
+                        {% else %}
+                            <tr>
+                                <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
+                                    Aucune équipe trouvée pour ce championnat
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.getElementById('championshipSelect').addEventListener('change', function() {
+            const championshipId = this.value;
+            window.location.href = `{{ path('app_ranking') }}?championship=${championshipId}`;
+        });
+    </script>
+{% endblock %}
