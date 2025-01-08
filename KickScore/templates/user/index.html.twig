@@ -77,6 +77,145 @@
                     </table>
                 </div>
             </div>
+
+
+            <!-- Champîonship -->
+            <div class="max-w-7xl mx-auto" style="margin-top:2rem">
+                <div class="mb-8 flex justify-between items-center">
+                    <h1 class="text-3xl font-bold text-slate-800">
+                        Liste des championnats
+                        <span class="block mt-1 text-lg text-slate-600 font-normal">
+                Gérez les championnats et leurs équipes
+            </span>
+                    </h1>
+
+                    {% if is_granted('ROLE_ORGANIZER') %}
+                        <a href="{{ path('app_meet') }}"
+                           class="px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm">
+                            Nouveau championnat
+                        </a>
+                    {% endif %}
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
+                    <div class="divide-y divide-slate-200">
+                        {% for championship in championships %}
+                            <div class="hover:bg-slate-50">
+                                <!-- En-tête du championnat -->
+                                <div class="flex items-center justify-between px-6 py-4 cursor-pointer"
+                                     onclick="toggleChampionship('championship-{{ championship.id }}')">
+                                    <div class="flex items-center space-x-4">
+                                        <h2 class="text-lg font-medium text-slate-800">{{ championship.name }}</h2>
+                                        <span class="px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                {{ championship.teams|length }} équipes
+                            </span>
+                                    </div>
+                                    <svg class="w-5 h-5 text-slate-500 transform transition-transform duration-200"
+                                         id="championship-icon-{{ championship.id }}"
+                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                    </svg>
+                                </div>
+
+                                <!-- Liste des équipes -->
+                                <div class="hidden bg-slate-50" id="championship-{{ championship.id }}">
+                                    {% for team in championship.teams %}
+                                        <div class="border-t border-slate-200">
+                                            <!-- En-tête de l'équipe -->
+                                            <div class="flex items-center justify-between px-8 py-3 cursor-pointer hover:bg-slate-100"
+                                                 onclick="toggleTeam('team-{{ team.id }}')">
+                                                <div class="flex items-center space-x-4">
+                                                    <h3 class="text-md font-medium text-slate-700">{{ team.name }}</h3>
+                                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                                            {{ team.members|length }} membres
+                                        </span>
+                                                </div>
+                                                <svg class="w-4 h-4 text-slate-500 transform transition-transform duration-200"
+                                                     id="team-icon-{{ team.id }}"
+                                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                    <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd" />
+                                                </svg>
+                                            </div>
+
+                                            <!-- Liste des membres -->
+                                            <div class="hidden" id="team-{{ team.id }}">
+                                                <div class="px-10 py-3 bg-white border-t border-slate-200">
+                                                    <table class="w-full">
+                                                        <thead class="bg-slate-50">
+                                                        <tr>
+                                                            <th class="px-4 py-2 text-left text-sm font-medium text-slate-700">Nom</th>
+                                                            <th class="px-4 py-2 text-left text-sm font-medium text-slate-700">Prénom</th>
+                                                            <th class="px-4 py-2 text-left text-sm font-medium text-slate-700">Email</th>
+                                                            <th class="px-4 py-2 text-left text-sm font-medium text-slate-700">Rôle</th>
+                                                        </tr>
+                                                        </thead>
+                                                        <tbody class="divide-y divide-slate-100">
+                                                        {% for member in team.members %}
+                                                            <tr class="hover:bg-slate-50">
+                                                                <td class="px-4 py-2 text-sm text-slate-600">{{ member.name }}</td>
+                                                                <td class="px-4 py-2 text-sm text-slate-600">{{ member.fname }}</td>
+                                                                <td class="px-4 py-2 text-sm text-slate-600">{{ member.email }}</td>
+                                                                <td class="px-4 py-2">
+                                                            <span class="px-2 py-1 text-xs font-medium rounded-full bg-slate-100 text-slate-800">
+                                                                Membre
+                                                            </span>
+                                                                </td>
+                                                            </tr>
+                                                        {% else %}
+                                                            <tr>
+                                                                <td colspan="4" class="px-4 py-4 text-center text-slate-600">
+                                                                    Aucun membre dans cette équipe.
+                                                                </td>
+                                                            </tr>
+                                                        {% endfor %}
+                                                        </tbody>
+                                                    </table>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    {% else %}
+                                        <div class="px-8 py-4 text-center text-slate-600 border-t border-slate-200">
+                                            Aucune équipe dans ce championnat.
+                                        </div>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                        {% else %}
+                            <div class="px-6 py-8 text-center text-slate-600">
+                                Aucun championnat n'a été trouvé.
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+
+            <script>
+                function toggleChampionship(id) {
+                    const content = document.getElementById(id);
+                    const icon = document.getElementById('championship-icon-' + id.split('-')[1]);
+
+                    if (content.classList.contains('hidden')) {
+                        content.classList.remove('hidden');
+                        icon.classList.add('rotate-180');
+                    } else {
+                        content.classList.add('hidden');
+                        icon.classList.remove('rotate-180');
+                    }
+                }
+
+                function toggleTeam(id) {
+                    const content = document.getElementById(id);
+                    const icon = document.getElementById('team-icon-' + id.split('-')[1]);
+
+                    if (content.classList.contains('hidden')) {
+                        content.classList.remove('hidden');
+                        icon.classList.add('rotate-180');
+                    } else {
+                        content.classList.add('hidden');
+                        icon.classList.remove('rotate-180');
+                    }
+                }
+            </script>
         </div>
     </div>
 {% endblock %}

@@ -134,6 +134,7 @@
             event.target.classList.add('bg-blue-300');
             document.querySelector('button[type="submit"]').classList.add('hidden');
             document.getElementById('form').classList.remove('hidden');
+            document.getElementById("date").classList.remove('hidden');
             document.getElementById('top-form').classList.add('mb-6');
             document.body.dispatchEvent(new Event('change'));
         });
@@ -145,6 +146,7 @@
             document.getElementById('select_btnMatch').classList.add('bg-blue-100');
             event.target.classList.remove('bg-blue-100');
             event.target.classList.add('bg-blue-300');
+            document.getElementById("date").classList.add('hidden');
             document.querySelector('button[type="submit"]').classList.remove('hidden');
             document.getElementById('form').classList.remove('hidden');
             document.getElementById('top-form').classList.add('mb-6');

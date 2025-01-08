@@ -109,7 +109,7 @@ class TeamController extends AbstractController
     #[Route('/edit/{id}', name: 'app_team_edit')]
     public function edit(Team $team, EntityManagerInterface $entityManager, Request $request): Response
     {
-        if ($this->getUser()->getTeam() !== $team) {
+        if ($this->getUser()->getTeam() !== $team && !$this->isGranted('ROLE_ORGANIZER')) {
             throw $this->createAccessDeniedException('You can only edit your own team.');
         }
         return $this->render('team/edit.html.twig', [
@@ -118,5 +118,17 @@ class TeamController extends AbstractController
         ]);
     }
 
-
+    #[Route('/edit/remove_member/{id}', name: 'app_team_remove_member', methods: ['POST'])]
+    public function removeMember(Member $member, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
+    {
+        if (!$this->isGranted('ROLE_ORGANIZER')) {
+            throw $this->createAccessDeniedException('You can only remove members from your own team.');
+        }
+        $user = $member->getUser();
+        $user->setTeam(null);
+        $entityManager->persist($user);
+        $entityManager->remove($member);
+        $entityManager->flush();
+        $this->addFlash('success', 'Member removed successfully');
+    }
 }

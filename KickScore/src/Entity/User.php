@@ -132,6 +132,18 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
+    public function getMember(): ?Member
+    {
+        return $this->member;
+    }
+
+    public function setMember(Member $member): static
+    {
+        $this->member = $member;
+
+        return $this;
+    }
+
     public function getRoles(): array
     {
         return $this->isOrganizer ? ['ROLE_ORGANIZER'] : ['ROLE_USER'];
@@ -144,5 +156,15 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->mail;
+    }
+
+    public function removeTeam()
+    {
+        $this->team = null;
+    }
+
+    public function removeMember()
+    {
+        $this->member = null;
     }
 }

@@ -58,6 +58,7 @@ class MeetController extends AbstractController
                 }
                 $greenTeamId = $request->request->get('greenTeam');
                 $greenTeam = $entityManager->getRepository(Team::class)->find($greenTeamId);
+
                 $blueTeamId = $request->request->get('blueTeam');
                 $blueTeam = $entityManager->getRepository(Team::class)->find($blueTeamId);
                 if (!$greenTeam || !$blueTeam) {
@@ -66,6 +67,8 @@ class MeetController extends AbstractController
                 }
                 $match->setChampionship($championship);
                 $championship->addMatch($match);
+                $greenTeam->setChampionship($championship);
+                $blueTeam->setChampionship($championship);
                 $match->setGreenTeam($greenTeam);
                 $match->setBlueTeam($blueTeam);
                 if ($request->request->get('greenscore') != "" && $request->request->get('bluescore') != "") {

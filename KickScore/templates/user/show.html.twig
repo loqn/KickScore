@@ -71,4 +71,12 @@
             </div>
         </div>
     </div>
+    <script>
+        const deleteBtn = document.getElementById('deleteBtn');
+        const deleteForm = document.getElementById('deleteForm');
+
+        deleteBtn.addEventListener('click', () => {
+            deleteForm.submit();
+        });
+    </script>
 {% endblock %}
