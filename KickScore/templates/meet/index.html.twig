@@ -19,8 +19,17 @@
                 <div id="select_btnChampionship" class="w-full bg-blue-100 text-center hover:cursor-pointer center rounded-lg py-2 px-4 transition ease-in duration-200 border-blue-300 hover:bg-blue-200 focus:ring focus:ring-blue-200">Championnat</div>
             </div>
         </div>
+
+        <div id="import" class="space-y-2 mb-4 hidden">
+            <p class="font-medium">Voulez vous l'importer ?</p>
+            <div class="flex gap-4">
+                <div id="select_btnOui" class="w-full bg-blue-100 text-center hover:cursor-pointer rounded-lg py-2 px-4 transition ease-in duration-200 hover:bg-blue-200 focus:ring focus:ring-blue-200">Oui</div>
+                <div id="select_btnNon" class="w-full bg-blue-100 text-center hover:cursor-pointer center rounded-lg py-2 px-4 transition ease-in duration-200 border-blue-300 hover:bg-blue-200 focus:ring focus:ring-blue-200">Non</div>
+            </div>
+        </div>
     </div>
 
+    
     <form id="form" class="hidden bg-white p-6 rounded-lg shadow-md w-full max-w-sm" method="post" action="{{ path('app_meet_create') }}">
 
         <!-- Name Input -->
@@ -95,8 +104,23 @@
         <button type="submit" class="bg-blue-500 hidden transition ease-in duration-200 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
             Créer
         </button>
+        
+
     </form>
 
+    <form id="formImport" class="hidden bg-white p-6 rounded-lg shadow-md w-full max-w-sm" 
+      method="post" 
+      action="{{ path('app_meet_import') }}" 
+      enctype="multipart/form-data">
+    <p class="font-medium">Importer un fichier</p>
+    <div class="p-6 rounded-lg w-full max-w-sm hidden">
+        <label for="file" class="block text">Importer un fichier</label>
+        <input type="file" id="file" name="file" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500" required>
+    </div>
+    <button type="submitImport" class="bg-blue-500 hidden transition ease-in duration-200 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
+        Importer
+    </button>
+</form>
     <script>
         document.querySelector('button[type="submit"]').addEventListener('click', (event) => {
             document.getElementById('addType').value = selected;
@@ -124,6 +148,42 @@
 
         //view form
         let selected = null;
+        let selectedOui = null;
+
+        document.getElementById('select_btnOui').addEventListener('click', function(event) {
+        selectedOui = 'OUI';
+        console.log('Selected:', selectedOui);
+        document.getElementById('select_btnNon').classList.remove('bg-blue-300');
+        document.getElementById('select_btnNon').classList.add('bg-blue-100');
+        event.target.classList.remove('bg-blue-100');
+        event.target.classList.add('bg-blue-300');
+        // Hide the form
+        document.getElementById('form').classList.add('hidden');
+        document.getElementById('formImport').classList.remove('hidden');
+        // Show the import section
+        document.getElementById('file').parentElement.classList.remove('hidden');
+        document.getElementById('top-form').classList.add('mb-6');
+        //the import button
+        document.querySelector('button[type="submitImport"]').classList.remove('hidden');
+        document.body.dispatchEvent(new Event('change'));
+});
+
+        //same for non
+        document.getElementById('select_btnNon').addEventListener('click', function(event) {
+            selectedOui = 'NON';
+            console.log('Selected:', selectedOui);
+            document.getElementById('select_btnOui').classList.remove('bg-blue-300');
+            document.getElementById('select_btnOui').classList.add('bg-blue-100');
+            event.target.classList.remove('bg-blue-100');
+            event.target.classList.add('bg-blue-300');
+            document.querySelector('button[type="submit"]').classList.remove('hidden');
+            document.getElementById('import').classList.add('hidden');
+            document.getElementById('form').classList.remove('hidden');
+            document.getElementById('top-form').classList.add('mb-6');
+            //show the date section
+            document.getElementById('date').classList.remove('hidden');
+            document.body.dispatchEvent(new Event('change'));
+        });
 
         document.getElementById('select_btnMatch').addEventListener('click', function(event) {
             selected = 'MATCH';
@@ -134,7 +194,19 @@
             event.target.classList.add('bg-blue-300');
             document.querySelector('button[type="submit"]').classList.add('hidden');
             document.getElementById('form').classList.remove('hidden');
+<<<<<<< HEAD
             document.getElementById("date").classList.remove('hidden');
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+            document.getElementById('import').classList.add('hidden');
+=======
+            document.getElementById("date").classList.remove('hidden');
+>>>>>>> 4b61edb (added championship view for organizer, finished user crud)
+=======
+            document.getElementById('import').classList.add('hidden');
+>>>>>>> 16ad426 (import fixed)
+>>>>>>> import
             document.getElementById('top-form').classList.add('mb-6');
             document.body.dispatchEvent(new Event('change'));
         });
@@ -146,9 +218,22 @@
             document.getElementById('select_btnMatch').classList.add('bg-blue-100');
             event.target.classList.remove('bg-blue-100');
             event.target.classList.add('bg-blue-300');
+<<<<<<< HEAD
+=======
+<<<<<<< HEAD
+<<<<<<< HEAD
+            //select the import section 
+            document.getElementById('import').classList.remove('hidden');
+=======
+>>>>>>> import
             document.getElementById("date").classList.add('hidden');
             document.querySelector('button[type="submit"]').classList.remove('hidden');
             document.getElementById('form').classList.remove('hidden');
+>>>>>>> 4b61edb (added championship view for organizer, finished user crud)
+=======
+            //select the import section 
+            document.getElementById('import').classList.remove('hidden');
+>>>>>>> 16ad426 (import fixed)
             document.getElementById('top-form').classList.add('mb-6');
             document.body.dispatchEvent(new Event('change'));
         });
