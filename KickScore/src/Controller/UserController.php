@@ -97,7 +97,6 @@ final class UserController extends AbstractController
                 $team->removeMember($member);
                 $entityManager->remove($member);
                 $user->removeTeam();
-//                return $this->redirectToRoute('app_delete_team', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
             }
             $entityManager->remove($user);
             $entityManager->flush();
@@ -112,5 +111,12 @@ final class UserController extends AbstractController
         return $this->render('user/delete_team.html.twig', [
             'user' => $user,
         ]);
+    }
+
+    #[Route('/user/{id}/impersonate', name:'app_user_impersonate')]
+    public function impersonate(Request $request, User $user): Response
+    {
+        $targetUrl = $this->generateUrl('app_root');
+        return $this->redirect($targetUrl . '?_switch_user=' . $user->getMail());
     }
 }

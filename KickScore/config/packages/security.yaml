@@ -23,6 +23,8 @@ security:
                 provider: app_user_provider
                 role: ROLE_ALLOWED_TO_SWITCH
                 parameter: _switch_user
+            context: main_context
+            stateless: false
     access_control:
      - { path: ^/admin, roles: ROLE_ADMIN }
      #user CRUD

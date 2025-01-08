@@ -12,8 +12,8 @@
                         <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 text-center md:text-left">
                             Liste des utilisateurs
                             <span class="block mt-1 text-sm sm:text-base md:text-lg text-slate-600 font-normal">
-                Gérez les utilisateurs de la plateforme
-            </span>
+                                Gérez les utilisateurs de la plateforme
+                            </span>
                         </h1>
                     </div>
                 </div>
@@ -81,6 +81,10 @@
                                        class="text-slate-600 hover:text-slate-800 font-medium">
                                         Modifier
                                     </a>
+                                    <a href="{{ path('app_user_impersonate', {'id': user.id}) }}"
+                                       class="text-indigo-600 hover:text-indigo-800 font-medium">
+                                        Incarner
+                                    </a>
                                 </td>
                             </tr>
                         {% else %}
@@ -140,22 +144,28 @@
                                     {% for team in championship.teams %}
                                         <div class="border-t border-slate-200">
                                             {# En-tête de l'équipe #}
-                                            <div class="flex items-center justify-between px-6 sm:px-8 py-3 cursor-pointer hover:bg-slate-100"
-                                                 onclick="toggleTeam('team-{{ team.id }}')">
-                                                <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                                                    <h3 class="text-sm sm:text-base font-medium text-slate-700">{{ team.name }}</h3>
-                                                    <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 w-fit">
+                                            <div class="flex items-center justify-between px-6 sm:px-8 py-3 hover:bg-slate-100">
+                                                <div class="flex flex-1 items-center cursor-pointer"
+                                                     onclick="toggleTeam('team-{{ team.id }}')">
+                                                    <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
+                                                        <h3 class="text-sm sm:text-base font-medium text-slate-700">{{ team.name }}</h3>
+                                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 w-fit">
                                                         {{ team.members|length }} membres
-                                                    </span>
+                                                         </span>
+                                                    </div>
+                                                    <svg class="w-4 h-4 text-slate-500 transform transition-transform duration-200 flex-shrink-0 ml-4"
+                                                         id="team-icon-{{ team.id }}"
+                                                         xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                                         fill="currentColor">
+                                                        <path fill-rule="evenodd"
+                                                              d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                              clip-rule="evenodd"/>
+                                                    </svg>
                                                 </div>
-                                                <svg class="w-4 h-4 text-slate-500 transform transition-transform duration-200 flex-shrink-0"
-                                                     id="team-icon-{{ team.id }}"
-                                                     xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                                     fill="currentColor">
-                                                    <path fill-rule="evenodd"
-                                                          d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                          clip-rule="evenodd"/>
-                                                </svg>
+                                                <a href="{{ path('app_team_edit', {'id': team.id}) }}"
+                                                   class="ml-4 px-3 py-1.5 text-xs font-medium bg-blue-900 text-white hover:bg-blue-800 rounded-md transition-colors">
+                                                    Gérer l'équipe
+                                                </a>
                                             </div>
 
                                             {# Liste des membres #}
