@@ -2,10 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 
-body {
-    background-color: lightgray;
-}
-
 @media (max-width: 768px) {
     nav {
         transform: translateX(-100%);

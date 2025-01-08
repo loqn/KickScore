@@ -24,6 +24,8 @@ security:
                 parameter: _switch_user
     access_control:
      - { path: ^/admin, roles: ROLE_ADMIN }
+     #user CRUD
+     - { path: ^/user, roles: ROLE_ORGANIZER }
      - { path: ^/org, roles: ROLE_ORGANIZER }
      - { path: ^/profile, roles: ROLE_USER }
     role_hierarchy:
