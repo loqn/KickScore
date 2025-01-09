@@ -22,7 +22,7 @@ class MeetController extends AbstractController
             throw $this->createAccessDeniedException('Only organizers can view meets.');
         }
         $championships = $entityManager->getRepository(Championship::class)->findAll();
-            $teams = $entityManager->getRepository(Team::class)->findAll();
+        $teams = $entityManager->getRepository(Team::class)->findAll();
         return $this->render('meet/index.html.twig', [
             'controller_name' => 'MeetController',
             'championships' => $championships,
@@ -36,42 +36,42 @@ class MeetController extends AbstractController
         if (!$this->isGranted('ROLE_ORGANIZER')) {
             throw $this->createAccessDeniedException('Only organizers can import meets.');
         }
-    
+
         $file = $request->files->get('file');
-        
+
         if (!$file) {
             $this->addFlash('error', 'Aucun fichier sélectionné.');
             return $this->redirectToRoute('app_meet');
         }
-    
+
         $jsonData = file_get_contents($file->getPathname());
         $championships = json_decode($jsonData, true);
-    
+
         if (!$championships) {
             $this->addFlash('error', 'Format JSON invalide, vérifiez le fichier.');
             return $this->redirectToRoute('app_meet');
         }
-    
+
         foreach ($championships as $championshipData) {
             $championship = new Championship();
             $championship->setName($championshipData['name']);
             $championship->setOrganizer($this->getUser());
-            
+
             foreach ($championshipData['matches'] as $matchData) {
                 $match = new Versus();
                 $match->setChampionship($championship);
-                
+
                 // Get team entities from repository
                 $blueTeam = $entityManager->getRepository(Team::class)->find($matchData['BlueTeam']);
                 $greenTeam = $entityManager->getRepository(Team::class)->find($matchData['GreenTeam']);
-                
+
                 // Create teams if they don't exist
                 if (!$greenTeam) {
                     $greenTeam = new Team();
                     $greenTeam->setName($matchData['GreenTeam']);
                     $entityManager->persist($greenTeam);
                 }
-                
+
                 if (!$blueTeam) {
                     $blueTeam = new Team();
                     $blueTeam->setName($matchData['BlueTeam']);
@@ -84,13 +84,13 @@ class MeetController extends AbstractController
                 $match->setBlueScore($matchData['BlueScore']);
                 $match->setGreenScore($matchData['GreenScore']);
                 $match->setDate(new \DateTime($matchData['Date']));
-    
+
                 $entityManager->persist($match);
             }
-            
+
             $entityManager->persist($championship);
         }
-    
+
         $entityManager->flush();
         $this->addFlash('success', 'Le(s) championnat(s) ont été importé(s) avec succès.');
         return $this->redirectToRoute('app_meet');
@@ -169,6 +169,36 @@ class MeetController extends AbstractController
         $logger->debug('Persisting changes.');
         $entityManager->flush();
 
+        return $this->redirectToRoute('app_meet');
+    }
+
+    #[Route('/meet/edit/{id}', name: 'edit_match', methods: ['GET'])]
+    public function edit(Versus $match, EntityManagerInterface $entityManager): Response
+    {
+        if (!$this->isGranted('ROLE_ORGANIZER')) {
+            throw $this->createAccessDeniedException('Only organizers can edit meets.');
+        }
+        return $this->render('meet/edit.html.twig', [
+            'match' => $match,
+        ]);
+    }
+
+    //update_match
+    #[Route('/meet/update/{id}', name: 'update_match', methods: ['POST'])]
+    public function update(Request $request, Versus $match, EntityManagerInterface $entityManager): Response
+    {
+        if (!$this->isGranted('ROLE_ORGANIZER')) {
+            throw $this->createAccessDeniedException('Only organizers can update meets.');
+        }
+        $greenTeam = $entityManager->getRepository(Team::class)->find($request->request->get('greenTeam'));
+        $blueTeam = $entityManager->getRepository(Team::class)->find($request->request->get('blueTeam'));
+        $match->setGreenTeam($greenTeam);
+        $match->setBlueTeam($blueTeam);
+        $match->setGreenScore($request->request->get('greenScore'));
+        $match->setBlueScore($request->request->get('blueScore'));
+        $match->setDate(new \DateTime($request->request->get('date')));
+        $entityManager->flush();
+        $this->addFlash('success', 'Match mis à jour avec succès.');
         return $this->redirectToRoute('app_meet');
     }
 }

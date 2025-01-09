@@ -98,8 +98,18 @@
                                             {{ match.blueteam.name }}
                                         </td>
                                         <td class="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-slate-600">
-                                            <span class="text-green-700 font-bold text-lg">{{ match.greenscore }}</span> - <span
-                                                    class="text-blue-700 font-bold text-lg">{{ match.bluescore }}</span>
+                                            <div class="flex items-center gap-4">
+                                                <div>
+                                                    <span class="text-green-700 font-bold text-lg">{{ match.greenscore }}</span> - <span
+                                                            class="text-blue-700 font-bold text-lg">{{ match.bluescore }}</span>
+                                                </div>
+                                                {% if is_granted('ROLE_ORGANIZER') %}
+                                                    <a href="{{ path('edit_match', {'id': match.id}) }}"
+                                                       class="px-3 py-1.5 bg-blue-900 text-white text-sm rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm">
+                                                        Modifier
+                                                    </a>
+                                                {% endif %}
+                                            </div>
                                         </td>
                                     </tr>
                                 {% else %}
