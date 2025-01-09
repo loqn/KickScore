@@ -34,7 +34,7 @@
                                     <h2 class="text-xl font-bold text-slate-700">{{ championship.name }}</h2>
                                     <p class="text-sm text-slate-500">
                                         Organisé
-                                        par {{ championship.organizer.FirstName }} {{ championship.organizer.name }}
+                                        par {{ championship.organizer.firstName }} {{ championship.organizer.name }}
                                         • {{ championship.teams|length }} équipes
                                     </p>
                                 </div>
@@ -50,19 +50,19 @@
 
                             <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
                                 <div class="bg-green-50 rounded-lg p-4 text-center">
-                                    <span class="block text-4xl font-bold text-green-800">{{ team.championshipStats[championship.id].wins ?? 0 }}</span>
+                                    <span class="block text-4xl font-bold text-green-800">{{ teamResults[championship.id].wins ?? 0 }}</span>
                                     <span class="text-sm text-slate-600">Victoires</span>
                                 </div>
                                 <div class="bg-yellow-50 rounded-lg p-4 text-center">
-                                    <span class="block text-4xl font-bold text-yellow-800">{{ team.championshipStats[championship.id].draws ?? 0 }}</span>
+                                    <span class="block text-4xl font-bold text-yellow-800">{{ teamResults[championship.id].draws ?? 0 }}</span>
                                     <span class="text-sm text-slate-600">Nuls</span>
                                 </div>
                                 <div class="bg-red-50 rounded-lg p-4 text-center">
-                                    <span class="block text-4xl font-bold text-red-800">{{ team.championshipStats[championship.id].losses ?? 0 }}</span>
+                                    <span class="block text-4xl font-bold text-red-800">{{ teamResults[championship.id].losses ?? 0 }}</span>
                                     <span class="text-sm text-slate-600">Défaites</span>
                                 </div>
                                 <div class="bg-blue-50 rounded-lg p-4 text-center">
-                                    <span class="block text-4xl font-bold text-blue-800">{{ team.championshipStats[championship.id].points ?? 0 }}</span>
+                                    <span class="block text-4xl font-bold text-blue-800">{{ teamResults[championship.id].points ?? 0 }}</span>
                                     <span class="text-sm text-slate-600">Points</span>
                                 </div>
                             </div>

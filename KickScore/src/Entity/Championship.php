@@ -3,6 +3,7 @@
 namespace App\Entity;
 
 use App\Repository\ChampionshipRepository;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -31,10 +32,17 @@ class Championship
     #[ORM\OneToMany(targetEntity: Field::class, mappedBy: 'championship')]
     private Collection $fields;
 
+    /**
+     * @var Collection<int, TeamResults>
+     */
+    #[ORM\OneToMany(targetEntity: TeamResults::class, mappedBy: 'championship')]
+    private Collection $teamResults;
+
     public function __construct()
     {
         $this->teams = new \Doctrine\Common\Collections\ArrayCollection();
         $this->matches = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->teamResults = new ArrayCollection();
     }
 
     public function getTeams(): Collection
@@ -98,6 +106,35 @@ class Championship
     public function setOrganizer(?User $organizer): static
     {
         $this->organizer = $organizer;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TeamResults>
+     */
+    public function getTeamResults(): Collection
+    {
+        return $this->teamResults;
+    }
+
+    public function addTeamResult(TeamResults $teamResult): static
+    {
+        if (!$this->teamResults->contains($teamResult)) {
+            $this->teamResults->add($teamResult);
+            $teamResult->setChampionship($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTeamResult(TeamResults $teamResult): static
+    {
+        if ($this->teamResults->removeElement($teamResult)) {
+            if ($teamResult->getChampionship() === $this) {
+                $teamResult->setChampionship(null);
+            }
+        }
 
         return $this;
     }

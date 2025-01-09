@@ -18,7 +18,7 @@ class Team
 
     #[ORM\ManyToMany(targetEntity: Championship::class, inversedBy: 'teams')]
     #[ORM\JoinTable(
-        name: 'team_championship',
+        name: 'T_CHAMPIONSHIP_TEAM_CHT',
         joinColumns: [
             new ORM\JoinColumn(name: 'TEA_ID', referencedColumnName: 'TEA_ID')
         ],
@@ -56,10 +56,17 @@ class Team
     #[ORM\OneToMany(targetEntity: Member::class, mappedBy: 'team', cascade: ['persist'])]
     private Collection $members;
 
+    /**
+     * @var Collection<int, TeamResults>
+     */
+    #[ORM\OneToMany(targetEntity: TeamResults::class, mappedBy: 'team')]
+    private Collection $teamResults;
+
     public function __construct()
     {
         $this->members = new ArrayCollection();
         $this->championships = new ArrayCollection();
+        $this->teamResults = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -108,11 +115,6 @@ class Team
         $this->structure = $structure;
 
         return $this;
-    }
-
-    public function getGamePlayed(): ?int
-    {
-        return $this->gamePlayed;
     }
 
     public function setGamePlayed(?int $gamePlayed): static
@@ -191,9 +193,37 @@ class Team
     public function removeMember(Member $member): static
     {
         if ($this->members->removeElement($member)) {
-            // set the owning side to null (unless already changed)
             if ($member->getTeam() === $this) {
                 $member->setTeam(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TeamResults>
+     */
+    public function getTeamResults(): Collection
+    {
+        return $this->teamResults;
+    }
+
+    public function addTeamResult(TeamResults $teamResult): static
+    {
+        if (!$this->teamResults->contains($teamResult)) {
+            $this->teamResults->add($teamResult);
+            $teamResult->setTeam($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTeamResult(TeamResults $teamResult): static
+    {
+        if ($this->teamResults->removeElement($teamResult)) {
+            if ($teamResult->getTeam() === $this) {
+                $teamResult->setTeam(null);
             }
         }
 
