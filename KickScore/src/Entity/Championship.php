@@ -22,17 +22,16 @@ class Championship
     #[ORM\JoinColumn(name: 'USR_ID', referencedColumnName: 'USR_ID')]
     private ?User $organizer = null;
 
-    //the list of all the match
+    #[ORM\ManyToMany(targetEntity: Team::class, mappedBy: 'championships')]
+    private Collection $teams;
+
     #[ORM\OneToMany(targetEntity: Versus::class, mappedBy: 'championship')]
     private Collection $matches;
 
-    #[ORM\OneToMany(targetEntity: Team::class, mappedBy: 'championship')]
-    private Collection $teams;
-
     public function __construct()
     {
-        $this->matches = new \Doctrine\Common\Collections\ArrayCollection();
         $this->teams = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->matches = new \Doctrine\Common\Collections\ArrayCollection();
     }
 
     public function getTeams(): Collection
@@ -44,7 +43,7 @@ class Championship
     {
         if (!$this->teams->contains($team)) {
             $this->teams[] = $team;
-            $team->setChampionship($this);
+            $team->addChampionship($this);
         }
         return $this;
     }
@@ -52,12 +51,8 @@ class Championship
     public function removeTeam(Team $team): static
     {
         if ($this->teams->removeElement($team)) {
-            // set the owning side to null (unless already changed)
-            if ($team->getChampionship() === $this) {
-                $team->setChampionship(null);
-            }
+            $team->getChampionships()->removeElement($this);
         }
-
         return $this;
     }
 

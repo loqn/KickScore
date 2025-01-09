@@ -6,7 +6,6 @@ use App\Repository\TeamRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
-use Doctrine\DBAL\Types\Types;
 
 #[ORM\Table(name: 'T_TEAM_TEA')]
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
@@ -17,9 +16,17 @@ class Team
     #[ORM\Column(name: 'TEA_ID', type: "integer")]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Championship::class, inversedBy: 'teams')]
-    #[ORM\JoinColumn(name: 'CHP_ID', referencedColumnName: 'CHP_ID')]
-    private ?Championship $championship = null;
+    #[ORM\ManyToMany(targetEntity: Championship::class, inversedBy: 'teams')]
+    #[ORM\JoinTable(
+        name: 'team_championship',
+        joinColumns: [
+            new ORM\JoinColumn(name: 'TEA_ID', referencedColumnName: 'TEA_ID')
+        ],
+        inverseJoinColumns: [
+            new ORM\JoinColumn(name: 'CHP_ID', referencedColumnName: 'CHP_ID')
+        ]
+    )]
+    private Collection $championships;
 
     #[ORM\Column(name: 'TEA_NAME', length: 32)]
     private ?string $name = null;
@@ -52,6 +59,7 @@ class Team
     public function __construct()
     {
         $this->members = new ArrayCollection();
+        $this->championships = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -59,15 +67,22 @@ class Team
         return $this->id;
     }
 
-    public function getChampionship(): ?Championship
+    public function getChampionships(): Collection
     {
-        return $this->championship;
+        return $this->championships;
     }
 
-    public function setChampionship(?Championship $championship): static
+    public function addChampionship(Championship $championship): self
     {
-        $this->championship = $championship;
+        if (!$this->championships->contains($championship)) {
+            $this->championships->add($championship);
+        }
+        return $this;
+    }
 
+    public function removeChampionship(Championship $championship): self
+    {
+        $this->championships->removeElement($championship);
         return $this;
     }
 

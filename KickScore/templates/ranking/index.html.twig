@@ -1,4 +1,3 @@
-{# templates/ranking/index.html.twig #}
 {% extends 'base.html.twig' %}
 
 {% block title %}Classement des équipes - KickScore{% endblock %}
@@ -6,64 +5,88 @@
 {% block body %}
     <div class="bg-gradient-to-br from-slate-50 to-white min-h-screen">
         <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-            <div class="mb-6 md:mb-8">
-                <div class="flex justify-between items-center">
-                    <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">
+            {# En-tête #}
+            <div class="mb-6 md:mb-8 flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center">
+                <div class="flex-1">
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 text-center md:text-left">
                         Classement des équipes
                         <span class="block mt-1 text-sm sm:text-base md:text-lg text-slate-600 font-normal">
-                            Consultez les performances de chaque équipe
-                        </span>
+                Consultez les performances de chaque équipe
+            </span>
                     </h1>
-                    
-                    
+                </div>
 
-
-
-
-                    <select id="championshipSelect" class="block w-1/4 text-center rounded-lg border border-slate-200 bg-white px-4 py-3 pr-10 text-base text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 appearance-none">
-{% for championship in championships %}
-<option value="{{ championship.id }}" {{ selectedChampionshipId == championship.id ? 'selected' : '' }}>
-{{ championship.name }}
-</option>
-{% endfor %}
-</select>
-
+                <div class="text-center md:text-left">
+                    <select id="championshipSelect"
+                            class="block w-full md:w-auto min-w-[200px] rounded-lg border border-slate-200 bg-white px-4 py-3 pr-10 text-base text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                        {% for championship in championships %}
+                            <option value="{{ championship.id }}" {{ selectedChampionshipId == championship.id ? 'selected' : '' }}>
+                                {{ championship.name }}
+                            </option>
+                        {% endfor %}
+                    </select>
                 </div>
             </div>
 
-            <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-x-auto">
-                <table class="min-w-full divide-y divide-gray-200">
-                    <thead class="bg-gray-50">
-                        <tr>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Équipe</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">MJ</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">V</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">N</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">D</th>
-                            <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Points</th>
-                        </tr>
-                    </thead>
-                    <tbody class="bg-white divide-y divide-gray-200">
-                        {% for team in teams %}
-                            <tr class="{{ app.user and app.user.team and app.user.team.id == team.id ? 'bg-blue-50' : '' }} hover:bg-gray-50">
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ loop.index }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">{{ team.name }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ team.gamePlayed }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ team.win }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ team.draw }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ team.lose }}</td>
-                                <td class="px-6 py-4 whitespace-nowrap text-sm font-medium text-center">{{ team.points }}</td>
-                            </tr>
-                        {% else %}
-                            <tr>
-                                <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
-                                    Aucune équipe trouvée pour ce championnat
-                                </td>
-                            </tr>
-                        {% endfor %}
-                    </tbody>
-                </table>
+            {% for message in app.flashes('success') %}
+                <div class="bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 mb-6">
+                    <p class="text-sm font-medium">{{ message }}</p>
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('error') %}
+                <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 mb-6">
+                    <p class="text-sm font-medium">{{ message }}</p>
+                </div>
+            {% endfor %}
+
+            {# Table responsive #}
+            <div class="bg-white rounded-lg shadow-sm border border-slate-200">
+                <div class="overflow-x-auto">
+                    <div class="inline-block min-w-full">
+                        <div class="overflow-hidden">
+                            <table class="min-w-full divide-y divide-gray-200">
+                                <thead class="bg-gray-50">
+                                <tr>
+                                    <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">Pos</th>
+                                    <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Équipe</th>
+                                    <th scope="col" class="hidden sm:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">MJ</th>
+                                    <th scope="col" class="hidden sm:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">V</th>
+                                    <th scope="col" class="hidden sm:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">N</th>
+                                    <th scope="col" class="hidden sm:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">D</th>
+                                    <th scope="col" class="px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Pts</th>
+                                </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-gray-200">
+                                {% for team in teams %}
+                                    <tr class="{{ app.user and app.user.member and app.user.member.team and app.user.member.team.id == team.id ? 'bg-blue-50' : '' }} hover:bg-gray-50">
+                                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ loop.index }}</td>
+                                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
+                                            <div class="flex flex-col sm:flex-row sm:items-center gap-1">
+                                                <span class="font-medium text-gray-900">{{ team.name }}</span>
+                                                {# Version mobile des stats #}
+                                                <span class="sm:hidden text-xs text-gray-500">
+                                                        {{ team.gamePlayed }}MJ · {{ team.win }}V · {{ team.draw }}N · {{ team.lose }}D
+                                                    </span>
+                                            </div>
+                                        </td>
+                                        <td class="hidden sm:table-cell px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ team.gamePlayed }}</td>
+                                        <td class="hidden sm:table-cell px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ team.win }}</td>
+                                        <td class="hidden sm:table-cell px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ team.draw }}</td>
+                                        <td class="hidden sm:table-cell px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ team.lose }}</td>
+                                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-center">{{ team.points }}</td>
+                                    </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="7" class="px-3 sm:px-6 py-4 text-center text-sm text-gray-500">
+                                            Aucune équipe trouvée pour ce championnat
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>

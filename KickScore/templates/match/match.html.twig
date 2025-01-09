@@ -43,16 +43,28 @@
             {# Championships List #}
             {% for championship in championships %}
                 <div class="mb-4 sm:mb-6 bg-white rounded-lg shadow-sm border border-slate-200">
-                    <button class="w-full px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center text-left hover:bg-slate-50 focus:outline-none"
-                            onclick="toggleCompetition('{{ championship.id }}')"
-                            aria-expanded="false"
-                            aria-controls="competition-{{ championship.id }}">
-                        <h2 class="text-lg sm:text-xl font-semibold text-slate-800">{{ championship.name }}</h2>
-                        <svg class="h-4 w-4 sm:h-5 sm:w-5 text-slate-400 transform transition-transform duration-200"
-                             id="arrow-{{ championship.id }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
-                        </svg>
-                    </button>
+                    <div class="px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
+                        <button class="flex-1 flex justify-between items-center text-left hover:bg-slate-50 focus:outline-none"
+                                onclick="toggleCompetition('{{ championship.id }}')"
+                                aria-expanded="false"
+                                aria-controls="competition-{{ championship.id }}">
+                            <h2 class="text-lg sm:text-xl font-semibold text-slate-800">{{ championship.name }}</h2>
+                            <svg class="h-4 w-4 sm:h-5 sm:w-5 text-slate-400 transform transition-transform duration-200"
+                                 id="arrow-{{ championship.id }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
+                            </svg>
+                        </button>
+
+                        {% if app.user and app.user.member and app.user.member.team %}
+                            <form action="{{ path('join_championship', {'id': championship.id}) }}" method="POST" class="ml-4">
+                                <input type="hidden" name="_token" value="{{ csrf_token('join' ~ championship.id) }}">
+                                <button type="submit"
+                                        class="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors font-medium shadow-sm">
+                                    Rejoindre
+                                </button>
+                            </form>
+                        {% endif %}
+                    </div>
 
                     <div id="competition-{{ championship.id }}" class="hidden">
                         <div class="border-t border-slate-200 overflow-x-auto">

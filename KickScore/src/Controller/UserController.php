@@ -58,7 +58,7 @@ final class UserController extends AbstractController
     {
         if ($request->isMethod('POST')) {
             if (!$this->isCsrfTokenValid('edit-user', $request->request->get('token'))) {
-                $this->addFlash('error', 'Token de sécurité invalide, veuillez réessayer.');
+                $this->addFlash('user_error', 'Token de sécurité invalide, veuillez réessayer.');
                 return $this->redirectToRoute('app_user_edit', ['id' => $user->getId()]);
             }
 
@@ -67,18 +67,17 @@ final class UserController extends AbstractController
                     ->setName($request->request->get('name'))
                     ->setMail($request->request->get('email'));
 
-                // Gérer le rôle organisateur seulement si l'utilisateur est autorisé
                 if ($this->isGranted('ROLE_ORGANIZER')) {
                     $user->setIsOrganizer($request->request->has('isOrganizer'));
                 }
 
                 $entityManager->flush();
 
-                $this->addFlash('success', 'Les modifications ont été enregistrées avec succès.');
+                $this->addFlash('user_success', 'Les modifications ont été enregistrées avec succès.');
                 return $this->redirectToRoute('app_user_index');
 
             } catch (\Exception $e) {
-                $this->addFlash('error', 'Une erreur est survenue lors de la modification.');
+                $this->addFlash('user_error', 'Une erreur est survenue lors de la modification.');
             }
         }
 
@@ -98,7 +97,6 @@ final class UserController extends AbstractController
                 $team->removeMember($member);
                 $entityManager->remove($member);
                 $user->removeTeam();
-//                return $this->redirectToRoute('app_delete_team', ['id' => $user->getId()], Response::HTTP_SEE_OTHER);
             }
             $entityManager->remove($user);
             $entityManager->flush();
@@ -113,5 +111,12 @@ final class UserController extends AbstractController
         return $this->render('user/delete_team.html.twig', [
             'user' => $user,
         ]);
+    }
+
+    #[Route('/user/{id}/impersonate', name:'app_user_impersonate')]
+    public function impersonate(Request $request, User $user): Response
+    {
+        $targetUrl = $this->generateUrl('app_root');
+        return $this->redirect($targetUrl . '?_switch_user=' . $user->getMail());
     }
 }
