@@ -48,39 +48,54 @@
                                class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
                     </div>
 
-                    <!-- Championship Selection -->
-                    <div class="space-y-1 hidden" id="champ">
-                        <label for="champ" class="text-sm font-medium text-slate-700">Compétition</label>
-                        <select id="champ" name="champ"
-                                class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
-                            {% for championship in championships %}
-                                <option value="{{ championship.id }}">{{ championship.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+        <!---------- Match ----------->
 
-                    <!-- Team Selections -->
-                    <div class="space-y-1 hidden" id="greenTeam">
-                        <label for="greenTeamSelect" class="text-sm font-medium text-slate-700">Équipe verte</label>
-                        <select id="greenTeamSelect" name="greenTeam"
-                                class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-green-50 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
-                            <option disabled selected value=""> -- Choisir équipe verte -- </option>
-                            {% for team in teams %}
-                                <option value="{{ team.id }}">{{ team.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+        <!-- Date -->
+        <div class="mb-4 hidden flex justify-center items-center flex-col" id="date">
+            <label for="date" class="block text-gray-700 font-medium mb-2">Date du match</label>
+            <input type="datetime-local" id="dateInput" name="date" placeholder="Date du match"
+                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+        </div>
 
-                    <div class="space-y-1 hidden" id="blueTeam">
-                        <label for="blueTeamSelect" class="text-sm font-medium text-slate-700">Équipe bleue</label>
-                        <select id="blueTeamSelect" name="blueTeam"
-                                class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-blue-50 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
-                            <option disabled selected value=""> -- Choisir équipe bleue -- </option>
-                            {% for team in teams %}
-                                <option value="{{ team.id }}">{{ team.name }}</option>
-                            {% endfor %}
-                        </select>
-                    </div>
+        <div class="w-full flex justify-center">
+            <p class="font-medium hidden text-green-500" id="date_valid"></p>
+        </div>
+
+        <!-- Select championship  -->
+        <div id="champ" class="mb-4 hidden">
+            <label for="champ" class="block text-gray-700 font-medium mb-2">Compétition</label>
+            <select id="champ" name="champ" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                {% for championship in championships %}
+                    <option value="{{ championship.id }}">{{ championship.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Select team green  -->
+        <div id="greenTeam" class="mb-4 hidden">
+            <label for="greenTeam" class="block text-gray-700 font-medium mb-2">Équipe verte</label>
+            <select required id="greenTeamSelect" name="greenTeam" class="w-full px-3 py-2 border bg-green-200 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option disabled selected value=""> -- Choisir équipe verte -- </option>
+                {% for team in teams %}
+                    <option value="{{ team.id }}">{{ team.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- Select team blue  -->
+        <div id="blueTeam" class="mb-4 hidden">
+            <label for="blueTeam" class="block text-gray-700 font-medium mb-2">Équipe bleue</label>
+            <select required id="blueTeamSelect" name="blueTeam" class="w-full px-3 py-2 border bg-blue-200 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                <option disabled selected value=""> -- Choisir équipe bleue -- </option>
+                {% for team in teams %}
+                    <option value="{{ team.id }}">{{ team.name }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
+        <!-- verification -->
+        <div id="date_verifyBtn" class="w-full bg-blue-100 text-center hover:cursor-pointer center rounded-lg py-2 px-4 transition ease-in duration-200 border-blue-300 hover:bg-blue-200 focus:ring focus:ring-blue-200 mt-2">Vérifier</div>
+
 
                     <!-- Date -->
                     <div class="space-y-1 hidden" id="date">
@@ -179,7 +194,16 @@
 
         document.getElementById('select_btnChampionship').addEventListener('click', function() {
             selected = 'CHAMPIONSHIP';
-            updateButtonState(this, document.getElementById('select_btnMatch'));
+            //deactivate the required attribute blue team
+            document.getElementById('blueTeamSelect').removeAttribute('required');
+            document.getElementById('greenTeamSelect').removeAttribute('required');
+
+            console.log('Selected:', selected);
+            document.getElementById('select_btnMatch').classList.remove('bg-blue-300');
+            document.getElementById('select_btnMatch').classList.add('bg-blue-100');
+            event.target.classList.remove('bg-blue-100');
+            event.target.classList.add('bg-blue-300');
+            //select the import section 
             document.getElementById('import').classList.remove('hidden');
             document.getElementById('date').classList.add('hidden');
             document.getElementById('champ').classList.add('hidden');
