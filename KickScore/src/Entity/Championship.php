@@ -16,7 +16,7 @@ class Championship
     private ?int $id = null;
 
     #[ORM\Column(name: "CHP_NAME", length: 32, nullable: true)]
-    private ?string $Name = null;
+    private ?string $name = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'organizedChampionships')]
     #[ORM\JoinColumn(name: 'USR_ID', referencedColumnName: 'USR_ID')]
@@ -27,6 +27,9 @@ class Championship
 
     #[ORM\OneToMany(targetEntity: Versus::class, mappedBy: 'championship')]
     private Collection $matches;
+
+    #[ORM\OneToMany(targetEntity: Field::class, mappedBy: 'championship')]
+    private Collection $fields;
 
     public function __construct()
     {
@@ -77,12 +80,12 @@ class Championship
 
     public function getName(): ?string
     {
-        return $this->Name;
+        return $this->name;
     }
 
-    public function setName(?string $Name): static
+    public function setName(?string $name): static
     {
-        $this->Name = $Name;
+        $this->name = $name;
 
         return $this;
     }

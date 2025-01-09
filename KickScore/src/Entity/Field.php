@@ -15,37 +15,37 @@ class Field
     private ?int $id = null;
 
     #[ORM\Column(name: 'FLD_NAME', length: 255) ]
-    private ?string $FLD_NAME = null;
+    private ?string $name = null;
 
-    #[ORM\ManyToOne]
-    #[ORM\JoinColumn(name:'CHP_ID', nullable: false)]
-    private ?Championship $CHP_ID = null;
+    #[ORM\ManyToOne(targetEntity: Championship::class, inversedBy: 'fields')]
+    #[ORM\JoinColumn(name:'CHP_ID', referencedColumnName: 'CHP_ID' ,nullable: false)]
+    private ?Championship $championship = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getFLDNAME(): ?string
+    public function getName(): ?string
     {
-        return $this->FLD_NAME;
+        return $this->name;
     }
 
-    public function setFLDNAME(string $FLD_NAME): static
+    public function setName(string $name): static
     {
-        $this->FLD_NAME = $FLD_NAME;
+        $this->name = $name;
 
         return $this;
     }
 
-    public function getCHPID(): ?Championship
+    public function getChampionship(): ?Championship
     {
-        return $this->CHP_ID;
+        return $this->championship;
     }
 
-    public function setCHPID(?Championship $CHP_ID): static
+    public function setChampionship(?Championship $championship): static
     {
-        $this->CHP_ID = $CHP_ID;
+        $this->championship = $championship;
 
         return $this;
     }

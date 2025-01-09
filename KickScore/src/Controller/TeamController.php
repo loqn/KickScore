@@ -21,6 +21,11 @@ class TeamController extends AbstractController
     {
         $players = $entityManager->getRepository(User::class)->findAll();
 
+        if (!$this->getUser()) {
+            $this->addFlash('error', 'Vous devez être connecté pour créer une équipe.');
+            return $this->redirectToRoute('app_login');
+        }
+
         if ($this->isGranted('ROLE_ORGANIZER')) {
             $this->addFlash('error', 'Organizers can\'t create teams.');
             return $this->redirectToRoute('app_root');
@@ -32,9 +37,14 @@ class TeamController extends AbstractController
         ]);
     }
 
-    #[Route('/create', name: 'app_team_create', methods: ['POST'])]
+    #[Route('/create', name: 'app_team_create', methods: ['POST', 'GET'])]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
+        if($request->getMethod() !== 'POST'){
+            $this->addFlash('error', 'Erreur : Vous ne pouvez pas accéder à cette page.');
+            return $this->redirectToRoute('app_error');
+        }
+
         if ($this->isGranted('ROLE_ORGANIZER')) {
             throw $this->createAccessDeniedException("organizers can't create teams.");
         }

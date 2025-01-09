@@ -16,36 +16,36 @@ class TimeSlot
     private ?int $id = null;
 
     #[ORM\Column(name:'TSL_START', type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $TLS_Start = null;
+    private ?\DateTimeInterface $start = null;
 
     #[ORM\Column(name:'TSL_END', type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $TSL_END = null;
+    private ?\DateTimeInterface $end = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getTLSStart(): ?\DateTimeInterface
+    public function getStart(): ?\DateTimeInterface
     {
-        return $this->TLS_Start;
+        return $this->start;
     }
 
-    public function setTLSStart(\DateTimeInterface $TLS_Start): static
+    public function setStart(\DateTimeInterface $start): static
     {
-        $this->TLS_Start = $TLS_Start;
+        $this->start = $start;
 
         return $this;
     }
 
-    public function getTSLEND(): ?\DateTimeInterface
+    public function getEnd(): ?\DateTimeInterface
     {
-        return $this->TSL_END;
+        return $this->end;
     }
 
-    public function setTSLEND(\DateTimeInterface $TSL_END): static
+    public function setEnd(\DateTimeInterface $end): static
     {
-        $this->TSL_END = $TSL_END;
+        $this->end = $end;
 
         return $this;
     }
