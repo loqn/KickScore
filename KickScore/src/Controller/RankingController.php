@@ -16,12 +16,15 @@ class RankingController extends AbstractController
     {
         $championships = $championshipRepository->findAll();
         $selectedChampionshipId = $request->query->get('championship');
-        
+        $teams = [];
+
         if (!$selectedChampionshipId && count($championships) > 0) {
             $selectedChampionshipId = $championships[0]->getId();
         }
-        
-        $teams = $teamRepository->findTeamsByChampionship($selectedChampionshipId);
+
+        if ($selectedChampionshipId) {
+            $teams = $teamRepository->findTeamsByChampionship((int) $selectedChampionshipId);
+        }
 
         return $this->render('ranking/index.html.twig', [
             'championships' => $championships,

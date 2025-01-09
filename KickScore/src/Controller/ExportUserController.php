@@ -15,13 +15,13 @@ class ExportUserController extends AbstractController
     public function exportToJson(Connection $connection, EntityManagerInterface $entity): Response
     {
             // Stocking the request
-            $team = $this->getUser()->getTeam();
+            $team = $this->getUser()->getMember()->getTeam();
             if ($team == null) {
                 $msg ="Vous n'avez pas d'équipe.";
                 echo '<script type="text/javascript">window.alert("'.$msg.'");</script>';
                 return $this->render('root/index.html.twig');
             }
-            $name = $this->getUser()->getTeam()->getName();
+            $name = $this->getUser()->getMember()->getTeam()->getName();
             $sql = "
                 SELECT 
                     mat.MAT_ID AS match_id,

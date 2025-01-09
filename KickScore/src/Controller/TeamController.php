@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Controller;
+use App\Entity\Championship;
 use App\Entity\Member;
 use App\Entity\Team;
 use App\Entity\User;
@@ -66,7 +67,8 @@ class TeamController extends AbstractController
             $member->setFname($this->getUser()->getFirstName());
             $member->setName($this->getUser()->getName());
             $member->setEmail($this->getUser()->getMail());
-            $this->getUser()->setTeam($team);
+            $this->getUser()->setMember($member);
+            $this->getUser()->getMember()->setTeam($team);
             $team->addMember($member);
         }
 
@@ -87,7 +89,7 @@ class TeamController extends AbstractController
             throw $this->createAccessDeniedException('User not found');
         }
 
-        $team = $user->getTeam();
+        $team = $user->getMember()->getTeam();
         if (!$team) {
             $logger->alert('User has no team');
             throw $this->createAccessDeniedException('You don\'t have a team');
@@ -145,12 +147,18 @@ class TeamController extends AbstractController
     #[Route('/edit/{id}', name: 'app_team_edit')]
     public function edit(Team $team, EntityManagerInterface $entityManager, Request $request): Response
     {
-        if ($this->getUser()->getTeam() !== $team && !$this->isGranted('ROLE_ORGANIZER')) {
-            throw $this->createAccessDeniedException('You can only edit your own team.');
+        if (!$this->isGranted('ROLE_ORGANIZER')) {
+            $userTeam = $this->getUser()->getMember()?->getTeam();
+            if ($userTeam !== $team) {
+                throw $this->createAccessDeniedException('You can only edit your own team.');
+            }
         }
+
+        $championships = $entityManager->getRepository(Championship::class)->findAll();
         return $this->render('team/edit.html.twig', [
             'controller_name' => 'TeamController',
-            'team' => $team
+            'team' => $team,
+            'championships' => $championships
         ]);
     }
 
@@ -161,7 +169,8 @@ class TeamController extends AbstractController
             throw $this->createAccessDeniedException('You can only remove members from your own team.');
         }
         $user = $member->getUser();
-        $user->setTeam(null);
+        $user->getMember()->setTeam(null);
+        $user->removeMember();
         $entityManager->persist($user);
         $entityManager->remove($member);
         $entityManager->flush();

@@ -139,8 +139,8 @@ class MeetController extends AbstractController
                 }
                 $match->setChampionship($championship);
                 $championship->addMatch($match);
-                $greenTeam->setChampionship($championship);
-                $blueTeam->setChampionship($championship);
+                $greenTeam->addChampionship($championship);
+                $blueTeam->addChampionship($championship);
                 $match->setGreenTeam($greenTeam);
                 $match->setBlueTeam($blueTeam);
                 if ($request->request->get('greenscore') != "" && $request->request->get('bluescore') != "") {

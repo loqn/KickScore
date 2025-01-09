@@ -48,10 +48,8 @@
                         </svg>
                         <span>Créer une équipe</span>
                     </a>
-                    {% if app.user.team %}
-
-
-                        <a href="{{ path('app_team_edit', {id: app.user.team.id}) }}"
+                    {% if app.user and app.user.member and app.user.member.team %}
+                        <a href="{{ path('app_team_edit', {id: app.user.member.team.id}) }}"
                            class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors w-full text-left flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-people-fill flex-shrink-0" viewBox="0 0 16 16">
