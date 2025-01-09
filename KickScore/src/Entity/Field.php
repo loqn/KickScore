@@ -5,19 +5,20 @@ namespace App\Entity;
 use App\Repository\FieldRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Table(name: 'T_FIELD_FLD')]
 #[ORM\Entity(repositoryClass: FieldRepository::class)]
 class Field
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(name: 'FLD_ID')]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255)]
+    #[ORM\Column(name: 'FLD_NAME', length: 255) ]
     private ?string $FLD_NAME = null;
 
     #[ORM\ManyToOne]
-    #[ORM\JoinColumn(nullable: false)]
+    #[ORM\JoinColumn(name:'CHP_ID', nullable: false)]
     private ?Championship $CHP_ID = null;
 
     public function getId(): ?int

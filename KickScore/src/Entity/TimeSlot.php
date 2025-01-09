@@ -6,18 +6,19 @@ use App\Repository\TimeSlotRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Table(name: 'T_TIMESLOT_TSL')]
 #[ORM\Entity(repositoryClass: TimeSlotRepository::class)]
 class TimeSlot
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column (name:'TSL_ID')]
     private ?int $id = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(name:'TSL_START', type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $TLS_Start = null;
 
-    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(name:'TSL_END', type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $TSL_END = null;
 
     public function getId(): ?int
