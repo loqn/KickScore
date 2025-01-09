@@ -42,6 +42,7 @@ class Team
     #[ORM\Column(name: 'TEA_POINTS', nullable: true)]
     private ?int $points = null;
 
+
     /**
      * @var Collection<int, Member>
      */

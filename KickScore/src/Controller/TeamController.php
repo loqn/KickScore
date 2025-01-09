@@ -59,8 +59,6 @@ class TeamController extends AbstractController
         $team->setLose($lose);
         $points = 0;
         $gameplayed = 0;
-        $date = new \DateTime();
-        $team->setCreatedAt($date);
         $team->setPoints($points);
         $team->setGamePlayed($gameplayed);
 

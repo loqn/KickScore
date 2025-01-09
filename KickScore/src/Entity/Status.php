@@ -5,15 +5,16 @@ namespace App\Entity;
 use App\Repository\StatusRepository;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Table(name: 'T_STATUS_STS')]
 #[ORM\Entity(repositoryClass: StatusRepository::class)]
 class Status
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column (name:'STS_ID')]
     private ?int $id = null;
 
-    #[ORM\Column(length: 255, nullable: true)]
+    #[ORM\Column(name:'STS_NAME', length: 255, nullable: true)]
     private ?string $STS_NAME = null;
 
     public function getId(): ?int
