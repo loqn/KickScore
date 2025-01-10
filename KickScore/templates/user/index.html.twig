@@ -129,6 +129,12 @@
                                         <span class="px-2 sm:px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 w-fit">
                                             {{ championship.teams|length }} équipes
                                         </span>
+                                            <td class="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm space-x-2 sm:space-x-3 whitespace-nowrap text-right">
+                                                <a href="{{ path('app_champ_edit', {'id': championship.id}) }}"
+                                                   class="text-slate-600 hover:text-slate-800 font-medium">
+                                                    Modifier
+                                                </a>
+                                </td>
                                     </div>
                                     <svg class="w-5 h-5 text-slate-500 transform transition-transform duration-200 flex-shrink-0"
                                          id="championship-icon-{{ championship.id }}"

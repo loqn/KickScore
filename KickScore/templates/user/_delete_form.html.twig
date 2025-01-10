@@ -11,7 +11,7 @@
 <script>
     const btn = document.createElement('button');
     btn.addEventListener('click', () => {
-        {% if app.user.member.team %}
+        {% if app.user and app.user.member and app.user.member.team  %}
         alert('Cet utilisateur est membre d\'une équipe, vous ne pouvez pas le supprimer.');
         {% endif %}
     });

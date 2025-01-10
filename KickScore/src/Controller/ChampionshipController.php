@@ -37,6 +37,53 @@ class ChampionshipController extends AbstractController
         return $this->redirectToRoute('app_team_edit', ['id' => $team->getId()]);
     }
 
+    #[Route('/{id}/champedit', name: 'app_champ_edit', methods: ['GET'])]
+    public function edit(Championship $championship, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        // get the fields of the championship
+        $fields = $championship->getFields();
+
+        $selectedChampionshipId = $request->query->get('select');
+
+        return $this->render('Championship/edit.html.twig', [
+            'championship' => $championship,
+            'fields' => $fields,
+            'select' => $selectedChampionshipId,
+
+        ]);
+    }
+
+    #[Route('/championshipedit/{id}', name: 'app_championship_edit', methods: ['POST'])]
+    public function champedit(Request $request, Championship $championship, EntityManagerInterface $entityManager): Response
+    {
+        // Update championship name
+        $newName = $request->request->get('firstName');
+        if ($newName) {
+            $championship->setName($newName);
+        }
+        // Get the terrain ID to remove
+        $terrainIdToRemove = $request->request->get('terrain');
+        // Find the terrain to remove
+        $terrainToRemove = null;
+        foreach ($championship->getFields() as $field) {
+            if ($field->getId() == $terrainIdToRemove) {
+                $terrainToRemove = $field;
+                break;
+            }
+        }
+        // Remove the selected terrain if found
+        if ($terrainToRemove) {
+            $championship->removeField($terrainToRemove);
+            $this->addFlash('success', 'Le terrain a été supprimé avec succès');
+        }
+        $entityManager->remove($terrainToRemove);
+        $entityManager->persist($championship);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_champ_edit', [
+            'id' => $championship->getId()
+        ]);
+    }
+
     #[Route('/leave_championship/{id}', name: 'leave_championship', methods: ['POST'])]
     public function leaveChampionship(int $id, EntityManagerInterface $entityManager, Request $request): Response
     {

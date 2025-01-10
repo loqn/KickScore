@@ -1,0 +1,73 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Modifier le championnat - KickScore{% endblock %}
+
+{% block body %}
+    <div class="h-[calc(100vh-2rem)]">
+        <div class="h-full bg-gradient-to-br from-slate-50 to-white rounded-xl p-8">
+            <div class="max-w-3xl mx-auto">
+                <div class="mb-8 flex items-center justify-between">
+                    <h1 class="text-3xl font-bold text-slate-800">
+                        Modifier le championnat
+                        <span class="block mt-1 text-lg text-slate-600 font-normal">
+                            Modification des informations du championnat
+                        </span>
+                    </h1>
+
+                    <div class="space-x-3">
+                        <a href="{{ path('app_user_index') }}"
+                           class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-medium">
+                            Retour à la liste
+                        </a>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-lg shadow-sm border border-slate-200">
+                    <div class="p-6">
+                        <div class="max-w-2xl">
+                        <form action="{{ path('app_championship_edit', {'id': championship.id}) }}" method="post" class="space-y-6">                                <input type="hidden" name="token" value="{{ csrf_token('edit-user') }}">
+
+                                <div>
+                                    <label for="firstName" class="block text-sm font-medium text-slate-700 mb-1">Nom</label>
+                                    <input type="text" id="firstName" name="firstName"
+                                           value="{{ championship.name }}"
+                                           class="block w-full rounded-md border-slate-200 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                </div>
+
+                                <div>
+                                    <label for="terrain" class="block text-sm font-medium text-slate-700 mb-2">Terrain à supprimer</label>
+                                    <select id="terrain" name="terrain" class="block w-full rounded-md border-slate-200 shadow-sm focus:border-blue-500 focus:ring-blue-500">
+                                        {% for terrain in fields %}
+                                            <option value="{{ terrain.id }}"{% if terrain.id == select %}selected{% endif %}>{{ terrain.name }}</option>
+                                                                                                                  
+                                        {% endfor %}
+                                    </select>
+                                </div>
+
+                                <div id="terrainConfirmation" class="hidden text-sm text-slate-600 mb-2">
+                                    Terrain sélectionné :
+                                </div>
+                                <script>
+                                    document.getElementById('terrain').addEventListener('change', function() {
+                                        const selectedTerrain = this.options[this.selectedIndex].text;
+                                        const confirmationElement = document.getElementById('terrainConfirmation');
+                                        confirmationElement.textContent = `Terrain sélectionné : ${selectedTerrain}`;
+                                        confirmationElement.classList.remove('hidden');
+                                    });
+                                </script>
+                        
+                                    
+                                <div class="p-6 bg-slate-50 rounded-b-lg flex items-center space-x-3">
+                                    <button type="submit"
+                                            class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm">
+                                        Enregistrer les modifications
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

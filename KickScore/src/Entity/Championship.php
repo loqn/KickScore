@@ -52,6 +52,32 @@ class Championship
         $this->teamResults = new ArrayCollection();
     }
 
+    public function getFields(): Collection
+    {
+        return $this->fields;
+    }
+
+    public function addField(Field $field): static
+    {
+        if (!$this->fields->contains($field)) {
+            $this->fields[] = $field;
+            $field->setChampionship($this);
+        }
+        return $this;
+    }
+
+    public function removeField(Field $field): static
+    {
+        if ($this->fields->removeElement($field)) {
+            if ($field->getChampionship() === $this) {
+                $field->setChampionship(null);
+            }
+        }
+        return $this;
+    }
+
+
+
     public function getTeams(): Collection
     {
         return $this->teams;
