@@ -132,8 +132,8 @@
                                     </div>
                                     <!-- PARTIE PLANNING -->
                                     <div class="flex items-center justify-between px-6">
-                                        <form action="{{ path('app_generate_match', {'chp_id':championship.id}) }}" method="post">
-                                            <input type="hidden" name="chp_id" value="{{ championship.id }}">a
+                                        <form action="{{ path('app_generate_match', {'id': championship.id}) }}" method="post">
+                                            <input type="hidden" name="chp_id" value="{{ championship.id }}">
                                             <button type="submit"
                                                     class="px-4 py-2 bg-white text-slate-800 rounded-lg hover:bg-blue-800 hover:text-white border border-blue-800 transition-colors font-medium shadow-sm mr-10">
                                                 Générer matchs

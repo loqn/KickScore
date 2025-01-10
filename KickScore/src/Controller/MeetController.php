@@ -3,6 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\TeamResults;
+use Doctrine\Common\Collections\ArrayCollection;
 use Symfony\Component\Console\Style\SymfonyStyle;
 use App\Entity\Championship;
 use App\Entity\Team;
@@ -302,8 +303,35 @@ class MeetController extends AbstractController
     #[Route('/gen_match/{id}', name: 'app_generate_match', methods: ['POST'])]
     public function generateMatchsForChampionship(Request $request, EntityManagerInterface $entityManager): Response
     {
-       $chp = $entityManager->getRepository(Championship::class)->find($request->request->get('chp_id'));
-       [...]
+        $chp = $entityManager->getRepository(Championship::class)->find($request->request->get('chp_id'));
+        $teams = $chp->getTeams();
+        $teamsArray = $teams->toArray();
+        $startDate = new \DateTimeImmutable('2026-12-12 10:00:00');
+        $matchCount = 0;
+        for ($i = 0; $i < count($teamsArray); $i++) {
+            for ($j = $i + 1; $j < count($teamsArray); $j++) {
+                $teamA = $teamsArray[$i];
+                $teamB = $teamsArray[$j];
+                $existingMatch = $chp->getMatches()->filter(function($match) use ($teamA, $teamB) {
+                    return ($match->getBlueTeam() === $teamA && $match->getGreenTeam() === $teamB)
+                        || ($match->getBlueTeam() === $teamB && $match->getGreenTeam() === $teamA);
+                })->first();
+                if (!$existingMatch) {
+                    $versus = new Versus();
+                    $versus->setBlueTeam($teamA);
+                    $versus->setGreenTeam($teamB);
+                    $versus->setChampionship($chp);
+                    $minutesToAdd = 20 * $matchCount;
+                    $matchDate = $startDate->modify("+{$minutesToAdd} minutes");
+                    $versus->setDate(\DateTime::createFromImmutable($matchDate));
+                    $chp->addMatch($versus);
+                    $entityManager->persist($versus);
+                    $matchCount++;
+                }
+            }
+        }
+        $this->addFlash('success', 'Matchs générés avec succès.');
+        $entityManager->flush();
         return $this->redirectToRoute('app_match_list');
     }
 }
