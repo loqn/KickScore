@@ -36,6 +36,9 @@ class Versus
     #[ORM\JoinColumn(name: 'CHP_ID', referencedColumnName: 'CHP_ID')]
     private ?Championship $championship = null;
 
+    #[ORM\Column(length: 512, nullable: true)]
+    private ?string $description = null;
+
     public function getChampionship(): ?Championship
     {
         return $this->championship;
@@ -109,6 +112,18 @@ class Versus
     public function setDate(?\DateTimeInterface $date): static
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }
