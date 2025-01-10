@@ -5,7 +5,7 @@
 {% block body %}
     <div class="bg-gradient-to-br from-slate-50 to-white min-h-screen">
         <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-            {# En-tête #}
+            {# header #}
             <div class="mb-6 md:mb-8 flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center">
                 <div class="flex-1">
                     <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 text-center md:text-left">
@@ -47,33 +47,59 @@
                             <table class="min-w-full divide-y divide-gray-200">
                                 <thead class="bg-gray-50">
                                 <tr>
-                                    <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">Pos</th>
-                                    <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Équipe</th>
-                                    <th scope="col" class="hidden sm:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">MJ</th>
-                                    <th scope="col" class="hidden sm:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">V</th>
-                                    <th scope="col" class="hidden sm:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">N</th>
-                                    <th scope="col" class="hidden sm:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">D</th>
-                                    <th scope="col" class="px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">Pts</th>
+                                    <th scope="col"
+                                        class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider w-12">
+                                        Pos
+                                    </th>
+                                    <th scope="col"
+                                        class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Équipe
+                                    </th>
+                                    <th scope="col"
+                                        class="hidden sm:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        MJ
+                                    </th>
+                                    <th scope="col"
+                                        class="hidden sm:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        V
+                                    </th>
+                                    <th scope="col"
+                                        class="hidden sm:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        N
+                                    </th>
+                                    <th scope="col"
+                                        class="hidden sm:table-cell px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        D
+                                    </th>
+                                    <th scope="col"
+                                        class="px-3 sm:px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                        Pts
+                                    </th>
                                 </tr>
                                 </thead>
                                 <tbody class="bg-white divide-y divide-gray-200">
-                                {% for team in teams %}
+                                {% for team in teams|sort((a, b) =>
+                                    (b.teamResults|filter(r => r.championship.id == selectedChampionshipId)|first).points
+                                    <=>
+                                    (a.teamResults|filter(r => r.championship.id == selectedChampionshipId)|first).points
+                                    ) %}
+                                    {% set results = team.teamResults|filter(r => r.championship.id == selectedChampionshipId)|first %}
                                     <tr class="{{ app.user and app.user.member and app.user.member.team and app.user.member.team.id == team.id ? 'bg-blue-50' : '' }} hover:bg-gray-50">
                                         <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ loop.index }}</td>
                                         <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
                                             <div class="flex flex-col sm:flex-row sm:items-center gap-1">
                                                 <span class="font-medium text-gray-900">{{ team.name }}</span>
-                                                {# Version mobile des stats #}
+                                                {# mobile #}
                                                 <span class="sm:hidden text-xs text-gray-500">
-                                                        {{ team.gamePlayed }}MJ · {{ team.win }}V · {{ team.draw }}N · {{ team.lose }}D
-                                                    </span>
+                            {{ results ? "#{results.gamesPlayed}MJ · #{results.wins}V · #{results.draws}N · #{results.losses}D" : "Pas de données" }}
+                        </span>
                                             </div>
                                         </td>
-                                        <td class="hidden sm:table-cell px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ team.gamePlayed }}</td>
-                                        <td class="hidden sm:table-cell px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ team.win }}</td>
-                                        <td class="hidden sm:table-cell px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ team.draw }}</td>
-                                        <td class="hidden sm:table-cell px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ team.lose }}</td>
-                                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-center">{{ team.points }}</td>
+                                        <td class="hidden sm:table-cell px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ results ? results.gamesPlayed : '-' }}</td>
+                                        <td class="hidden sm:table-cell px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ results ? results.wins : '-' }}</td>
+                                        <td class="hidden sm:table-cell px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ results ? results.draws : '-' }}</td>
+                                        <td class="hidden sm:table-cell px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ results ? results.losses : '-' }}</td>
+                                        <td class="px-3 sm:px-6 py-4 whitespace-nowrap text-sm font-medium text-center">{{ results ? results.points : '0' }}</td>
                                     </tr>
                                 {% else %}
                                     <tr>
@@ -92,7 +118,7 @@
     </div>
 
     <script>
-        document.getElementById('championshipSelect').addEventListener('change', function() {
+        document.getElementById('championshipSelect').addEventListener('change', function () {
             const championshipId = this.value;
             window.location.href = `{{ path('app_ranking') }}?championship=${championshipId}`;
         });

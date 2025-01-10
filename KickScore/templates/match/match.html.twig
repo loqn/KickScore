@@ -1,15 +1,15 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des matchs - KickScore{% endblock %}
+{% block title %}Liste des compétitions - KickScore{% endblock %}
 
 {% block body %}
     <div class="bg-gradient-to-br from-slate-50 to-white min-h-screen">
         <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-            {# Header Section #}
+            {# Header #}
             <div class="mb-6 md:mb-8 flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center">
                 <div class="flex-1">
                     <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 text-center md:text-left">
-                        Liste des matchs
+                        Liste des compétitions
                         <span class="block mt-1 text-sm sm:text-base md:text-lg text-slate-600 font-normal">
                 Consultez tous les matchs par compétition
             </span>
@@ -55,14 +55,24 @@
                             </svg>
                         </button>
 
-                        {% if app.user and app.user.member and app.user.member.team %}
-                            <form action="{{ path('join_championship', {'id': championship.id}) }}" method="POST" class="ml-4">
-                                <input type="hidden" name="_token" value="{{ csrf_token('join' ~ championship.id) }}">
-                                <button type="submit"
-                                        class="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors font-medium shadow-sm">
-                                    Rejoindre
-                                </button>
-                            </form>
+                        {% if app.user and app.user.member and app.user.member.team and app.user.member.team.championships %}
+                            {% if championship in app.user.member.team.championships %}
+                                <form action="{{ path('leave_championship', {'id': championship.id}) }}" method="POST" class="ml-4">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('join' ~ championship.id) }}">
+                                    <button type="submit"
+                                            class="px-4 py-2 bg-red-400 text-white text-sm rounded-lg hover:bg-red-500 transition-colors font-medium shadow-sm">
+                                        Quitter
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form action="{{ path('join_championship', {'id': championship.id}) }}" method="POST" class="ml-4">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('join' ~ championship.id) }}">
+                                    <button type="submit"
+                                            class="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors font-medium shadow-sm">
+                                        Rejoindre
+                                    </button>
+                                </form>
+                            {% endif %}
                         {% endif %}
                     </div>
 
@@ -98,8 +108,18 @@
                                             {{ match.blueteam.name }}
                                         </td>
                                         <td class="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-slate-600">
-                                            <span class="text-green-700 font-bold text-lg">{{ match.greenscore }}</span> - <span
-                                                    class="text-blue-700 font-bold text-lg">{{ match.bluescore }}</span>
+                                            <div class="flex items-center gap-4">
+                                                <div>
+                                                    <span class="text-green-700 font-bold text-lg">{{ match.greenscore }}</span> - <span
+                                                            class="text-blue-700 font-bold text-lg">{{ match.bluescore }}</span>
+                                                </div>
+                                                {% if is_granted('ROLE_ORGANIZER') %}
+                                                    <a href="{{ path('edit_match', {'id': match.id}) }}"
+                                                       class="px-3 py-1.5 bg-blue-900 text-white text-sm rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm">
+                                                        Modifier
+                                                    </a>
+                                                {% endif %}
+                                            </div>
                                         </td>
                                     </tr>
                                 {% else %}

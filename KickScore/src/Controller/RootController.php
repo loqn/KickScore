@@ -18,6 +18,12 @@ class RootController extends AbstractController
         ]);
     }
 
+    #[Route('/error', name: 'app_error')]
+    public function error(): Response
+    {
+        return $this->render('root/error.html.twig');
+    }
+
     #[Route('/match', name: 'app_match_list')]
     public function matchList(EntityManagerInterface $entityManager): Response
     {

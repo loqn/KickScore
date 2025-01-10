@@ -59,4 +59,16 @@ class TeamRepository extends ServiceEntityRepository
             ->getQuery()
             ->getResult();
     }
+
+    public function findResultsByTeamId(int $teamId)
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t', 'tr', 'c')
+            ->leftJoin('t.teamResults', 'tr')
+            ->leftJoin('tr.championship', 'c')
+            ->where('t.id = :teamId')
+            ->setParameter('teamId', $teamId)
+            ->getQuery()
+            ->getResult();
+    }
 }

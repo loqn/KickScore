@@ -4,6 +4,7 @@ namespace App\Controller;
 use App\Entity\Championship;
 use App\Entity\Member;
 use App\Entity\Team;
+use App\Entity\TeamResults;
 use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
@@ -21,6 +22,11 @@ class TeamController extends AbstractController
     {
         $players = $entityManager->getRepository(User::class)->findAll();
 
+        if (!$this->getUser()) {
+            $this->addFlash('error', 'Vous devez être connecté pour créer une équipe.');
+            return $this->redirectToRoute('app_login');
+        }
+
         if ($this->isGranted('ROLE_ORGANIZER')) {
             $this->addFlash('error', 'Organizers can\'t create teams.');
             return $this->redirectToRoute('app_root');
@@ -32,9 +38,14 @@ class TeamController extends AbstractController
         ]);
     }
 
-    #[Route('/create', name: 'app_team_create', methods: ['POST'])]
+    #[Route('/create', name: 'app_team_create', methods: ['POST', 'GET'])]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
+        if($request->getMethod() !== 'POST'){
+            $this->addFlash('error', 'Erreur : Vous ne pouvez pas accéder à cette page.');
+            return $this->redirectToRoute('app_error');
+        }
+
         if ($this->isGranted('ROLE_ORGANIZER')) {
             throw $this->createAccessDeniedException("organizers can't create teams.");
         }
@@ -44,10 +55,6 @@ class TeamController extends AbstractController
         }
         $name = $request->request->get('name');
         $structure = $request->request->get('structure');
-        $win = 0;
-        $draw = 0;
-        $lose = 0;
-
         if (empty($name)) {
             $this->addFlash('error', 'Erreur : le nom de l\'équipe ne peut pas être vide.');
             return $this->redirectToRoute('app_team');
@@ -55,9 +62,9 @@ class TeamController extends AbstractController
         $team = new Team();
         $team->setName($name);
         $team->setStructure($structure);
-        $team->setWin($win);
-        $team->setDraw($draw);
-        $team->setLose($lose);
+        $team->setWin(0);
+        $team->setDraw(0);
+        $team->setLose(0);
         $points = 0;
         $gameplayed = 0;
         $team->setPoints($points);
@@ -135,11 +142,11 @@ class TeamController extends AbstractController
             $this->addFlash(
                 'success',
                 $addedCount === 1
-                    ? 'Ajout(s) réalisé(s) avec succès'
-                    : $addedCount . ' members were added successfully'
+                    ? 'Le membre a été ajouté avec succès.'
+                    : $addedCount . ' membres ajoutés avec succès.'
             );
         } else {
-            $this->addFlash('info', 'No new members were added (they might already exist)');
+            $this->addFlash('info', 'Aucun membre ajouté.');
         }
 
         return $this->redirectToRoute('app_team_edit', [
@@ -157,11 +164,30 @@ class TeamController extends AbstractController
             }
         }
 
-        $championships = $entityManager->getRepository(Championship::class)->findAll();
+        $championships = $team->getChampionships();
+        $teamResults = [];
+
+        foreach ($championships as $championship) {
+            $results = $entityManager->getRepository(TeamResults::class)->findOneBy([
+                'team' => $team,
+                'championship' => $championship
+            ]);
+
+            if ($results) {
+                $teamResults[$championship->getId()] = [
+                    'wins' => $results->getWins(),
+                    'losses' => $results->getLosses(),
+                    'draws' => $results->getDraws(),
+                    'points' => $results->getPoints()
+                ];
+            }
+        }
+
         return $this->render('team/edit.html.twig', [
             'controller_name' => 'TeamController',
             'team' => $team,
-            'championships' => $championships
+            'championships' => $championships,
+            'teamResults' => $teamResults
         ]);
     }
 
@@ -178,6 +204,7 @@ class TeamController extends AbstractController
         $entityManager->remove($member);
         $entityManager->flush();
         $this->addFlash('success', 'Member removed successfully');
+        return $this->redirectToRoute('app_team_edit', ['id' => $member->getTeam()->getId()]);
     }
     #[Route('/teams/ranking', name: 'app_teams_ranking')]
     public function ranking(TeamRepository $teamRepository): Response

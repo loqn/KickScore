@@ -3,7 +3,7 @@
 namespace App\Controller;
 
 use App\Entity\Championship;
-use App\Entity\Team;
+use App\Entity\TeamResults;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -26,11 +26,15 @@ class ChampionshipController extends AbstractController
         if (!$championship) {
             throw $this->createNotFoundException('Championnat non trouvé');
         }
+        $teamResults = new TeamResults();
+        $teamResults->setTeam($team);
+        $teamResults->setChampionship($championship);
+        $entityManager->persist($teamResults);
         $team->addChampionship($championship);
         $championship->addTeam($team);
         $entityManager->flush();
         $this->addFlash('success', 'Votre équipe a rejoint le championnat avec succès');
-        return $this->redirectToRoute('app_ranking');
+        return $this->redirectToRoute('app_team_edit', ['id' => $team->getId()]);
     }
 
     #[Route('/leave_championship/{id}', name: 'leave_championship', methods: ['POST'])]

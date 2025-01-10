@@ -15,21 +15,21 @@ class Status
     private ?int $id = null;
 
     #[ORM\Column(name:'STS_NAME', length: 255, nullable: true)]
-    private ?string $STS_NAME = null;
+    private ?string $name = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getSTSNAME(): ?string
+    public function getName(): ?string
     {
-        return $this->STS_NAME;
+        return $this->name;
     }
 
-    public function setSTSNAME(?string $STS_NAME): static
+    public function setName(?string $name): static
     {
-        $this->STS_NAME = $STS_NAME;
+        $this->name = $name;
 
         return $this;
     }
