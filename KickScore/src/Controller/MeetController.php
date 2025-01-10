@@ -298,4 +298,12 @@ class MeetController extends AbstractController
         $this->addFlash('success', 'Match mis à jour avec succès.');
         return $this->redirectToRoute('app_meet');
     }
+
+    #[Route('/gen_match/{id}', name: 'app_generate_match', methods: ['POST'])]
+    public function generateMatchsForChampionship(Request $request, EntityManagerInterface $entityManager): Response
+    {
+       $chp = $entityManager->getRepository(Championship::class)->find($request->request->get('chp_id'));
+       [...]
+        return $this->redirectToRoute('app_match_list');
+    }
 }
