@@ -24,7 +24,7 @@ class MeetController extends AbstractController
             throw $this->createAccessDeniedException('Only organizers can view meets.');
         }
         $championships = $entityManager->getRepository(Championship::class)->findAll();
-            $teams = $entityManager->getRepository(Team::class)->findAll();
+        $teams = $entityManager->getRepository(Team::class)->findAll();
         return $this->render('meet/index.html.twig', [
             'controller_name' => 'MeetController',
             'championships' => $championships,
@@ -137,7 +137,7 @@ class MeetController extends AbstractController
                         }
                     }
                 }
-                if ($date_start >= $date_end){
+                if ($date_start >= $date_end) {
                     $this->addFlash('error', 'Les dates ne sont pas cohérentes.');
                     return $this->redirectToRoute('app_meet');
                 }
@@ -213,7 +213,7 @@ class MeetController extends AbstractController
             for ($j = $i + 1; $j < count($teamsArray); $j++) {
                 $teamA = $teamsArray[$i];
                 $teamB = $teamsArray[$j];
-                $existingMatch = $chp->getMatches()->filter(function($match) use ($teamA, $teamB) {
+                $existingMatch = $chp->getMatches()->filter(function ($match) use ($teamA, $teamB) {
                     return ($match->getBlueTeam() === $teamA && $match->getGreenTeam() === $teamB)
                         || ($match->getBlueTeam() === $teamB && $match->getGreenTeam() === $teamA);
                 })->first();
@@ -234,5 +234,34 @@ class MeetController extends AbstractController
         $this->addFlash('success', 'Matchs générés avec succès.');
         $entityManager->flush();
         return $this->redirectToRoute('app_match_list');
+    }
+
+    #[Route('/meet/edit/{id}', name: 'edit_match', methods: ['GET'])]
+    public function edit(Versus $match, EntityManagerInterface $entityManager): Response
+    {
+        if (!$this->isGranted('ROLE_ORGANIZER')) {
+            throw $this->createAccessDeniedException('Only organizers can edit meets.');
+        }
+        return $this->render('meet/edit.html.twig', [
+            'match' => $match,
+        ]);
+    }
+
+    #[Route('/meet/update/{id}', name: 'update_match', methods: ['POST'])]
+    public function update(Request $request, Versus $match, EntityManagerInterface $entityManager): Response
+    {
+        if (!$this->isGranted('ROLE_ORGANIZER')) {
+            throw $this->createAccessDeniedException('Only organizers can update meets.');
+        }
+        $greenTeam = $entityManager->getRepository(Team::class)->find($request->request->get('greenTeam'));
+        $blueTeam = $entityManager->getRepository(Team::class)->find($request->request->get('blueTeam'));
+        $match->setGreenTeam($greenTeam);
+        $match->setBlueTeam($blueTeam);
+        $match->setGreenScore($request->request->get('greenScore'));
+        $match->setBlueScore($request->request->get('blueScore'));
+        $match->setDate(new \DateTime($request->request->get('date')));
+        $entityManager->flush();
+        $this->addFlash('success', 'Match mis à jour avec succès.');
+        return $this->redirectToRoute('app_meet');
     }
 }
