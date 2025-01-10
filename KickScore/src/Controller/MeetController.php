@@ -64,11 +64,9 @@ class MeetController extends AbstractController
                 $match = new Versus();
                 $match->setChampionship($championship);
 
-                // Get team entities from repository
                 $blueTeam = $entityManager->getRepository(Team::class)->find($matchData['BlueTeam']);
                 $greenTeam = $entityManager->getRepository(Team::class)->find($matchData['GreenTeam']);
 
-                // Create teams if they don't exist
                 if (!$greenTeam) {
                     $greenTeam = new Team();
                     $greenTeam->setName($matchData['GreenTeam']);
@@ -278,6 +276,7 @@ class MeetController extends AbstractController
         }
         return $this->render('meet/edit.html.twig', [
             'match' => $match,
+            'teams' => $match->getTeams(),
         ]);
     }
 

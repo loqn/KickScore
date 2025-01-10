@@ -3,6 +3,8 @@
 namespace App\Repository;
 
 use App\Entity\Championship;
+use App\Entity\Team;
+use App\Entity\User;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
@@ -14,6 +16,27 @@ class ChampionshipRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Championship::class);
+    }
+
+    public function findTeamsByOrganizer(User $organizer): array
+    {
+        $results = $this->createQueryBuilder('c')
+            ->select('c, t')
+            ->join('c.teams', 't')
+            ->where('c.organizer = :organizer')
+            ->setParameter('organizer', $organizer)
+            ->getQuery()
+            ->getResult();
+
+        // Extraction des équipes uniques
+        $teams = [];
+        foreach ($results as $championship) {
+            foreach ($championship->getTeams() as $team) {
+                $teams[$team->getId()] = $team;
+            }
+        }
+
+        return array_values($teams);
     }
 
     //    /**

@@ -80,6 +80,11 @@ class Versus
         return $this;
     }
 
+    public function getTeams(): array
+    {
+        return [$this->blueTeam, $this->greenTeam];
+    }
+
     public function getGreenScore(): ?int
     {
         return $this->greenScore;

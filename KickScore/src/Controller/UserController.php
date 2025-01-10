@@ -20,9 +20,12 @@ final class UserController extends AbstractController
     #[Route(name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository, ChampionshipRepository $championshipRepository): Response
     {
+        //all the teams participating in all the championships organized by the current organizer
+        $teams = $championshipRepository->findTeamsByOrganizer($this->getUser());
         return $this->render('user/index.html.twig', [
             'users' => $userRepository->findAll(),
             'championships' => $championshipRepository->findAll(),
+            'teams' => $teams
         ]);
     }
 
