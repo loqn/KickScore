@@ -9,126 +9,93 @@
                 <h1 class="text-4xl font-bold text-slate-800 text-center mb-8">
                     <span>{{ 'nav.creation'|trans }}</span>
                     <span class="block mt-2 text-blue-900 text-2xl font-medium" id="subtitle">
-                    <span>{{ 'nav.newmatchandchampionship'|trans }}</span>
-                </span>
+                       
+                    </span>
                 </h1>
 
-                <!-- Selection Type -->
-                <div class="bg-white rounded-lg shadow-sm border border-slate-100 p-6 mb-6">
-                    <p class="text-sm font-medium text-slate-700 mb-3">Que souhaitez-vous créer ?</p>
-                    <div class="flex gap-4">
-                        <button id="select_btnMatch" class="w-full py-3 px-4 rounded-lg text-slate-700 bg-slate-50 hover:bg-slate-100 transition-colors font-medium">
-                            Match
-                        </button>
-                        <button id="select_btnChampionship" class="w-full py-3 px-4 rounded-lg text-slate-700 bg-slate-50 hover:bg-slate-100 transition-colors font-medium">
-                            <span>{{ 'nav.championship'|trans }}</span>
-                        </button>
+                {% for message in app.flashes('success') %}
+                    <div class="bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 mb-6">
+                        <p class="text-sm font-medium">{{ message }}</p>
                     </div>
-                </div>
-
-                <!-- Import Option -->
-                <div id="import" class="bg-white rounded-lg shadow-sm border border-slate-100 p-6 mb-6 hidden">
-                    <p class="text-sm font-medium text-slate-700 mb-3"><span>{{ 'nav.import'|trans }}</span></p>
-                    <div class="flex gap-4">
-                        <button id="select_btnOui" class="w-full py-3 px-4 rounded-lg text-slate-700 bg-slate-50 hover:bg-slate-100 transition-colors font-medium">
-                            <span>{{ 'nav.yes'|trans }}</span>
-                        </button>
-                        <button id="select_btnNon" class="w-full py-3 px-4 rounded-lg text-slate-700 bg-slate-50 hover:bg-slate-100 transition-colors font-medium">
-                            <span>{{ 'nav.no'|trans }}</span>
-                        </button>
+                {% endfor %}
+                {% for message in app.flashes('error') %}
+                    <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 mb-6">
+                        <p class="text-sm font-medium">{{ message }}</p>
                     </div>
-                </div>
-
-                <!-- Main Form -->
-                <form id="form" method="post" action="{{ path('app_meet_create') }}" class="hidden space-y-6 bg-white rounded-lg shadow-sm border border-slate-100 p-6">
-                    <!-- Name Input -->
-                    <div class="space-y-1 hidden" id="name">
-                        <label for="name" class="text-sm font-medium text-slate-700"><span>{{ 'nav.name'|trans }}</span></label>
-                        <input type="text" id="name" name="name" placeholder= {{ 'nav.nameofchampionship'|trans }}
-                               class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
-                    </div>
-
-        <!---------- Match ----------->
-
-        <!-- Date -->
-        <div class="mb-4 hidden flex justify-center items-center flex-col" id="date">
-            <label for="date" class="block text-gray-700 font-medium mb-2">{{ 'nav.dateofthematch'|trans }}</label>
-            <input type="datetime-local" id="dateInput" name="date" placeholder={{ 'nav.dateofthematch'|trans }}
-                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
-
-        <div class="w-full flex justify-center">
-            <p class="font-medium hidden text-green-500" id="date_valid"></p>
-        </div>
-
-        <!-- Select championship  -->
-        <div id="champ" class="mb-4 hidden">
-            <label for="champ" class="block text-gray-700 font-medium mb-2"><span>{{ 'nav.competition'|trans }}</span></label>
-            <select id="champ" name="champ" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                {% for championship in championships %}
-                    <option value="{{ championship.id }}">{{ championship.name }}</option>
                 {% endfor %}
-            </select>
-        </div>
 
-        <!-- Select team green  -->
-        <div id="greenTeam" class="mb-4 hidden">
-            <label for="greenTeam" class="block text-gray-700 font-medium mb-2"><span>{{ 'nav.greenteam'|trans }}</span></label>
-            <select required id="greenTeamSelect" name="greenTeam" class="w-full px-3 py-2 border bg-green-200 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option disabled selected value=""> <span>{{ 'nav.greenteam'|trans }}</span> </option>
-                {% for team in teams %}
-                    <option value="{{ team.id }}">{{ team.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
+                <!-- Tabs Navigation -->
+                <nav class="flex border-b border-slate-200 mb-6">
+                    <button id="tab_match"
+                            class="px-6 py-3 text-sm font-medium border-b-2 border-transparent hover:border-slate-300 hover:text-slate-600 transition-colors relative -mb-[2px]">
+                        Match
+                    </button>
+                    <button id="tab_championship"
+                            class="px-6 py-3 text-sm font-medium border-b-2 border-transparent hover:border-slate-300 hover:text-slate-600 transition-colors relative -mb-[2px]">
+                        <span> {{ 'nav.championship'|trans }} </span>
+                    </button>
+                </nav>
 
-        <!-- Select team blue  -->
-        <div id="blueTeam" class="mb-4 hidden">
-            <label for="blueTeam" class="block text-gray-700 font-medium mb-2"><span>{{ 'nav.blueteam'|trans }}</span></label>
-            <select required id="blueTeamSelect" name="blueTeam" class="w-full px-3 py-2 border bg-blue-200 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                <option disabled selected value=""> <span>{{ 'nav.blueteam'|trans }}</span></option>
-                {% for team in teams %}
-                    <option value="{{ team.id }}">{{ team.name }}</option>
-                {% endfor %}
-            </select>
-        </div>
+                <!-- Match Form Panel -->
+                <div id="panel_match" class="hidden">
 
-        <!-- verification -->
-        <div id="date_verifyBtn" class="w-full bg-blue-100 text-center hover:cursor-pointer center rounded-lg py-2 px-4 transition ease-in duration-200 border-blue-300 hover:bg-blue-200 focus:ring focus:ring-blue-200 mt-2">Vérifier</div>
+                    <form method="post" action="{{ path('app_meet_create') }}"
+                          class="space-y-6 bg-white rounded-lg shadow-sm border border-slate-100 p-6">
+                        <input type="hidden" name="addType" value="MATCH">
 
+                        <!-- Championship Selection -->
+                        <div class="space-y-1">
+                            <label for="champ" class="text-sm font-medium text-slate-700">{{'nav.competition' | trans}}</label>
+                            <select id="champ" name="champ"
+                                    class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
+                                {% for championship in championships %}
+                                    <option value="{{ championship.id }}">{{ championship.name }}</option>
+                                {% endfor %}
+                            </select>
+                        </div>
 
-                    <!-- Date -->
-                    <div class="space-y-1 hidden" id="date">
-                        <label for="dateInput" class="text-sm font-medium text-slate-700"><span>{{ 'nav.dateofthematch'|trans }}</span></label>
-                        <div class="space-y-2">
+                        <!-- Teams Selection -->
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label for="greenTeamSelect" class="text-sm font-medium text-slate-700">{{'nav.greenteam'|trans}}</label>
+                                <select id="greenTeamSelect" name="greenTeam"
+                                        class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-green-50 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
+                                    <option disabled selected value=""> -- Choisir -- </option>
+                                </select>
+                            </div>
+                            <div class="space-y-1">
+                                <label for="blueTeamSelect" class="text-sm font-medium text-slate-700">{{'nav.blueeteam'|trans}}</label>
+                                <select id="blueTeamSelect" name="blueTeam"
+                                        class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-blue-50 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
+                                    <option disabled selected value=""> -- Choisir -- </option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- Date and Scores -->
+                        <div class="space-y-1">
+                            <label for="dateInput" class="text-sm font-medium text-slate-700">{{'nav.dateofthematch' | trans}}</label>
                             <input type="datetime-local" id="dateInput" name="date"
                                    class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
-                            <button type="button" id="date_verifyBtn"
-                                    class="w-full py-2 px-4 bg-slate-50 text-slate-700 rounded-lg hover:bg-slate-100 transition-colors font-medium">
-                                <span>{{ 'nav.verify'|trans }}</span>
-                            </button>
+                            <p id="date_valid" class="hidden text-sm text-green-600 mt-1"></p>
                         </div>
-                        <p id="date_valid" class="hidden text-sm text-green-600 mt-1"></p>
-                    </div>
 
-                    <!-- Score Inputs -->
-                    <div class="space-y-1 hidden" id="greenscore">
-                        <label for="greenscore" class="text-sm font-medium text-slate-700"><span>{{ 'nav.goalgreen'|trans }}</span></label>
-                        <input type="number" id="greenscore" name="greenscore"
-                               class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-green-50 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
-                    </div>
-
-                    <div class="space-y-1 hidden" id="bluescore">
-                        <label for="bluescore" class="text-sm font-medium text-slate-700"><span>{{ 'nav.goalblue'|trans }}</span></label>
-                        <input type="number" id="bluescore" name="bluescore"
-                               class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-blue-50 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
-                    </div>
-
-                    <input type="hidden" name="addType" value="" id="addType">
+                        <div id="scores_container" class="hidden grid grid-cols-2 gap-4">
+                            <div class="space-y-1">
+                                <label for="greenscore" class="text-sm font-medium text-slate-700">{{'nav.goalgreen' | trans}}</label>
+                                <input type="number" id="greenscore" name="greenscore"
+                                       class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-green-50 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
+                            </div>
+                            <div class="space-y-1">
+                                <label for="bluescore" class="text-sm font-medium text-slate-700">{{'nav.goalblue' | trans}}</label>
+                                <input type="number" id="bluescore" name="bluescore"
+                                       class="w-full px-4 py-3 rounded-lg border border-slate-200 bg-blue-50 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
+                            </div>
+                        </div>
 
                         <button type="submit"
                                 class="w-full px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
-                            Créer le match
+                            {{'nav.newmatch' | trans}}
                         </button>
                     </form>
                 </div>
@@ -140,11 +107,11 @@
                             <div class="flex flex-col space-y-4">
                                 <a href="#" id="btn_manual"
                                    class="w-full py-3 px-4 rounded-lg text-slate-700 bg-slate-50 hover:bg-slate-100 transition-colors font-medium text-center">
-                                    Créer manuellement
+                                    {{'nav.createmanually' | trans}}
                                 </a>
                                 <a href="#" id="btn_import"
                                    class="w-full py-3 px-4 rounded-lg text-slate-700 bg-slate-50 hover:bg-slate-100 transition-colors font-medium text-center">
-                                    Importer depuis un fichier
+                                    {{'nav.importefile' | trans}}
                                 </a>
                             </div>
                         </div>
@@ -161,24 +128,26 @@
                             </div>
                             <button type="submit"
                                     class="w-full px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
-                                Créer le championnat
+                                {{'championship_management.create' |trans}}
                             </button>
                         </form>
 
-                <!-- Import Form -->
-                <form id="formImport" class="hidden space-y-6 bg-white rounded-lg shadow-sm border border-slate-100 p-6"
-                      method="post" action="{{ path('app_meet_import') }}" enctype="multipart/form-data">
-                    <div class="space-y-1">
-                        <label for="file" class="text-sm font-medium text-slate-700"><span>{{ 'nav.importfile'|trans }}</span></label>
-                        <input type="file" id="file" name="file" required
-                               class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
+                        <!-- Import Form -->
+                        <form id="championship_import" method="post" action="{{ path('app_meet_import') }}"
+                              class="hidden space-y-6 bg-white rounded-lg shadow-sm border border-slate-100 p-6"
+                              enctype="multipart/form-data">
+                            <div class="space-y-1">
+                                <label for="file" class="text-sm font-medium text-slate-700">Fichier à importer</label>
+                                <input type="file" id="file" name="file" required
+                                       class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
+                            </div>
+                            <button type="submit"
+                                    class="w-full px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
+                                {{'championship_management.import' |trans}}
+                            </button>
+                        </form>
                     </div>
-
-                    <button id="submitImport" type="submit"
-                            class="w-full px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
-                        <span>{{ 'nav.import'|trans }}</span>
-                    </button>
-                </form>
+                </div>
             </div>
         </div>
     </div>
@@ -199,6 +168,12 @@
     </script>
 
     <script>
+  
+    
+    const translations = {
+        newMatch: "{{ 'nav.newmatch'|trans }}",
+        newChampionship: "{{ 'championship_management.new_championship'|trans }}"
+    };
         const tabs = {
             match: document.getElementById('tab_match'),
             championship: document.getElementById('tab_championship')
@@ -222,7 +197,7 @@
             Object.values(panels).forEach(panel => panel.classList.add('hidden'));
             panels[tabId].classList.remove('hidden');
 
-            subtitle.textContent = tabId === 'match' ? "d'un nouveau match" : "d'un nouveau championnat";
+            subtitle.textContent = tabId === 'match' ? translations.newMatch : translations.newChampionship;
         }
 
         activateTab('match');
@@ -300,8 +275,8 @@
             const currentGreenTeam = greenTeamSelect.value;
             const currentBlueTeam = blueTeamSelect.value;
 
-            greenTeamSelect.innerHTML = '<option disabled selected value=""> -- Choisir -- </option>';
-            blueTeamSelect.innerHTML = '<option disabled selected value=""> -- Choisir -- </option>';
+            greenTeamSelect.innerHTML = '<option disabled selected value=""> -- xxx -- </option>';
+            blueTeamSelect.innerHTML = '<option disabled selected value=""> -- xxx -- </option>';
 
             teams.forEach(team => {
                 const greenOption = new Option(team.name, team.id);

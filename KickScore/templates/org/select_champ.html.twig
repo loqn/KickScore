@@ -33,7 +33,7 @@
                                                 class="block w-full rounded-lg border border-slate-200 bg-white px-4 py-3 pr-10 text-base text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 appearance-none"
                                                 required
                                         >
-                                            <option value="" disabled selected>Sélectionnez un championnat</option>
+                                            <option value="" disabled selected>{{'nav.selectchamp' | trans}}</option>
                                             {% for championship in championships %}
                                                 <option value="{{ championship.id }}" {% if championship.id == select %}selected{% endif %}
                                                         class="py-2">

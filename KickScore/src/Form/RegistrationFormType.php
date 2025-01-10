@@ -29,7 +29,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                     new Length([
                         'min' => 2,
-                        'minMessage' => 'Votre prénom doit être de  {{ limit }} caractères minimum.',
+                        'minMessage' => 'Votre prénom doit être de {{ limit }} caractères minimum.',
                         'max' => 32,
                     ]),
                 ],
@@ -44,7 +44,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                     new Length([
                         'min' => 2,
-                        'minMessage' => 'Votre nom de famille doit être de {{ limit }} caractères minimum.',
+                        'minMessage' => 'Votre nom de famille doit être de{{ limit }} caractères minimum.',
                         'max' => 32,
                     ]),
                 ],
@@ -60,7 +60,7 @@ class RegistrationFormType extends AbstractType
                     ]),
                     new Length([
                         'min' => 6,
-                        'minMessage' => 'Votre mot de passe doit être de {{ limit }} caractères minimum.',
+                        'minMessage' => 'Votre mot de passe doit être de{{ limit }} caractères minimum.',
                         // max length allowed by Symfony for security reasons
                         'max' => 4096,
                     ]),

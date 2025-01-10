@@ -45,7 +45,7 @@ nav:
     selectchamp: 'Sélectionnez un championnat'
     exportchampionship: 'Exporter les données du championnat'
     availablechampionships: 'Championnats disponibles'
-    dowload: 'Télécharger'
+    download: 'Télécharger'
     teamranking: 'Classement des équipes'
     teamperformance: 'Consultez les performances de chaque équipe'
     team: 'Équipe'
@@ -53,7 +53,86 @@ nav:
     fast: "c'est rapide !"
     alreadylogin : "Déjà inscrit ? Connectez vous"
     noteamnochamp: " Aucune équipe trouvée pour ce championnat."
+    createmanually: "Créer manuellement"
+    validdate : "Date valide pour un futur match"
+user_list:
+    title: "Liste des utilisateurs"
+    subtitle: "Gérez les utilisateurs de la plateforme"
+    table:
+        name: "Nom"
+        firstname: "Prénom"
+        email: "Email"
+        role: "Rôle"
+        actions: "Actions"
+        organizer: "Organisateur"
+        user: "Utilisateur"
+        view: "Voir"
+        edit: "Modifier"
+        impersonate: "Incarner"
+    no_users: "Aucun utilisateur n'a été trouvé."
+championship_list:
+    title: "Liste des championnats"
+    subtitle: "Gérez les championnats et leurs équipes"
+    new_championship: "Nouveau championnat"
+    teams_count: "%count% équipes"
+    team:
+        manage: "Gérer l'équipe"
+        members_count: "%count% membres"
+        table:
+            name: "Nom"
+            firstname: "Prénom"
+            email: "Email"
+            role: "Rôle"
+            member: "Membre"
+        no_members: "Aucun membre dans cette équipe."
+    no_teams: "Aucune équipe dans ce championnat."
+    no_championships: "Aucun championnat n'a été trouvé."
+user:
+    profile:
+        title: "Profil utilisateur"
+        account_details: "Détails du compte"
+        back_to_list: "Retour à la liste"
+        personal_info: "Informations personnelles"
+        firstname: "Prénom"
+        lastname: "Nom"
+        email: "Email"
+        role: "Rôle"
+        role_types:
+            organizer: "Organisateur"
+            user: "Utilisateur"
+        edit_profile: "Modifier le profil"
+        id_label: "ID"
+    edit:
+        title: "Modifier l'utilisateur"
+        subtitle: "Modification des informations du compte"
+        back_to_list: "Retour à la liste"
+        form:
+            firstname: "Prénom"
+            lastname: "Nom"
+            email: "Email"
+            organizer_role: "Rôle Organisateur"
+            save: "Enregistrer les modifications"
+
 form:
+    firstname:
+        not_blank: 'Veuillez insérer votre prénom.'
+        min_length: 'Votre prénom doit être de {{ limit }} caractères minimum.'
+        placeholder: 'Insérer votre prénom...'
+    lastname:
+        not_blank: 'Veuillez insérer votre nom de famille.'
+        min_length: 'Votre nom de famille doit être de {{ limit }} caractères minimum.'
+        placeholder: 'Insérer votre nom de famille...'
+    password:
+        not_blank: 'Veuillez insérer un mot de passe.'
+        min_length: 'Votre mot de passe doit être de {{ limit }} caractères minimum.'
+
+
+root:
+    error: 'Erreur'
+    home: "Retour à l'accueil"
+
+
+formal:
     insertfirstname: 'Entrez votre prénom'
     insertlastname: 'Entrez votre nom'
     firstname: 'Prénom'
@@ -121,6 +200,8 @@ user_management:
         edit: "Modifier"
     no_users: "Aucun utilisateur n'a été trouvé."
 championship_management:
+    import: "Importer un championnat"
+    create: "Créer un championnat"
     title: "Liste des championnats"
     subtitle: "Gérez les championnats et leurs équipes"
     new_championship: "Nouveau championnat"
@@ -136,3 +217,19 @@ championship_management:
             member: "Membre"
         no_members: "Aucun membre dans cette équipe."
     no_teams: "Aucune équipe dans ce championnat."
+delete: "Supprimer"
+
+deleteuser : 'Êtes-vous sûr de vouloir supprimer cet utilisateur ?'
+userteam: "Cet utilisateur est membre d'une équipe. Vous ne pouvez pas le supprimer."
+delete_confirmation: "Confirmation de suppression"
+cannot_delete_user: "Impossible de supprimer l'utilisateur"
+user_in_team: "Cet utilisateur fait partie d'une équipe"
+return_to_list: "Retour à la liste"
+action_impossible: "Action impossible"
+user_delete_error: " ne peut pas être supprimé car il fait partie d'une équipe active. Veuillez d'abord retirer l'utilisateur de son équipe ou assigner un nouveau membre."
+team_details: "Détails de l'équipe"
+team_name: "Nom de l'équipe"
+team_members: "Membres de l'équipe"
+concerned_member: "Membre concerné"
+edit_user: "Modifier l'utilisateur"
+manage_team: "Gérer l'équipe"

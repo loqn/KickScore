@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Modifier l'utilisateur - KickScore{% endblock %}
+{% block title %}{{ 'user.edit.title'|trans }} - KickScore{% endblock %}
 
 {% block body %}
     <div class="h-[calc(100vh-2rem)]">
@@ -8,16 +8,16 @@
             <div class="max-w-3xl mx-auto">
                 <div class="mb-8 flex items-center justify-between">
                     <h1 class="text-3xl font-bold text-slate-800">
-                        Modifier l'utilisateur
+                        {{ 'user.edit.title'|trans }}
                         <span class="block mt-1 text-lg text-slate-600 font-normal">
-                            Modification des informations du compte
+                            {{ 'user.edit.subtitle'|trans }}
                         </span>
                     </h1>
 
                     <div class="space-x-3">
                         <a href="{{ path('app_user_index') }}"
                            class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-medium">
-                            Retour à la liste
+                            {{ 'user.edit.back_to_list'|trans }}
                         </a>
                     </div>
                 </div>
@@ -29,21 +29,21 @@
                                 <input type="hidden" name="token" value="{{ csrf_token('edit-user') }}">
 
                                 <div>
-                                    <label for="firstName" class="block text-sm font-medium text-slate-700 mb-1">Prénom</label>
+                                    <label for="firstName" class="block text-sm font-medium text-slate-700 mb-1">{{ 'user.edit.form.firstname'|trans }}</label>
                                     <input type="text" id="firstName" name="firstName"
                                            value="{{ user.FirstName }}"
                                            class="block w-full rounded-md border-slate-200 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                 </div>
 
                                 <div>
-                                    <label for="name" class="block text-sm font-medium text-slate-700 mb-1">Nom</label>
+                                    <label for="name" class="block text-sm font-medium text-slate-700 mb-1">{{ 'user.edit.form.lastname'|trans }}</label>
                                     <input type="text" id="name" name="name"
                                            value="{{ user.name }}"
                                            class="block w-full rounded-md border-slate-200 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                 </div>
 
                                 <div>
-                                    <label for="email" class="block text-sm font-medium text-slate-700 mb-1">Email</label>
+                                    <label for="email" class="block text-sm font-medium text-slate-700 mb-1">{{ 'user.edit.form.email'|trans }}</label>
                                     <input type="email" id="email" name="email"
                                            value="{{ user.mail }}"
                                            class="block w-full rounded-md border-slate-200 shadow-sm focus:border-blue-500 focus:ring-blue-500">
@@ -55,7 +55,7 @@
                                             <input type="checkbox" id="isOrganizer" name="isOrganizer"
                                                    {% if user.isOrganizer %}checked{% endif %}
                                                    class="rounded border-slate-200 text-blue-600 shadow-sm focus:border-blue-500 focus:ring-blue-500">
-                                            Rôle Organisateur
+                                            {{ 'user.edit.form.organizer_role'|trans }}
                                         </label>
                                     </div>
                                 {% endif %}
@@ -63,7 +63,7 @@
                                 <div class="p-6 bg-slate-50 rounded-b-lg flex items-center space-x-3">
                                     <button type="submit"
                                             class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm">
-                                        Enregistrer les modifications
+                                        {{ 'user.edit.form.save'|trans }}
                                     </button>
                                     {% if is_granted('ROLE_ORGANIZER') %}
                                         {{ include('user/_delete_form.html.twig') }}

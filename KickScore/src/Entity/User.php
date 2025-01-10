@@ -21,8 +21,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     private ?int $id = null;
 
     #[ORM\Column(name: 'USR_FNAME',length: 32, nullable: true)]
-    private ?string $firstName = null;
-
+    private ?string $firstName = null; 
+    
     #[ORM\Column(name: 'USR_NAME',length: 32, nullable: true)]
     private ?string $name = null;
 
@@ -40,6 +40,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     #[ORM\OneToMany(targetEntity: Championship::class, mappedBy: 'organizer')]
     private Collection $organizedChampionships;
+    #[Assert\Length(
+        min: 2,
+        minMessage: 'user.firstname.min_length'
+    )]
+    private ?string $firstname = null;
 
     public function __construct()
     {

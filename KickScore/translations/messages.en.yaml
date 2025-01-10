@@ -42,14 +42,15 @@ nav:
     selectchamp: 'Select a championship'
     exportchampionship: 'Export championship data'
     availablechampionships: 'Available championships'
-    dowload: 'Download'
+    download: 'Download'
     teamranking: 'Team ranking'
     teamperformance: 'Consult the performance of each team'
     createaccount: 'Create an account'
     fast: 'It is fast!'
     alreadylogin: 'Already registered? Log in'
     noteamnochamp: 'No team found for this championship.'
-form:
+    createmanually: 'Create manually'
+formal:
     insertfirstname: 'Enter your first name'
     insertlastname: 'Enter your last name'
     firstname: 'First name'
@@ -89,6 +90,78 @@ team:
         email_placeholder: "Member's email"
         add_button: 'Add'
         no_new_member: 'No new member'
+form:
+    firstname:
+        not_blank: 'Please enter your first name.'
+        min_length: 'Your first name must be at least {{ limit }} characters long.'
+        placeholder: 'Enter your first name...'
+    lastname:
+        not_blank: 'Please enter your last name.'
+        min_length: 'Your last name must be at least {{ limit }} characters long.'
+        placeholder: 'Enter your last name...'
+    password:
+        not_blank: 'Please enter a password.'
+        min_length: 'Your password must be at least {{ limit }} characters long.'
+user_list:
+    title: "Users List"
+    subtitle: "Manage platform users"
+    table:
+        name: "Name"
+        firstname: "First Name"
+        email: "Email"
+        role: "Role"
+        actions: "Actions"
+        organizer: "Organizer"
+        user: "User"
+        view: "View"
+        edit: "Edit"
+        impersonate: "Impersonate"
+    no_users: "No users found."
+championship_list:
+    title: "Championships List"
+    subtitle: "Manage championships and their teams"
+    new_championship: "New Championship"
+    teams_count: "%count% teams"
+    team:
+        manage: "Manage Team"
+        members_count: "%count% members"
+        table:
+            name: "Name"
+            firstname: "First Name"
+            email: "Email"
+            role: "Role"
+            member: "Member"
+        no_members: "No members in this team."
+    no_teams: "No teams in this championship."
+    no_championships: "No championships found."
+user:
+    profile:
+        title: "User Profile"
+        account_details: "Account Details"
+        back_to_list: "Back to list"
+        personal_info: "Personal Information"
+        firstname: "First Name"
+        lastname: "Last Name"
+        email: "Email"
+        role: "Role"
+        role_types:
+            organizer: "Organizer"
+            user: "User"
+        edit_profile: "Edit Profile"
+        id_label: "ID"
+    edit:
+        title: "Edit User"
+        subtitle: "Edit account information"
+        back_to_list: "Back to list"
+        form:
+            firstname: "First Name"
+            lastname: "Last Name"
+            email: "Email"
+            organizer_role: "Organizer Role"
+            save: "Save changes"
+root:
+    error: 'Error'
+    home: 'Back to Home'
 team_creation:
     title: "Team Creation"
     title_short: "Creation"
@@ -117,6 +190,8 @@ user_management:
         edit: "Edit"
     no_users: "No users found."
 championship_management:
+    import: "Import a championship"
+    create: "Create Championship"
     title: "Championships List"
     subtitle: "Manage championships and their teams"
     new_championship: "New Championship"
@@ -132,3 +207,18 @@ championship_management:
             member: "Member"
         no_members: "No members in this team."
     no_teams: "No teams in this championship."
+delete: "Delete"
+deleteuser: "Are you sure you want to delete this user?"
+userteam: "This user is part of a team. You can't delete it."
+delete_confirmation: "Delete Confirmation"
+cannot_delete_user: "Cannot Delete User"
+user_in_team: "This user is part of a team"
+return_to_list: "Back to list"
+action_impossible: "Action Impossible"
+user_delete_error: "User %firstname% %name% cannot be deleted because they are part of an active team. Please remove the user from their team or assign a new member first."
+team_details: "Team Details"
+team_name: "Team Name"
+team_members: "Team Members"
+concerned_member: "Concerned Member"
+edit_user: "Edit User"
+manage_team: "Manage Team"
