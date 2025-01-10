@@ -53,11 +53,34 @@ class ChampionshipController extends AbstractController
         ]);
     }
 
-    #[Route('/championshipedit', name: 'app_championship_edit', methods: ['POST'])]
+    #[Route('/championshipedit/{id}', name: 'app_championship_edit', methods: ['POST'])]
     public function champedit(Request $request, Championship $championship, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('Championship/edit.html.twig', [
-            'championship' => $championship
+        // Update championship name
+        $newName = $request->request->get('firstName');
+        if ($newName) {
+            $championship->setName($newName);
+        }
+        // Get the terrain ID to remove
+        $terrainIdToRemove = $request->request->get('terrain');
+        // Find the terrain to remove
+        $terrainToRemove = null;
+        foreach ($championship->getFields() as $field) {
+            if ($field->getId() == $terrainIdToRemove) {
+                $terrainToRemove = $field;
+                break;
+            }
+        }
+        // Remove the selected terrain if found
+        if ($terrainToRemove) {
+            $championship->removeField($terrainToRemove);
+            $this->addFlash('success', 'Le terrain a été supprimé avec succès');
+        }
+        $entityManager->remove($terrainToRemove);
+        $entityManager->persist($championship);
+        $entityManager->flush();
+        return $this->redirectToRoute('app_champ_edit', [
+            'id' => $championship->getId()
         ]);
     }
 
