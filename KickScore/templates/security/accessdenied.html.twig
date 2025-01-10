@@ -6,19 +6,19 @@
         <div class="h-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-white rounded-xl p-8">
             <div class="w-full max-w-md text-center">
                 <h1 class="text-4xl font-bold text-slate-800 mb-8">
-                    Accès Refusé
+                  {{ 'access_denied.title'|trans }}
                     <span class="block mt-2 text-red-600 text-2xl font-medium">
-                        Vous n'avez pas les permissions nécessaires
+                     {{ 'access_denied.subtitle'|trans }}
                     </span>
                 </h1>
 
                 <div class="p-4 text-red-700 bg-red-100 rounded-lg mb-6">
-                    Vous n'êtes pas autorisé à accéder à cette ressource.
+                    {{ 'access_denied.message'|trans }}
                 </div>
 
                 <a href="{{ path('app_root') }}" 
                    class="inline-block px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors">
-                    Retour à l'accueil
+                    {{ 'access_denied.back_home'|trans }}
                 </a>
             </div>
         </div>

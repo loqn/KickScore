@@ -9,9 +9,9 @@
             <div class="mb-6 md:mb-8 flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center">
                 <div class="flex-1">
                     <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 text-center md:text-left">
-                        Liste des matchs
+                        <span>{{ 'nav.matches'|trans }}</span>
                         <span class="block mt-1 text-sm sm:text-base md:text-lg text-slate-600 font-normal">
-                Consultez tous les matchs par compétition
+                 <span>{{ 'nav.consultmatch'|trans }}</span>
             </span>
                     </h1>
                 </div>
@@ -34,7 +34,7 @@
                     {% if is_granted('ROLE_ORGANIZER') %}
                         <a href="{{ path('app_meet') }}"
                            class="w-full xs:w-auto px-3 sm:px-4 md:px-6 py-2 sm:py-3 bg-blue-900 text-white text-sm sm:text-base rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm text-center">
-                            Nouveau match
+                            <span>{{ 'nav.newmatch'|trans }}</span>
                         </a>
                     {% endif %}
                 </div>
@@ -63,10 +63,10 @@
                                         Date
                                     </th>
                                     <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-slate-700">
-                                        Équipe verte
+                                         <span>{{ 'nav.greenteam'|trans }}</span>
                                     </th>
                                     <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-slate-700">
-                                        Équipe bleue
+                                         <span>{{ 'nav.blueteam'|trans }}</span>
                                     </th>
                                     <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-slate-700">
                                         Score
@@ -94,7 +94,7 @@
                                     <tr>
                                         <td colspan="4"
                                             class="px-4 sm:px-6 py-6 sm:py-8 text-center text-sm text-slate-600">
-                                            Il n'y a aucun match dans ce championnat.
+                                            <span>{{ 'nav.nomatch'|trans }}</span>
                                         </td>
                                     </tr>
                                 {% endfor %}
@@ -105,7 +105,7 @@
                 </div>
             {% else %}
                 <div class="bg-white rounded-lg shadow-sm border border-slate-200 px-4 sm:px-6 py-6 sm:py-8 text-center text-sm sm:text-base text-slate-600">
-                    Aucun championnat n'a été trouvé.
+                    <span>{{ 'nav.nochampionship'|trans }}</span>
                 </div>
             {% endfor %}
         </div>

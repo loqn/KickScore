@@ -1,0 +1,138 @@
+nav:
+    firstname: 'Prénom'
+    lastname: 'Nom'
+    email: 'Adresse email'
+    password: 'Mot de passe'
+    home: 'Accueil'
+    ranking: 'Classement'
+    matches: 'Liste des matchs'
+    newmatchandchampionship: "d'un nouveau match ou championnat"
+    createteam: 'Créer une équipe'
+    login: 'Connexion'
+    start: 'Commencer'
+    logout: 'Déconnexion'
+    register: "S'inscrire"
+    profile: 'Profil'
+    admin: 'Administration'
+    managechampionship: 'Gérer vos championnats'
+    withsimplicity: 'avec simplicité'
+    explainkickscore: 'KickScore peut vous aider à organiser vos tournois de RoboCup.'
+    myteam: 'Mon équipe'
+    controlepanel: 'Panneau de contrôle'
+    creation: 'Création'
+    welcome: 'Bienvenue'
+    onkickscore: 'sur kickScore'
+    creationmenu: 'Menu de création'
+    newmatch: 'Nouveau match'
+    consultmatch: 'Consultez tous les matchs par compétition'
+    greenteam: 'Équipe verte'
+    nomatch: "Il n'y a aucun match dans ce championnat."
+    nochampionship: "Il n'y a aucun championnat."
+    championship: 'Championnat'
+    yes: 'Oui'
+    no: 'Non'
+    wantimport: "Voulez-vous l'importer ?"
+    name: 'Nom'
+    nameofchampionship: 'Nom du championnat'
+    dateofthematch: 'Date du match'
+    competition: 'Compétition'
+    blueeteam: 'Équipe bleue'
+    verify: 'Vérifier'
+    goalblue: 'Buts bleus'
+    goalgreen: 'Buts verts'
+    importefile: 'Importer un fichier'
+    import: 'Importer'
+    selectchamp: 'Sélectionnez un championnat'
+    exportchampionship: 'Exporter les données du championnat'
+    availablechampionships: 'Championnats disponibles'
+    dowload: 'Télécharger'
+    teamranking: 'Classement des équipes'
+    teamperformance: 'Consultez les performances de chaque équipe'
+    team: 'Équipe'
+    createaccount: "Créer un compte"
+    fast: "c'est rapide !"
+    alreadylogin : "Déjà inscrit ? Connectez vous"
+    noteamnochamp: " Aucune équipe trouvée pour ce championnat."
+form:
+    insertfirstname: 'Entrez votre prénom'
+    insertlastname: 'Entrez votre nom'
+    firstname: 'Prénom'
+    lastname: 'Nom'
+    email: 'Adresse email'
+    password: 'Mot de passe'
+
+access_denied:
+    title: 'Accès refusé'
+    subtitle: "Vous n'avez pas les permissions nécessaires"
+    message: "Vous n'êtes pas autorisé à accéder à cette ressource"
+    back_home: "Retour à l'accueil"
+login:
+    title: 'Connexion'
+    subtitle: 'à votre espace KickScore'
+    connected_as: 'Vous êtes connecté en tant que'
+    logout: 'Se déconnecter'
+    email: 'Email'
+    password: 'Mot de passe'
+    remember_me: 'Se souvenir de moi'
+    submit: 'Se connecter'
+    no_account: 'Pas encore de compte ? Inscrivez-vous'
+
+team:
+    title: 'Mon équipe'
+    team_name: 'Équipe %name%'
+    members: 'Membres'
+    member_saved: 'Ce membre est sauvegardé.'
+    remove: 'Supprimer'
+    add_member:
+        title: 'Ajouter un membre'
+        firstname: 'Prénom'
+        lastname: 'Nom'
+        email: 'EMail'
+        firstname_placeholder: 'Prénom du membre'
+        lastname_placeholder: 'Nom du membre'
+        email_placeholder: 'EMail du membre'
+        add_button: 'Ajouter'
+        no_new_member: 'Aucun nouveau membre'
+team_creation:
+    title: "Création d'une équipe"
+    title_short: "Création"
+    subtitle: "d'une nouvelle équipe"
+    name:
+        label: "Nom"
+        placeholder: "Nom de l'équipe"
+    structure:
+        label: "Structure (optionnel)"
+        placeholder: "Structure de l'équipe"
+    join_team: "Rejoindre cette équipe"
+    create_button: "Créer l'équipe"
+user_management:
+    title: "Liste des utilisateurs"
+    subtitle: "Gérez les utilisateurs de la plateforme"
+    new_user: "Nouvel utilisateur"
+    table:
+        name: "Nom"
+        firstname: "Prénom"
+        email: "Email"
+        role: "Rôle"
+        actions: "Actions"
+        organizer: "Organisateur"
+        user: "Utilisateur"
+        view: "Voir"
+        edit: "Modifier"
+    no_users: "Aucun utilisateur n'a été trouvé."
+championship_management:
+    title: "Liste des championnats"
+    subtitle: "Gérez les championnats et leurs équipes"
+    new_championship: "Nouveau championnat"
+    teams_count: "%count% équipes"
+    no_championships: "Aucun championnat n'a été trouvé."
+    team:
+        members_count: "%count% membres"
+        table:
+            name: "Nom"
+            firstname: "Prénom"
+            email: "Email"
+            role: "Rôle"
+            member: "Membre"
+        no_members: "Aucun membre dans cette équipe."
+    no_teams: "Aucune équipe dans ce championnat."

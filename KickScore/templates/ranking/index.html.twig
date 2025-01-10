@@ -9,9 +9,9 @@
             <div class="mb-6 md:mb-8">
                 <div class="flex justify-between items-center">
                     <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">
-                        Classement des équipes
+                        <span>{{ 'nav.teamranking'|trans }}</span>
                         <span class="block mt-1 text-sm sm:text-base md:text-lg text-slate-600 font-normal">
-                            Consultez les performances de chaque équipe
+                            <span>{{ 'nav.teamperformance'|trans }}</span>
                         </span>
                     </h1>
                     
@@ -36,7 +36,7 @@
                     <thead class="bg-gray-50">
                         <tr>
                             <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Position</th>
-                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">Équipe</th>
+                            <th class="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider"><span>{{ 'nav.team'|trans }}</span></th>
                             <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">MJ</th>
                             <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">V</th>
                             <th class="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider">N</th>
@@ -58,7 +58,7 @@
                         {% else %}
                             <tr>
                                 <td colspan="7" class="px-6 py-4 text-center text-sm text-gray-500">
-                                    Aucune équipe trouvée pour ce championnat
+                                    <span>{{ 'nav.noteamnochampionship'|trans }}</span>
                                 </td>
                             </tr>
                         {% endfor %}

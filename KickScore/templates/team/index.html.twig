@@ -1,52 +1,50 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Création d'une équipe - KickScore{% endblock %}
+{% block title %}{{ 'team_creation.title'|trans }} - KickScore{% endblock %}
 
 {% block body %}
     <div class="h-[calc(100vh-2rem)]">
         <div class="h-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-white rounded-xl p-8">
             <div class="w-full max-w-md">
                 <h1 class="text-4xl font-bold text-slate-800 text-center mb-8">
-                    Création
+                    {{ 'team_creation.title_short'|trans }}
                     <span class="block mt-2 text-blue-900 text-2xl font-medium">
-                    d'une nouvelle équipe
-                </span>
+                        {{ 'team_creation.subtitle'|trans }}
+                    </span>
                 </h1>
 
                 <form method="post" action="{{ path('app_team_create') }}"
                       class="space-y-6 bg-white rounded-lg shadow-sm border border-slate-100 p-6">
 
-                    <!-- Nom de l'équipe -->
                     <div class="space-y-1">
-                        <label for="name" class="text-sm font-medium text-slate-700">Nom</label>
+                        <label for="name" class="text-sm font-medium text-slate-700">{{ 'team_creation.name.label'|trans }}</label>
                         <input type="text" id="name" name="name"
-                               placeholder="Nom de l'équipe"
+                               placeholder="{{ 'team_creation.name.placeholder'|trans }}"
                                class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors"
                                required>
                     </div>
 
-        <div id="structure" class="mb-4">
-            <label for="structure" class="block text-gray-700 font-medium mb-2">Structure (optionnel)</label>
-            <input type="text" id="structure" name="structure" placeholder="the team's structure"
-                   class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-        </div>
+                    <div id="structure" class="mb-4">
+                        <label for="structure" class="block text-gray-700 font-medium mb-2">{{ 'team_creation.structure.label'|trans }}</label>
+                        <input type="text" id="structure" name="structure" 
+                               placeholder="{{ 'team_creation.structure.placeholder'|trans }}"
+                               class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
+                    </div>
 
                     {% if not app.user.team %}
-                        <!-- Option pour rejoindre l'équipe -->
                         <div class="flex items-center space-x-3 pt-2">
                             <input type="checkbox" id="userJoin" name="userJoin" value="1"
                                    class="w-4 h-4 text-blue-900 border-slate-300 rounded focus:ring-blue-900">
                             <label for="userJoin" class="text-sm font-medium text-slate-700">
-                                Rejoindre cette équipe
+                                {{ 'team_creation.join_team'|trans }}
                             </label>
                         </div>
                     {% endif %}
 
-                    <!-- Bouton de soumission -->
                     <div class="pt-4">
                         <button type="submit"
                                 class="w-full px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
-                            Créer l'équipe
+                            {{ 'team_creation.create_button'|trans }}
                         </button>
                     </div>
                 </form>

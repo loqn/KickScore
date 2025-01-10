@@ -1,0 +1,134 @@
+nav:
+    home: 'Home'
+    ranking: 'Ranking'
+    matches: 'Match List'
+    login: 'Login'
+    team: 'Team'
+    start: 'Start'
+    createteam: 'Create a team'
+    logout: 'Logout'
+    register: 'Register'
+    newmatchandchampionship: 'New match or championship'
+    profile: 'Profile'
+    admin: 'Administration'
+    managechampionship: 'Manage your championships'
+    withsimplicity: 'With simplicity'
+    explainkickscore: 'KickScore can help you organize your RoboCup tournaments.'
+    myteam: 'My team'
+    controlepanel: 'Control panel'
+    creation: 'Creation'
+    welcome: 'Welcome'
+    onkickscore: 'on KickScore'
+    creationmenu: 'Creation menu'
+    newmatch: 'New match'
+    consultmatch: 'Consult all matches by competition'
+    greenteam: 'Green team'
+    blueeteam: 'Blue team'
+    nomatch: 'There are no matches in this championship.'
+    nochampionship: 'There is no championship.'
+    championship: 'Championship'
+    yes: 'Yes'
+    no: 'No'
+    wantimport: 'Do you want to import it?'
+    name: 'Name'
+    nameofchampionship: 'Name of the championship'
+    dateofthematch: 'Date of the match'
+    competition: 'Competition'
+    verify: 'Verify'
+    goalblue: 'Blue goals'
+    goalgreen: 'Green goals'
+    importefile: 'Import a file'
+    import: 'Import'
+    selectchamp: 'Select a championship'
+    exportchampionship: 'Export championship data'
+    availablechampionships: 'Available championships'
+    dowload: 'Download'
+    teamranking: 'Team ranking'
+    teamperformance: 'Consult the performance of each team'
+    createaccount: 'Create an account'
+    fast: 'It is fast!'
+    alreadylogin: 'Already registered? Log in'
+    noteamnochamp: 'No team found for this championship.'
+form:
+    insertfirstname: 'Enter your first name'
+    insertlastname: 'Enter your last name'
+    firstname: 'First name'
+    lastname: 'Last name'
+    email: 'Email address'
+    password: 'Password'
+
+access_denied:
+    title: 'Access Denied'
+    subtitle: 'You do not have the necessary permissions'
+    message: 'You are not authorized to access this resource'
+    back_home: 'Back to Home'
+login:
+    title: 'Login'
+    subtitle: 'to your KickScore space'
+    connected_as: 'You are logged in as'
+    logout: 'Logout'
+    email: 'Email'
+    password: 'Password'
+    remember_me: 'Remember me'
+    submit: 'Login'
+    no_account: 'No account yet? Sign up'
+
+team:
+    title: 'My Team'
+    team_name: 'Team %name%'
+    members: 'Members'
+    member_saved: 'This member is saved.'
+    remove: 'Remove'
+    add_member:
+        title: 'Add member'
+        firstname: 'First name'
+        lastname: 'Last name'
+        email: 'Email'
+        firstname_placeholder: "Member's first name"
+        lastname_placeholder: "Member's last name"
+        email_placeholder: "Member's email"
+        add_button: 'Add'
+        no_new_member: 'No new member'
+team_creation:
+    title: "Team Creation"
+    title_short: "Creation"
+    subtitle: "of a new team"
+    name:
+        label: "Name"
+        placeholder: "Team name"
+    structure:
+        label: "Structure (optional)"
+        placeholder: "Team's structure"
+    join_team: "Join this team"
+    create_button: "Create team"
+user_management:
+    title: "Users List"
+    subtitle: "Manage platform users"
+    new_user: "New User"
+    table:
+        name: "Name"
+        firstname: "First Name"
+        email: "Email"
+        role: "Role"
+        actions: "Actions"
+        organizer: "Organizer"
+        user: "User"
+        view: "View"
+        edit: "Edit"
+    no_users: "No users found."
+championship_management:
+    title: "Championships List"
+    subtitle: "Manage championships and their teams"
+    new_championship: "New Championship"
+    teams_count: "%count% teams"
+    no_championships: "No championships found."
+    team:
+        members_count: "%count% members"
+        table:
+            name: "Name"
+            firstname: "First Name"
+            email: "Email"
+            role: "Role"
+            member: "Member"
+        no_members: "No members in this team."
+    no_teams: "No teams in this championship."
