@@ -43,7 +43,7 @@
                             </a>
                             <a href="{{ path('app_user_index') }}"
                                class="px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
-                                {{ 'nav.controlpanel'|trans }}
+                                {{ 'nav.controlepanel'|trans }}
                             </a>
                         {% elseif is_granted('ROLE_USER') and not is_granted('ROLE_ORGANIZER') %}
                             {% if app.user and app.user.member and app.user.member.team %}
