@@ -60,19 +60,31 @@
             <div id="panel_users" class="hidden">
                 <div class="bg-white rounded-lg shadow-sm border border-slate-200">
                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-6 border-b border-slate-200">
-                        <h2 class="text-xl font-bold text-slate-800">
-                            Liste des utilisateurs
-                            <span class="block mt-1 text-sm text-slate-600 font-normal">
-                    Gérez les utilisateurs de la plateforme
-                </span>
-                        </h2>
+                        <div class="flex-1">
+                            <h2 class="text-xl font-bold text-slate-800">
+                                Liste des utilisateurs
+                                <span class="block mt-1 text-sm text-slate-600 font-normal">
+                                    Gérez les utilisateurs de la plateforme
+                                </span>
+                            </h2>
+                        </div>
 
-                        {% if is_granted('ROLE_ADMIN') %}
-                            <a href="{{ path('app_user_new') }}"
-                               class="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm text-center">
-                                Nouvel utilisateur
-                            </a>
-                        {% endif %}
+                        <div class="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
+                            <!-- Barre de recherche -->
+                            <div class="relative w-full sm:w-64">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg class="w-4 h-4 text-slate-500" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <input
+                                        type="text"
+                                        id="userSearch"
+                                        class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        placeholder="Rechercher un utilisateur..."
+                                >
+                            </div>
+                        </div>
                     </div>
 
                     <div class="overflow-x-auto">
@@ -180,6 +192,22 @@
                                     </tbody>
                                 </table>
                             </div>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4 flex items-center justify-between border-t border-slate-200">
+                        <div class="flex items-center gap-2">
+                            <button id="prevPage" class="px-3 py-1 border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            <div id="pagination" class="flex items-center gap-1">
+                            </div>
+                            <button id="nextPage" class="px-3 py-1 border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -500,5 +528,116 @@
             content.classList.toggle('hidden');
             icon.classList.toggle('rotate-180');
         }
+
+        // Search bar
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.querySelector('#userSearch');
+            const tbody = document.querySelector('tbody');
+            const paginationContainer = document.querySelector('#pagination');
+            const prevButton = document.querySelector('#prevPage');
+            const nextButton = document.querySelector('#nextPage');
+            const startIndexSpan = document.querySelector('#startIndex');
+            const endIndexSpan = document.querySelector('#endIndex');
+            const totalItemsSpan = document.querySelector('#totalItems');
+
+            const itemsPerPage = 8;
+            let currentPage = 1;
+            let filteredRows = [];
+
+            function filterRows(searchTerm) {
+                const rows = Array.from(tbody.querySelectorAll('tr')).filter(row => !row.querySelector('td[colspan]'));
+
+                filteredRows = searchTerm ? rows.filter(row => {
+                    const name = row.querySelector('td:first-child')?.textContent || '';
+                    const firstName = row.querySelector('td:nth-child(2)')?.textContent || '';
+                    const email = row.querySelector('td:nth-child(3)')?.textContent || '';
+
+                    return [name, firstName, email].some(text =>
+                        text.toLowerCase().includes(searchTerm.toLowerCase())
+                    );
+                }) : rows;
+
+                return filteredRows;
+            }
+
+            function updatePagination() {
+                const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+                paginationContainer.innerHTML = '';
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const button = document.createElement('button');
+                    button.textContent = i;
+                    button.className = `px-3 py-1 border border-slate-200 rounded-lg hover:bg-slate-50 ${
+                        currentPage === i ? 'bg-blue-50 border-blue-200 text-blue-600' : ''
+                    }`;
+                    button.addEventListener('click', () => {
+                        currentPage = i;
+                        displayRows();
+                    });
+                    paginationContainer.appendChild(button);
+                }
+
+                prevButton.disabled = currentPage === 1;
+                nextButton.disabled = currentPage === totalPages;
+
+                const startIndex = (currentPage - 1) * itemsPerPage + 1;
+                const endIndex = Math.min(startIndex + itemsPerPage - 1, filteredRows.length);
+                startIndexSpan.textContent = filteredRows.length > 0 ? startIndex : 0;
+                endIndexSpan.textContent = endIndex;
+                totalItemsSpan.textContent = filteredRows.length;
+            }
+
+            function displayRows() {
+                const start = (currentPage - 1) * itemsPerPage;
+                const end = start + itemsPerPage;
+
+                tbody.querySelectorAll('tr').forEach(row => {
+                    row.style.display = 'none';
+                });
+
+                filteredRows.slice(start, end).forEach(row => {
+                    row.style.display = '';
+                });
+
+                const noResultsRow = tbody.querySelector('tr td[colspan]')?.closest('tr');
+                if (noResultsRow) noResultsRow.remove();
+
+                if (filteredRows.length === 0) {
+                    const noResultsRow = document.createElement('tr');
+                    noResultsRow.innerHTML = `
+                <td colspan="5" class="px-3 sm:px-6 py-6 text-center text-sm text-slate-600">
+                    Aucun utilisateur trouvé pour cette recherche.
+                </td>
+            `;
+                    tbody.appendChild(noResultsRow);
+                }
+
+                updatePagination();
+            }
+
+            searchInput.addEventListener('input', function(e) {
+                currentPage = 1;
+                filterRows(e.target.value);
+                displayRows();
+            });
+
+            prevButton.addEventListener('click', function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayRows();
+                }
+            });
+
+            nextButton.addEventListener('click', function() {
+                const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    displayRows();
+                }
+            });
+
+            filterRows('');
+            displayRows();
+        });
     </script>
 {% endblock %}
