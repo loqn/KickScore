@@ -37,6 +37,30 @@ class ChampionshipController extends AbstractController
         return $this->redirectToRoute('app_team_edit', ['id' => $team->getId()]);
     }
 
+    #[Route('/{id}/champedit', name: 'app_champ_edit', methods: ['GET'])]
+    public function edit(Championship $championship, EntityManagerInterface $entityManager, Request $request): Response
+    {
+        // get the fields of the championship
+        $fields = $championship->getFields();
+
+        $selectedChampionshipId = $request->query->get('select');
+
+        return $this->render('Championship/edit.html.twig', [
+            'championship' => $championship,
+            'fields' => $fields,
+            'select' => $selectedChampionshipId,
+
+        ]);
+    }
+
+    #[Route('/championshipedit', name: 'app_championship_edit', methods: ['POST'])]
+    public function champedit(Request $request, Championship $championship, EntityManagerInterface $entityManager): Response
+    {
+        return $this->render('Championship/edit.html.twig', [
+            'championship' => $championship
+        ]);
+    }
+
     #[Route('/leave_championship/{id}', name: 'leave_championship', methods: ['POST'])]
     public function leaveChampionship(int $id, EntityManagerInterface $entityManager, Request $request): Response
     {
