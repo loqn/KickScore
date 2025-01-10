@@ -126,11 +126,44 @@
 
                     <input type="hidden" name="addType" value="" id="addType">
 
-                    <button type="submit"
-                            class="w-full px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm hidden">
-                        Créer
-                    </button>
-                </form>
+                        <button type="submit"
+                                class="w-full px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
+                            Créer le match
+                        </button>
+                    </form>
+                </div>
+
+                <!-- Championship Panel -->
+                <div id="panel_championship" class="hidden">
+                    <div class="space-y-6">
+                        <div class="bg-white rounded-lg shadow-sm border border-slate-100 p-6">
+                            <div class="flex flex-col space-y-4">
+                                <a href="#" id="btn_manual"
+                                   class="w-full py-3 px-4 rounded-lg text-slate-700 bg-slate-50 hover:bg-slate-100 transition-colors font-medium text-center">
+                                    Créer manuellement
+                                </a>
+                                <a href="#" id="btn_import"
+                                   class="w-full py-3 px-4 rounded-lg text-slate-700 bg-slate-50 hover:bg-slate-100 transition-colors font-medium text-center">
+                                    Importer depuis un fichier
+                                </a>
+                            </div>
+                        </div>
+
+                        <!-- Manual Creation Form -->
+                        <form id="championship_manual" method="post" action="{{ path('app_meet_create') }}"
+                              class="hidden space-y-6 bg-white rounded-lg shadow-sm border border-slate-100 p-6">
+                            <input type="hidden" name="addType" value="CHAMPIONSHIP">
+                            <div class="space-y-1">
+                                <label for="name" class="text-sm font-medium text-slate-700">Nom</label>
+                                <input type="text" id="name" name="name"
+                                       placeholder="Nom du championnat"
+                                       class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
+                            </div>
+                            <button type="submit"
+                                    class="w-full px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
+                                Créer le championnat
+                            </button>
+                        </form>
 
                 <!-- Import Form -->
                 <form id="formImport" class="hidden space-y-6 bg-white rounded-lg shadow-sm border border-slate-100 p-6"
@@ -151,124 +184,146 @@
     </div>
 
     <script>
-        let selected = null;
-        let selectedOui = null;
+        const championshipTeams = {
+        {% for championship in championships %}
+        {{ championship.id }}: [
+            {% for teamResult in championship.teamResults %}
+            {
+                id: {{ teamResult.team.id }},
+                name: "{{ teamResult.team.name }}"
+            },
+            {% endfor %}
+        ],
+        {% endfor %}
+        };
+    </script>
 
-        // Helper function to update button states
-        function updateButtonState(activeBtn, inactiveBtn) {
-            activeBtn.classList.remove('bg-slate-50');
-            activeBtn.classList.add('bg-blue-900', 'text-white');
-            inactiveBtn.classList.remove('bg-blue-900', 'text-white');
-            inactiveBtn.classList.add('bg-slate-50');
-        }
-
-        // Import selection handlers
-        document.getElementById('select_btnOui').addEventListener('click', function() {
-            selectedOui = 'OUI';
-            updateButtonState(this, document.getElementById('select_btnNon'));
-            document.getElementById('form').classList.add('hidden');
-            document.getElementById('formImport').classList.remove('hidden');
-            document.getElementById('subtitle').textContent = "Importation d'un championnat";
-        });
-
-        document.getElementById('select_btnNon').addEventListener('click', function() {
-            selectedOui = 'NON';
-            updateButtonState(this, document.getElementById('select_btnOui'));
-            document.getElementById('form').classList.remove('hidden');
-            document.getElementById('formImport').classList.add('hidden');
-            document.getElementById('import').classList.add('hidden');
-            document.getElementById('subtitle').textContent = "Création d'un championnat";
-        });
-
-        // Main type selection handlers
-        document.getElementById('select_btnMatch').addEventListener('click', function() {
-            selected = 'MATCH';
-            updateButtonState(this, document.getElementById('select_btnChampionship'));
-            document.getElementById('form').classList.remove('hidden');
-            document.getElementById('date').classList.remove('hidden');
-            document.getElementById('import').classList.add('hidden');
-            document.getElementById('formImport').classList.add('hidden');
-            document.getElementById('subtitle').textContent = "Création d'un match";
-            document.body.dispatchEvent(new Event('change'));
-        });
-
-        document.getElementById('select_btnChampionship').addEventListener('click', function() {
-            selected = 'CHAMPIONSHIP';
-            //deactivate the required attribute blue team
-            document.getElementById('blueTeamSelect').removeAttribute('required');
-            document.getElementById('greenTeamSelect').removeAttribute('required');
-
-            console.log('Selected:', selected);
-            document.getElementById('select_btnMatch').classList.remove('bg-blue-300');
-            document.getElementById('select_btnMatch').classList.add('bg-blue-100');
-            event.target.classList.remove('bg-blue-100');
-            event.target.classList.add('bg-blue-300');
-            //select the import section 
-            document.getElementById('import').classList.remove('hidden');
-            document.getElementById('date').classList.add('hidden');
-            document.getElementById('champ').classList.add('hidden');
-            document.getElementById('formImport').classList.add('hidden');
-            document.getElementById('subtitle').textContent = "Création d'un championnat";
-            document.body.dispatchEvent(new Event('change'));
-        });
-
-        // Date verification handler
-        document.getElementById('date_verifyBtn').addEventListener('click', () => {
-            const date = new Date(document.getElementById('dateInput').value);
-            const now = new Date();
-            const dateValidMsg = document.getElementById('date_valid');
-
-            if (date < now) {
-                document.getElementById('greenscore').classList.remove('hidden');
-                document.getElementById('bluescore').classList.remove('hidden');
-                dateValidMsg.textContent = "Match passé - Saisie des scores activée";
-            } else {
-                dateValidMsg.textContent = "Date valide pour un futur match";
-            }
-
-            dateValidMsg.classList.remove('hidden');
-            document.querySelector('button[type="submit"]').classList.remove('hidden');
-
-            setTimeout(() => dateValidMsg.classList.add('hidden'), 5000);
-        });
-
-        // Form change handler
-        document.body.addEventListener('change', () => {
-            const containers = {
-                greenscore: document.getElementById('greenscore'),
-                bluescore: document.getElementById('bluescore'),
-                champ: document.getElementById('champ'),
-                name: document.getElementById('name'),
-                greenTeam: document.getElementById('greenTeam'),
-                blueTeam: document.getElementById('blueTeam')
-            };
-
-            if (selected === 'MATCH') {
-                containers.champ.classList.remove('hidden');
-                containers.greenTeam.classList.remove('hidden');
-                containers.blueTeam.classList.remove('hidden');
-                containers.name.classList.add('hidden');
-            } else if (selected === 'CHAMPIONSHIP') {
-                Object.values(containers).forEach(container => container.classList.add('hidden'));
-                containers.name.classList.remove('hidden');
-            }
-        });
-
-        // Team selection handlers
-        const setupTeamSelect = (selectElem, otherSelectElem) => {
-            selectElem.addEventListener('change', () => {
-                Array.from(otherSelectElem.options).forEach(option => {
-                    option.disabled = option.value === selectElem.value;
-                });
-            });
+    <script>
+        const tabs = {
+            match: document.getElementById('tab_match'),
+            championship: document.getElementById('tab_championship')
         };
 
-        setupTeamSelect(document.getElementById('greenTeamSelect'), document.getElementById('blueTeamSelect'));
-        setupTeamSelect(document.getElementById('blueTeamSelect'), document.getElementById('greenTeamSelect'));
+        const panels = {
+            match: document.getElementById('panel_match'),
+            championship: document.getElementById('panel_championship')
+        };
 
-        // Form submission handler
-        document.querySelector('button[type="submit"]').addEventListener('click', () => {
-            document.getElementById('addType').value = selected;
+        const subtitle = document.getElementById('subtitle');
+
+        function activateTab(tabId) {
+            Object.values(tabs).forEach(tab => {
+                tab.classList.remove('text-blue-900', 'border-blue-900');
+                tab.classList.add('text-slate-500', 'border-transparent');
+            });
+            tabs[tabId].classList.add('text-blue-900', 'border-blue-900');
+            tabs[tabId].classList.remove('text-slate-500', 'border-transparent');
+
+            Object.values(panels).forEach(panel => panel.classList.add('hidden'));
+            panels[tabId].classList.remove('hidden');
+
+            subtitle.textContent = tabId === 'match' ? "d'un nouveau match" : "d'un nouveau championnat";
+        }
+
+        activateTab('match');
+
+        tabs.match.addEventListener('click', () => activateTab('match'));
+        tabs.championship.addEventListener('click', () => activateTab('championship'));
+
+        const btnManual = document.getElementById('btn_manual');
+        const btnImport = document.getElementById('btn_import');
+        const formManual = document.getElementById('championship_manual');
+        const formImport = document.getElementById('championship_import');
+
+        btnManual.addEventListener('click', (e) => {
+            e.preventDefault();
+            formManual.classList.remove('hidden');
+            formImport.classList.add('hidden');
+
+            btnManual.classList.add('bg-blue-900', 'text-white');
+            btnManual.classList.remove('bg-slate-50', 'text-slate-700');  // Retire aussi text-slate-700
+
+            btnImport.classList.remove('bg-blue-900', 'text-white');
+            btnImport.classList.add('bg-slate-50', 'text-slate-700');
         });
+
+        btnImport.addEventListener('click', (e) => {
+            e.preventDefault();
+            formImport.classList.remove('hidden');
+            formManual.classList.add('hidden');
+
+            btnImport.classList.add('bg-blue-900', 'text-white');
+            btnImport.classList.remove('bg-slate-50', 'text-slate-700');  // Retire aussi text-slate-700
+
+            btnManual.classList.remove('bg-blue-900', 'text-white');
+            btnManual.classList.add('bg-slate-50', 'text-slate-700');
+        });
+
+        const dateInput = document.getElementById('dateInput');
+        const scoresContainer = document.getElementById('scores_container');
+        const dateValid = document.getElementById('date_valid');
+
+        dateInput.addEventListener('change', () => {
+            const date = new Date(dateInput.value);
+            const now = new Date();
+
+            if (date < now) {
+                scoresContainer.classList.remove('hidden');
+                dateValid.textContent = "Match passé - Saisie des scores activée";
+            } else {
+                scoresContainer.classList.add('hidden');
+                dateValid.textContent = "Date valide pour un futur match";
+            }
+
+            dateValid.classList.remove('hidden');
+            setTimeout(() => dateValid.classList.add('hidden'), 5000);
+        });
+
+        const greenTeamSelect = document.getElementById('greenTeamSelect');
+        const blueTeamSelect = document.getElementById('blueTeamSelect');
+
+        function updateTeamOptions(activeSelect, otherSelect) {
+            Array.from(otherSelect.options).forEach(option => {
+                option.disabled = option.value === activeSelect.value;
+            });
+        }
+
+        greenTeamSelect.addEventListener('change', () => updateTeamOptions(greenTeamSelect, blueTeamSelect));
+        blueTeamSelect.addEventListener('change', () => updateTeamOptions(blueTeamSelect, greenTeamSelect));
+
+        const champSelect = document.getElementById('champ');
+
+        function updateTeamSelects() {
+            const championshipId = champSelect.value;
+            const teams = championshipTeams[championshipId] || [];
+
+            const currentGreenTeam = greenTeamSelect.value;
+            const currentBlueTeam = blueTeamSelect.value;
+
+            greenTeamSelect.innerHTML = '<option disabled selected value=""> -- Choisir -- </option>';
+            blueTeamSelect.innerHTML = '<option disabled selected value=""> -- Choisir -- </option>';
+
+            teams.forEach(team => {
+                const greenOption = new Option(team.name, team.id);
+                const blueOption = new Option(team.name, team.id);
+
+                greenOption.disabled = team.id.toString() === currentBlueTeam;
+                blueOption.disabled = team.id.toString() === currentGreenTeam;
+
+                greenTeamSelect.add(greenOption);
+                blueTeamSelect.add(blueOption);
+            });
+
+            if (teams.some(t => t.id.toString() === currentGreenTeam)) {
+                greenTeamSelect.value = currentGreenTeam;
+            }
+            if (teams.some(t => t.id.toString() === currentBlueTeam)) {
+                blueTeamSelect.value = currentBlueTeam;
+            }
+        }
+
+        champSelect.addEventListener('change', updateTeamSelects);
+
+        updateTeamSelects();
     </script>
 {% endblock %}

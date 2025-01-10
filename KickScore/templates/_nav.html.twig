@@ -2,7 +2,8 @@
     <div class="p-4">
         <div class="mb-8">
             <h1 class="text-2xl font-semibold text-slate-800">
-                <a href="{{ path('app_root') }}" class="hover:text-slate-600 transition-colors">
+                <a href="{{ path('app_root') }}" class=" flex items-center transition-colors">
+                    <img src="{{ asset("favicon.ico")}}" alt="KickScore icon" class="w-1/12 mr-2">
                     KickScore
                 </a>
             </h1>
@@ -16,8 +17,6 @@
 
         <div class="space-y-2">
             {% if app.user %}
-
-            
                 <div class="px-4 py-2 text-slate-600 border-b border-slate-200 mb-4 flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                          class="bi bi-person-fill flex-shrink-0" viewBox="0 0 16 16">
@@ -56,10 +55,8 @@
                         </svg>
                         <span>{{ 'nav.createteam'|trans }}</span>
                     </a>
-                    {% if app.user.team %}
-
-
-                        <a href="{{ path('app_team_edit', {id: app.user.team.id}) }}"
+                    {% if app.user and app.user.member and app.user.member.team %}
+                        <a href="{{ path('app_team_edit', {id: app.user.member.team.id}) }}"
                            class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors w-full text-left flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
                                  class="bi bi-people-fill flex-shrink-0" viewBox="0 0 16 16">
@@ -142,11 +139,6 @@
                     </svg>
                     <span>{{ 'nav.register'|trans }}</span>
                 </a>
-             
-
-
-
-                 
             {% endif %}
         </div>
     </div>

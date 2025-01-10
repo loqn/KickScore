@@ -51,10 +51,23 @@ class TeamRepository extends ServiceEntityRepository
     public function findTeamsByChampionship(int $championshipId)
     {
         return $this->createQueryBuilder('t')
-            ->where('t.championship = :championshipId')
+            ->innerJoin('t.championships', 'c')
+            ->where('c.id = :championshipId')
             ->setParameter('championshipId', $championshipId)
             ->orderBy('t.points', 'DESC')
             ->addOrderBy('t.win', 'DESC')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function findResultsByTeamId(int $teamId)
+    {
+        return $this->createQueryBuilder('t')
+            ->select('t', 'tr', 'c')
+            ->leftJoin('t.teamResults', 'tr')
+            ->leftJoin('tr.championship', 'c')
+            ->where('t.id = :teamId')
+            ->setParameter('teamId', $teamId)
             ->getQuery()
             ->getResult();
     }

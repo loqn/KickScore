@@ -69,57 +69,94 @@
 
 
     <script>
+        let membersToAdd = [];
 
         const addMemberToTab = (user) => {
-            const ul = document.querySelector('ul');
-            const li = document.createElement('li');
-            li.classList.add('flex', 'items-center', 'justify-between', 'p-3', 'border', 'rounded-lg', 'hover:bg-gray-100', 'transition', 'ease-in', 'duration-200');
-            const div = document.createElement('div');
-            div.classList.add('flex', 'flex-col');
-            const span1 = document.createElement('span');
-            span1.classList.add('font-medium');
-            span1.textContent = `${user.fname} ${user.name}`;
-            const span2 = document.createElement('span');
-            span2.classList.add('text-sm', 'text-gray-600');
-            span2.textContent = user.email;
-            div.appendChild(span1);
-            div.appendChild(span2);
-            li.appendChild(div);
-            ul.appendChild(li);
+            membersToAdd.push(user);
+
             const hiddenInput = document.querySelector('input[name="to_add"]');
-            hiddenInput.value += JSON.stringify(user);
-        }
+            hiddenInput.value = JSON.stringify(membersToAdd);
+
+            const container = document.querySelector('.space-y-3');
+            const div = document.createElement('div');
+            div.className = 'flex items-center justify-between p-4 bg-white border border-slate-200 rounded-lg hover:border-blue-900 transition-colors';
+
+            const memberHTML = `
+                <div class="space-y-1">
+                    <div class="font-medium text-slate-800 flex items-center">
+                        ${user.fname} ${user.name}
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 text-slate-400" viewBox="0 0 16 16" fill="currentColor">
+                            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                        </svg>
+                    </div>
+                    <div class="text-sm text-slate-500">${user.email}</div>
+                </div>
+                <button type="button" class="remove-member px-4 py-2 text-blue-900 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors font-medium" data-index="${membersToAdd.length - 1}">
+                    Retirer
+                </button>
+            `;
+
+            div.innerHTML = memberHTML;
+            container.appendChild(div);
+
+            const removeButton = div.querySelector('.remove-member');
+            removeButton.addEventListener('click', function () {
+                const index = parseInt(this.dataset.index);
+                membersToAdd.splice(index, 1);
+                hiddenInput.value = JSON.stringify(membersToAdd);
+                div.remove();
+                updateSubmitButton();
+            });
+
+            updateSubmitButton();
+        };
+
+        const updateSubmitButton = () => {
+            const submitBtn = document.getElementById('addMemberBtn');
+
+            if (membersToAdd.length > 0) {
+                submitBtn.disabled = false;
+                submitBtn.className = 'w-full px-4 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium flex items-center justify-center cursor-pointer';
+                submitBtn.innerHTML = `
+                    Valider les ajouts
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2"/>
+                    </svg>
+                `;
+            } else {
+                submitBtn.disabled = true;
+                submitBtn.className = 'w-full px-4 py-3 bg-slate-200 text-slate-500 rounded-lg font-medium flex items-center justify-center cursor-not-allowed';
+                submitBtn.innerHTML = `
+                    Aucun nouveau membre
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="currentColor" viewBox="0 0 16 16">
+                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                    </svg>
+                `;
+            }
+        };
 
         const addBtn = document.getElementById('addBtn');
-        const submitBtn = document.querySelector('button[type="submit"]');
+        const inputs = document.querySelectorAll('form input:not([type="hidden"])');
+
         addBtn.addEventListener('click', () => {
-            let count = 0;
-            document.querySelectorAll('form input').forEach(input => {
-                if (input.value !== '') {
-                    count++;
-                }
-            });
-            if (count === 3) {
-                submitBtn.removeAttribute('disabled');
-                submitBtn.classList.remove('bg-slate-600', 'hover:bg-slate-700', 'hover:cursor-not-allowed');
-                submitBtn.classList.add('bg-blue-500', 'hover:bg-blue-600', 'hover:cursor-pointer');
+            const allFilled = Array.from(inputs).every(input => input.value.trim() !== '');
 
-                submitBtn.innerHTML = `Valider les ajouts
-                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-unlock-fill ml-2" viewBox="0 0 16 16">
-                           <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2"/>
-                    </svg>`;
+            if (allFilled) {
+                const newMember = {
+                    fname: document.getElementById('fname').value.trim(),
+                    name: document.getElementById('name').value.trim(),
+                    email: document.getElementById('email').value.trim()
+                };
 
-                addMemberToTab({
-                    fname: document.querySelector('input[name="fname"]').value,
-                    name: document.querySelector('input[name="name"]').value,
-                    email: document.querySelector('input[name="email"]').value
-                });
+                addMemberToTab(newMember);
 
-                document.querySelectorAll('form input').forEach(input => {
-                    if (input.name !== 'to_add')
-                    {input.value = '';}
+                // Réinitialiser les champs
+                inputs.forEach(input => {
+                    input.value = '';
                 });
             }
         });
+
+        updateSubmitButton();
     </script>
 {% endblock %}

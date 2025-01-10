@@ -1,8 +1,10 @@
 <?php
 
 namespace App\Controller;
+use App\Entity\Championship;
 use App\Entity\Member;
 use App\Entity\Team;
+use App\Entity\TeamResults;
 use App\Entity\User;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
@@ -20,6 +22,11 @@ class TeamController extends AbstractController
     {
         $players = $entityManager->getRepository(User::class)->findAll();
 
+        if (!$this->getUser()) {
+            $this->addFlash('error', 'Vous devez être connecté pour créer une équipe.');
+            return $this->redirectToRoute('app_login');
+        }
+
         if ($this->isGranted('ROLE_ORGANIZER')) {
             $this->addFlash('error', 'Organizers can\'t create teams.');
             return $this->redirectToRoute('app_root');
@@ -31,36 +38,35 @@ class TeamController extends AbstractController
         ]);
     }
 
-    #[Route('/create', name: 'app_team_create', methods: ['POST'])]
+    #[Route('/create', name: 'app_team_create', methods: ['POST', 'GET'])]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
+        if($request->getMethod() !== 'POST'){
+            $this->addFlash('error', 'Erreur : Vous ne pouvez pas accéder à cette page.');
+            return $this->redirectToRoute('app_error');
+        }
+
         if ($this->isGranted('ROLE_ORGANIZER')) {
             throw $this->createAccessDeniedException("organizers can't create teams.");
         }
         if ($entityManager->getRepository(Team::class)->findOneBy(['name' => $request->request->get('name')])) {
-            $this->addFlash('error', 'Team name already exists.');
+            $this->addFlash('error', 'Erreur : une équipe possède déjà ce nom.');
             return $this->redirectToRoute('app_team');
         }
         $name = $request->request->get('name');
         $structure = $request->request->get('structure');
-        $win = 0;
-        $draw = 0;
-        $lose = 0;
-
         if (empty($name)) {
-            $this->addFlash('error', 'Name is required.');
+            $this->addFlash('error', 'Erreur : le nom de l\'équipe ne peut pas être vide.');
             return $this->redirectToRoute('app_team');
         }
         $team = new Team();
         $team->setName($name);
         $team->setStructure($structure);
-        $team->setWin($win);
-        $team->setDraw($draw);
-        $team->setLose($lose);
+        $team->setWin(0);
+        $team->setDraw(0);
+        $team->setLose(0);
         $points = 0;
         $gameplayed = 0;
-        $date = new \DateTime();
-        $team->setCreatedAt($date);
         $team->setPoints($points);
         $team->setGamePlayed($gameplayed);
 
@@ -71,14 +77,18 @@ class TeamController extends AbstractController
             $member->setFname($this->getUser()->getFirstName());
             $member->setName($this->getUser()->getName());
             $member->setEmail($this->getUser()->getMail());
-            $this->getUser()->setTeam($team);
+            $this->getUser()->setMember($member);
+            $this->getUser()->getMember()->setTeam($team);
             $team->addMember($member);
         }
 
         $entityManager->persist($team);
         $entityManager->flush();
-        $this->addFlash('success', 'team added successfully');
-        return $this->redirectToRoute('app_team_edit', ['id' => $team->getId()]);
+        $this->addFlash('success', 'L\'équipe a été créée avec succès.');
+        if($request->request->get('userJoin')){
+            return $this->redirectToRoute('app_team_edit', ['id' => $team->getId()]);
+        }
+        return $this->redirectToRoute('app_team');
     }
 
     #[Route('/edit/add_member', name: 'app_team_add_member', methods: ['POST'])]
@@ -88,39 +98,96 @@ class TeamController extends AbstractController
         if (!$user) {
             throw $this->createAccessDeniedException('User not found');
         }
-        $team = $user->getTeam();
+
+        $team = $user->getMember()->getTeam();
         if (!$team) {
             $logger->alert('User has no team');
             throw $this->createAccessDeniedException('You don\'t have a team');
         }
-        $userData = json_decode($request->request->get('to_add'), true);
-        $to_add = new ArrayCollection([$userData]);
-        foreach($to_add as $temp_mbr) {
-            $temp_email = $temp_mbr['email'];
-            if (!$entityManager->getRepository(Member::class)->findOneBy(['email' => $temp_email])) {
+
+        $jsonData = $request->request->get('to_add');
+        $membersData = json_decode($jsonData, true);
+
+        if (!is_array($membersData)) {
+            $membersData = [$membersData];
+        }
+
+        $addedCount = 0;
+
+        foreach ($membersData as $memberData) {
+            if (!isset($memberData['email'], $memberData['fname'], $memberData['name'])) {
+                continue;
+            }
+
+            $existingMember = $entityManager->getRepository(Member::class)->findOneBy([
+                'email' => $memberData['email']
+            ]);
+
+            if (!$existingMember) {
                 $member = new Member();
-                $member->setTeam($team);
-                $member->setFname($temp_mbr['fname']);
-                $member->setName($temp_mbr['name']);
-                $member->setEmail($temp_email);
+                $member->setTeam($team)
+                    ->setFname($memberData['fname'])
+                    ->setName($memberData['name'])
+                    ->setEmail($memberData['email']);
+
                 $team->addMember($member);
                 $entityManager->persist($member);
+                $addedCount++;
             }
         }
+
         $entityManager->flush();
-        $this->addFlash('success', $to_add->count().'member(s) were added successfully');
-        return $this->redirectToRoute('app_team_edit', ['id' => $this->getUser()->getTeam()->getId()]);
+
+        if ($addedCount > 0) {
+            $this->addFlash(
+                'success',
+                $addedCount === 1
+                    ? 'Le membre a été ajouté avec succès.'
+                    : $addedCount . ' membres ajoutés avec succès.'
+            );
+        } else {
+            $this->addFlash('info', 'Aucun membre ajouté.');
+        }
+
+        return $this->redirectToRoute('app_team_edit', [
+            'id' => $team->getId()
+        ]);
     }
 
     #[Route('/edit/{id}', name: 'app_team_edit')]
     public function edit(Team $team, EntityManagerInterface $entityManager, Request $request): Response
     {
-        if ($this->getUser()->getTeam() !== $team && !$this->isGranted('ROLE_ORGANIZER')) {
-            throw $this->createAccessDeniedException('You can only edit your own team.');
+        if (!$this->isGranted('ROLE_ORGANIZER')) {
+            $userTeam = $this->getUser()->getMember()?->getTeam();
+            if ($userTeam !== $team) {
+                throw $this->createAccessDeniedException('You can only edit your own team.');
+            }
         }
+
+        $championships = $team->getChampionships();
+        $teamResults = [];
+
+        foreach ($championships as $championship) {
+            $results = $entityManager->getRepository(TeamResults::class)->findOneBy([
+                'team' => $team,
+                'championship' => $championship
+            ]);
+
+            if ($results) {
+                $teamResults[$championship->getId()] = [
+                    'wins' => $results->getWins(),
+                    'losses' => $results->getLosses(),
+                    'draws' => $results->getDraws(),
+                    'points' => $results->getPoints()
+                ];
+            }
+        }
+
         return $this->render('team/edit.html.twig', [
             'controller_name' => 'TeamController',
-            'team' => $team
+            'team' => $team,
+            'championships' => $championships,
+            'teamResults' => $teamResults
         ]);
     }
 
@@ -131,11 +198,13 @@ class TeamController extends AbstractController
             throw $this->createAccessDeniedException('You can only remove members from your own team.');
         }
         $user = $member->getUser();
-        $user->setTeam(null);
+        $user->getMember()->setTeam(null);
+        $user->removeMember();
         $entityManager->persist($user);
         $entityManager->remove($member);
         $entityManager->flush();
         $this->addFlash('success', 'Member removed successfully');
+        return $this->redirectToRoute('app_team_edit', ['id' => $member->getTeam()->getId()]);
     }
     #[Route('/teams/ranking', name: 'app_teams_ranking')]
     public function ranking(TeamRepository $teamRepository): Response
