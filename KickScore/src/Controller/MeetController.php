@@ -244,6 +244,7 @@ class MeetController extends AbstractController
         }
         return $this->render('meet/edit.html.twig', [
             'match' => $match,
+            'teams' => $match->getTeams()
         ]);
     }
 
