@@ -38,42 +38,40 @@ class MeetController extends AbstractController
         if (!$this->isGranted('ROLE_ORGANIZER')) {
             throw $this->createAccessDeniedException('Only organizers can import meets.');
         }
-    
+
         $file = $request->files->get('file');
-        
+
         if (!$file) {
             $this->addFlash('error', 'Aucun fichier sélectionné.');
             return $this->redirectToRoute('app_meet');
         }
-    
+
         $jsonData = file_get_contents($file->getPathname());
         $championships = json_decode($jsonData, true);
-    
+
         if (!$championships) {
             $this->addFlash('error', 'Format JSON invalide, vérifiez le fichier.');
             return $this->redirectToRoute('app_meet');
         }
-    
+
         foreach ($championships as $championshipData) {
             $championship = new Championship();
             $championship->setName($championshipData['name']);
             $championship->setOrganizer($this->getUser());
-            
+
             foreach ($championshipData['matches'] as $matchData) {
                 $match = new Versus();
                 $match->setChampionship($championship);
-                
-                // Get team entities from repository
+
                 $blueTeam = $entityManager->getRepository(Team::class)->find($matchData['BlueTeam']);
                 $greenTeam = $entityManager->getRepository(Team::class)->find($matchData['GreenTeam']);
-                
-                // Create teams if they don't exist
+
                 if (!$greenTeam) {
                     $greenTeam = new Team();
                     $greenTeam->setName($matchData['GreenTeam']);
                     $entityManager->persist($greenTeam);
                 }
-                
+
                 if (!$blueTeam) {
                     $blueTeam = new Team();
                     $blueTeam->setName($matchData['BlueTeam']);
@@ -86,13 +84,13 @@ class MeetController extends AbstractController
                 $match->setBlueScore($matchData['BlueScore']);
                 $match->setGreenScore($matchData['GreenScore']);
                 $match->setDate(new \DateTime($matchData['Date']));
-    
+
                 $entityManager->persist($match);
             }
-            
+
             $entityManager->persist($championship);
         }
-    
+
         $entityManager->flush();
         $this->addFlash('success', 'Le(s) championnat(s) ont été importé(s) avec succès.');
         return $this->redirectToRoute('app_meet');
@@ -201,5 +199,40 @@ class MeetController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('app_meet');
+    }
+
+    #[Route('/gen_match/{id}', name: 'app_generate_match', methods: ['POST'])]
+    public function generateMatchsForChampionship(Request $request, EntityManagerInterface $entityManager): Response
+    {
+        $chp = $entityManager->getRepository(Championship::class)->find($request->request->get('chp_id'));
+        $teams = $chp->getTeams();
+        $teamsArray = $teams->toArray();
+        $startDate = new \DateTimeImmutable('2026-12-12 10:00:00');
+        $matchCount = 0;
+        for ($i = 0; $i < count($teamsArray); $i++) {
+            for ($j = $i + 1; $j < count($teamsArray); $j++) {
+                $teamA = $teamsArray[$i];
+                $teamB = $teamsArray[$j];
+                $existingMatch = $chp->getMatches()->filter(function($match) use ($teamA, $teamB) {
+                    return ($match->getBlueTeam() === $teamA && $match->getGreenTeam() === $teamB)
+                        || ($match->getBlueTeam() === $teamB && $match->getGreenTeam() === $teamA);
+                })->first();
+                if (!$existingMatch) {
+                    $versus = new Versus();
+                    $versus->setBlueTeam($teamA);
+                    $versus->setGreenTeam($teamB);
+                    $versus->setChampionship($chp);
+                    $minutesToAdd = 20 * $matchCount;
+                    $matchDate = $startDate->modify("+{$minutesToAdd} minutes");
+                    $versus->setDate(\DateTime::createFromImmutable($matchDate));
+                    $chp->addMatch($versus);
+                    $entityManager->persist($versus);
+                    $matchCount++;
+                }
+            }
+        }
+        $this->addFlash('success', 'Matchs générés avec succès.');
+        $entityManager->flush();
+        return $this->redirectToRoute('app_match_list');
     }
 }

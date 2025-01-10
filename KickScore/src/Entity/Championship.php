@@ -45,6 +45,9 @@ class Championship
     #[ORM\OneToMany(targetEntity: TeamResults::class, mappedBy: 'championship')]
     private Collection $teamResults;
 
+    #[ORM\Column(length: 2048, nullable: true)]
+    private ?string $description = null;
+
     public function __construct()
     {
         $this->teams = new \Doctrine\Common\Collections\ArrayCollection();
@@ -168,6 +171,18 @@ class Championship
                 $teamResult->setChampionship(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
 
         return $this;
     }

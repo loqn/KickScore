@@ -1,18 +1,27 @@
+{# templates/user/_delete_form.html.twig #}
 <form method="post" action="{{ path('app_user_delete', {'id': user.id}) }}"
-      onsubmit="return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');"
-      class="inline-block">
+      class="inline-block"
+      onsubmit="return handleDelete(event);">
     <input type="hidden" name="_token" value="{{ csrf_token('delete' ~ user.id) }}">
     <button type="submit"
-            class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors font-medium">
+            class="px-4 py-2 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition-colors font-medium inline-flex items-center">
+        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"/>
+        </svg>
         Supprimer
     </button>
 </form>
 
-<script>
-    const btn = document.createElement('button');
-    btn.addEventListener('click', () => {
-        {% if app.user and app.user.member and app.user.member.team  %}
-        alert('Cet utilisateur est membre d\'une équipe, vous ne pouvez pas le supprimer.');
-        {% endif %}
-    });
-</script>
+{% block javascripts %}
+    <script>
+        function handleDelete(event) {
+            {% if app.user and app.user.member and app.user.member.team %}
+            event.preventDefault();
+            alert('Cet utilisateur est membre d\'une équipe, vous ne pouvez pas le supprimer.');
+            return false;
+            {% else %}
+            return confirm('Êtes-vous sûr de vouloir supprimer cet utilisateur ?');
+            {% endif %}
+        }
+    </script>
+{% endblock %}

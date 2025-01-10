@@ -94,15 +94,30 @@ class TeamController extends AbstractController
     #[Route('/edit/add_member', name: 'app_team_add_member', methods: ['POST'])]
     public function addMember(EntityManagerInterface $entityManager, Request $request, LoggerInterface $logger): Response
     {
-        $user = $this->getUser();
-        if (!$user) {
-            throw $this->createAccessDeniedException('User not found');
-        }
+        if ($this->isGranted('ROLE_ORGANIZER')) {
+            $teamId = $request->request->get('team_id');
+            $team = $entityManager->getRepository(Team::class)->find($teamId);
 
-        $team = $user->getMember()->getTeam();
-        if (!$team) {
-            $logger->alert('User has no team');
-            throw $this->createAccessDeniedException('You don\'t have a team');
+            if (!$team) {
+                throw $this->createNotFoundException('L\'équipe renseignée n\'a pas été trouvée');
+            }
+            $firstMember = $team->getMembers()->first();
+            $teamCreator = $firstMember->getUser();
+            if (!$teamCreator) {
+                throw $this->createNotFoundException('Le créateur de l\'équipe n\'a pas été trouvé');
+            }
+            $user = $teamCreator;
+        } else {
+            $user = $this->getUser();
+            if (!$user) {
+                $logger->alert('User not logged in');
+                throw $this->createAccessDeniedException('Vous devez être connecté pour ajouter des membres.');
+            }
+            $team = $user->getMember()->getTeam();
+            if (!$team) {
+                $logger->alert('User has no team');
+                throw $this->createAccessDeniedException('Vous ne faites partie d\'aucune équipe.');
+            }
         }
 
         $jsonData = $request->request->get('to_add');

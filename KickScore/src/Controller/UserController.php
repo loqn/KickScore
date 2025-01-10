@@ -11,6 +11,7 @@ use Psr\Log\LoggerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 #[Route('/user')]
@@ -19,9 +20,12 @@ final class UserController extends AbstractController
     #[Route(name: 'app_user_index', methods: ['GET'])]
     public function index(UserRepository $userRepository, ChampionshipRepository $championshipRepository): Response
     {
+        //all the teams participating in all the championships organized by the current organizer
+        $teams = $championshipRepository->findTeamsByOrganizer($this->getUser());
         return $this->render('user/index.html.twig', [
             'users' => $userRepository->findAll(),
             'championships' => $championshipRepository->findAll(),
+            'teams' => $teams
         ]);
     }
 
@@ -54,7 +58,12 @@ final class UserController extends AbstractController
     }
 
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
-    public function edit(Request $request, User $user, EntityManagerInterface $entityManager): Response
+    public function edit(
+        Request $request,
+        User $user,
+        EntityManagerInterface $entityManager,
+        UserPasswordHasherInterface $passwordHasher
+    ): Response
     {
         if ($request->isMethod('POST')) {
             if (!$this->isCsrfTokenValid('edit-user', $request->request->get('token'))) {
@@ -66,6 +75,19 @@ final class UserController extends AbstractController
                 $user->setFirstName($request->request->get('firstName'))
                     ->setName($request->request->get('name'))
                     ->setMail($request->request->get('email'));
+
+                $password = $request->request->get('password');
+                if (!empty($password)) {
+                    $password_confirm = $request->request->get('password_confirm');
+
+                    if ($password !== $password_confirm) {
+                        $this->addFlash('user_error', 'Les mots de passe ne correspondent pas.');
+                        return $this->redirectToRoute('app_user_edit', ['id' => $user->getId()]);
+                    }
+
+                    $hashedPassword = $passwordHasher->hashPassword($user, $password);
+                    $user->setPassword($hashedPassword);
+                }
 
                 if ($this->isGranted('ROLE_ORGANIZER')) {
                     $user->setIsOrganizer($request->request->has('isOrganizer'));

@@ -168,6 +168,10 @@
 
                             <input type="hidden" name="to_add" value="">
 
+                            <input type="hidden" name="_token" value="{{ csrf_token('add_member') }}">
+
+                            <input type="hidden" name="team_id" value="{{ team.id }}">
+
                             <button id="addMemberBtn" type="submit" disabled
                                     class="w-full px-4 py-3 bg-slate-200 text-slate-500 rounded-lg font-medium flex items-center justify-center cursor-not-allowed">
                                 Aucun nouveau membre
