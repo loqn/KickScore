@@ -20,12 +20,8 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'USR_ID', type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Team::class)]
-    #[ORM\JoinColumn(name: 'TEA_ID', referencedColumnName: 'TEA_ID', nullable: true)]
-    private ?Team $team = null;
-
     #[ORM\Column(name: 'USR_FNAME',length: 32, nullable: true)]
-    private ?string $FirstName = null;
+    private ?string $firstName = null;
 
     #[ORM\Column(name: 'USR_NAME',length: 32, nullable: true)]
     private ?string $name = null;
@@ -62,12 +58,12 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
 
     public function getFirstName(): ?string
     {
-        return $this->FirstName;
+        return $this->firstName;
     }
 
-    public function setFirstName(?string $FirstName): static
+    public function setFirstName(?string $firstName): static
     {
-        $this->FirstName = $FirstName;
+        $this->firstName = $firstName;
 
         return $this;
     }
@@ -120,18 +116,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getTeam(): ?Team
-    {
-        return $this->team;
-    }
-
-    public function setTeam(Team $team): static
-    {
-        $this->team = $team;
-
-        return $this;
-    }
-
     public function getMember(): ?Member
     {
         return $this->member;
@@ -156,11 +140,6 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     public function getUserIdentifier(): string
     {
         return $this->mail;
-    }
-
-    public function removeTeam()
-    {
-        $this->team = null;
     }
 
     public function removeMember()

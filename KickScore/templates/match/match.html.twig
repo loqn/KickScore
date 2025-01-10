@@ -1,97 +1,145 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Liste des matchs - KickScore{% endblock %}
+{% block title %}Liste des compétitions - KickScore{% endblock %}
 
 {% block body %}
-    <div class="h-[calc(100vh-2rem)]">
-        <div class="h-full bg-gradient-to-br from-slate-50 to-white rounded-xl p-8">
-            <div class="max-w-7xl mx-auto">
-                <div class="mb-8 flex justify-between items-center">
-                    <h1 class="text-3xl font-bold text-slate-800">
-                        Liste des matchs
-                        <span class="block mt-1 text-lg text-slate-600 font-normal">
-                            Consultez tous les matchs par compétition
-                        </span>
+    <div class="bg-gradient-to-br from-slate-50 to-white min-h-screen">
+        <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
+            {# Header #}
+            <div class="mb-6 md:mb-8 flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center">
+                <div class="flex-1">
+                    <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 text-center md:text-left">
+                        Liste des compétitions
+                        <span class="block mt-1 text-sm sm:text-base md:text-lg text-slate-600 font-normal">
+                Consultez tous les matchs par compétition
+            </span>
                     </h1>
-
-                    <div class="flex items-center space-x-4">
-                        <form action="{{ path('export_orga') }}" method="POST" class="inline-block">
-                            <input type="hidden" name="_csrf_token" value="{{ csrf_token('export') }}">
-                            <button type="submit"
-                                    class="px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm flex items-center space-x-2">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
-                                    <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
-                                </svg>
-                                <span>Export</span>
-                            </button>
-                        </form>
-
-                        {% if is_granted('ROLE_ORGANIZER') %}
-                            <a href="{{ path('app_meet') }}"
-                               class="px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm">
-                                Nouveau match
-                            </a>
-                        {% endif %}
-                    </div>
                 </div>
 
-                {% for championship in championships %}
-                    <div class="mb-6 bg-white rounded-lg shadow-sm border border-slate-200">
-                        <button class="w-full px-6 py-4 flex justify-between items-center text-left hover:bg-slate-50 focus:outline-none"
+                <div class="flex flex-col xs:flex-row gap-3">
+                    <form action="{{ path('export_orga') }}" method="POST" class="flex-shrink-0">
+                        <input type="hidden" name="_csrf_token" value="{{ csrf_token('export') }}">
+                        <button type="submit"
+                                class="w-full xs:w-auto px-3 sm:px-4 md:px-6 py-2 sm:py-3 bg-blue-900 text-white text-sm sm:text-base rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm flex items-center justify-center space-x-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 sm:h-5 sm:w-5" viewBox="0 0 20 20"
+                                 fill="currentColor">
+                                <path fill-rule="evenodd"
+                                      d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z"
+                                      clip-rule="evenodd"/>
+                            </svg>
+                            <span>Export</span>
+                        </button>
+                    </form>
+
+                    {% if is_granted('ROLE_ORGANIZER') %}
+                        <a href="{{ path('app_meet') }}"
+                           class="w-full xs:w-auto px-3 sm:px-4 md:px-6 py-2 sm:py-3 bg-blue-900 text-white text-sm sm:text-base rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm text-center">
+                            Nouveau match
+                        </a>
+                    {% endif %}
+                </div>
+            </div>
+
+            {# Championships List #}
+            {% for championship in championships %}
+                <div class="mb-4 sm:mb-6 bg-white rounded-lg shadow-sm border border-slate-200">
+                    <div class="px-4 sm:px-6 py-3 sm:py-4 flex justify-between items-center">
+                        <button class="flex-1 flex justify-between items-center text-left hover:bg-slate-50 focus:outline-none"
                                 onclick="toggleCompetition('{{ championship.id }}')"
                                 aria-expanded="false"
                                 aria-controls="competition-{{ championship.id }}">
-                            <h2 class="text-xl font-semibold text-slate-800">{{ championship.name}}</h2>
-                            <svg class="h-5 w-5 text-slate-400 transform transition-transform duration-200" id="arrow-{{ championship.id }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
+                            <h2 class="text-lg sm:text-xl font-semibold text-slate-800">{{ championship.name }}</h2>
+                            <svg class="h-4 w-4 sm:h-5 sm:w-5 text-slate-400 transform transition-transform duration-200"
+                                 id="arrow-{{ championship.id }}" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"/>
                             </svg>
                         </button>
 
-                        <div id="competition-{{ championship.id }}" class="hidden">
-                            <div class="border-t border-slate-200">
-                                <table class="w-full">
-                                    <thead class="bg-slate-50 border-b border-slate-200">
-                                    <tr>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-slate-700">Date</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-slate-700">Équipe 1</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-slate-700">Équipe 2</th>
-                                        <th class="px-6 py-4 text-left text-sm font-medium text-slate-700">Score</th>
+                        {% if app.user and app.user.member and app.user.member.team and app.user.member.team.championships %}
+                            {% if championship in app.user.member.team.championships %}
+                                <form action="{{ path('leave_championship', {'id': championship.id}) }}" method="POST" class="ml-4">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('join' ~ championship.id) }}">
+                                    <button type="submit"
+                                            class="px-4 py-2 bg-red-400 text-white text-sm rounded-lg hover:bg-red-500 transition-colors font-medium shadow-sm">
+                                        Quitter
+                                    </button>
+                                </form>
+                            {% else %}
+                                <form action="{{ path('join_championship', {'id': championship.id}) }}" method="POST" class="ml-4">
+                                    <input type="hidden" name="_token" value="{{ csrf_token('join' ~ championship.id) }}">
+                                    <button type="submit"
+                                            class="px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors font-medium shadow-sm">
+                                        Rejoindre
+                                    </button>
+                                </form>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+
+                    <div id="competition-{{ championship.id }}" class="hidden">
+                        <div class="border-t border-slate-200 overflow-x-auto">
+                            <table class="w-full min-w-full">
+                                <thead class="bg-slate-50 border-b border-slate-200">
+                                <tr>
+                                    <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-slate-700">
+                                        Date
+                                    </th>
+                                    <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-slate-700">
+                                        Équipe verte
+                                    </th>
+                                    <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-slate-700">
+                                        Équipe bleue
+                                    </th>
+                                    <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-slate-700">
+                                        Score
+                                    </th>
+                                </tr>
+                                </thead>
+                                <tbody class="divide-y divide-slate-200">
+                                {% for match in championship.matches %}
+                                    <tr class="hover:bg-slate-50 transition-colors">
+                                        <td class="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-slate-600 whitespace-nowrap">
+                                            {{ match.date|date('d/m/Y H:i') }}
+                                        </td>
+                                        <td class="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-slate-600">
+                                            {{ match.greenteam.name }}
+                                        </td>
+                                        <td class="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-slate-600">
+                                            {{ match.blueteam.name }}
+                                        </td>
+                                        <td class="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-slate-600">
+                                            <div class="flex items-center gap-4">
+                                                <div>
+                                                    <span class="text-green-700 font-bold text-lg">{{ match.greenscore }}</span> - <span
+                                                            class="text-blue-700 font-bold text-lg">{{ match.bluescore }}</span>
+                                                </div>
+                                                {% if is_granted('ROLE_ORGANIZER') %}
+                                                    <a href="{{ path('edit_match', {'id': match.id}) }}"
+                                                       class="px-3 py-1.5 bg-blue-900 text-white text-sm rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm">
+                                                        Modifier
+                                                    </a>
+                                                {% endif %}
+                                            </div>
+                                        </td>
                                     </tr>
-                                    </thead>
-                                    <tbody class="divide-y divide-slate-200">
-                                    {% for match in championship.matches %}
-                                        <tr class="hover:bg-slate-50 transition-colors">
-                                            <td class="px-6 py-4 text-sm text-slate-600">
-                                                {{ match.date|date('d/m/Y H:i') }}
-                                            </td>
-                                            <td class="px-6 py-4 text-sm text-slate-600">
-                                                {{ match.greenteam.name }}
-                                            </td>
-                                            <td class="px-6 py-4 text-sm text-slate-600">
-                                                {{ match.blueteam.name }}
-                                            </td>
-                                            <td class="px-6 py-4 text-sm text-slate-600">
-                                                <span class="text-green-700 font-bold">{{ match.greenscore }}</span> - <span class="text-blue-700 font-bold">{{ match.bluescore }}</span>
-                                            </td>
-                                        </tr>
-                                    {% else %}
-                                        <tr>
-                                            <td colspan="4" class="px-6 py-8 text-center text-slate-600">
-                                                Il n'y a aucun match dans ce championnat.
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="4"
+                                            class="px-4 sm:px-6 py-6 sm:py-8 text-center text-sm text-slate-600">
+                                            Il n'y a aucun match dans ce championnat.
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
-                {% else %}
-                    <div class="bg-white rounded-lg shadow-sm border border-slate-200 px-6 py-8 text-center text-slate-600">
-                        Aucun championnat n'a été trouvé.
-                    </div>
-                {% endfor %}
-            </div>
+                </div>
+            {% else %}
+                <div class="bg-white rounded-lg shadow-sm border border-slate-200 px-4 sm:px-6 py-6 sm:py-8 text-center text-sm sm:text-base text-slate-600">
+                    Aucun championnat n'a été trouvé.
+                </div>
+            {% endfor %}
         </div>
     </div>
 

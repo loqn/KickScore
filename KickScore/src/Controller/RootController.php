@@ -18,12 +18,19 @@ class RootController extends AbstractController
         ]);
     }
 
+    #[Route('/error', name: 'app_error')]
+    public function error(): Response
+    {
+        return $this->render('root/error.html.twig');
+    }
+
     #[Route('/match', name: 'app_match_list')]
-    
     public function matchList(EntityManagerInterface $entityManager): Response
     {
+        //get all championships by ordering them by date
+        
         $championships = $entityManager->getRepository(Championship::class)->findAll();
-
+        
         return $this->render('match/match.html.twig', [
             'controller_name' => 'RootController',
             'championships' => $championships
