@@ -6,6 +6,7 @@ use App\Repository\ChampionshipRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Doctrine\DBAL\Types\Types;
 
 #[ORM\Table(name: 'T_CHAMPIONSHIP_CHP')]
 #[ORM\Entity(repositoryClass: ChampionshipRepository::class)]
@@ -31,6 +32,12 @@ class Championship
 
     #[ORM\OneToMany(targetEntity: Field::class, mappedBy: 'championship')]
     private Collection $fields;
+
+    #[ORM\Column(name: 'CHP_DATE_START', type: Types::DATETIME_MUTABLE )]
+    private ?\DateTime $date_start;
+
+    #[ORM\Column(name: 'CHP_DATE_END', type: Types::DATETIME_MUTABLE )]
+    private ?\DateTime $date_end;
 
     /**
      * @var Collection<int, TeamResults>
@@ -138,4 +145,27 @@ class Championship
 
         return $this;
     }
+
+    public function getDateStart(): ?\DateTime
+    {
+        return $this->date_start;
+    }
+
+    public function setDateStart(?\DateTime $date): static
+    {
+        $this->date_start = $date;
+        return $this;
+    }
+
+    public function getDateEnd(): ?\DateTime
+    {
+        return $this->date_end;
+    }
+
+    public function setDateEnd(?\DateTime $date): static
+    {
+        $this->date_end = $date;
+        return $this;
+    }
+
 }
