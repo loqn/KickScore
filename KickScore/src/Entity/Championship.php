@@ -48,6 +48,9 @@ class Championship
     #[ORM\Column(name:'CHP_DESCRIPTION', length: 2048, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\OneToOne(mappedBy: 'championship', cascade: ['persist', 'remove'])]
+    private ?Tournament $tournament = null;
+
     public function __construct()
     {
         $this->teams = new ArrayCollection();
@@ -204,6 +207,23 @@ class Championship
     public function setEndDate(?\DateTime $date): static
     {
         $this->endDate = $date;
+        return $this;
+    }
+
+    public function getTournament(): ?Tournament
+    {
+        return $this->tournament;
+    }
+
+    public function setTournament(Tournament $tournament): static
+    {
+        // set the owning side of the relation if necessary
+        if ($tournament->getChampionship() !== $this) {
+            $tournament->setChampionship($this);
+        }
+
+        $this->tournament = $tournament;
+
         return $this;
     }
 

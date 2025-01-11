@@ -66,11 +66,18 @@ class Team
     #[ORM\JoinColumn(name: 'CREATOR_ID', referencedColumnName: 'USR_ID', nullable: false)]
     private ?User $creator = null;
 
+    /**
+     * @var Collection<int, TeamMatchStatus>
+     */
+    #[ORM\OneToMany(targetEntity: TeamMatchStatus::class, mappedBy: 'team')]
+    private Collection $teamMatchStatuses;
+
     public function __construct()
     {
         $this->members = new ArrayCollection();
         $this->championships = new ArrayCollection();
         $this->teamResults = new ArrayCollection();
+        $this->teamMatchStatuses = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -242,6 +249,36 @@ class Team
     public function setCreator(User $creator): static
     {
         $this->creator = $creator;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TeamMatchStatus>
+     */
+    public function getTeamMatchStatuses(): Collection
+    {
+        return $this->teamMatchStatuses;
+    }
+
+    public function addTeamMatchStatus(TeamMatchStatus $teamMatchStatus): static
+    {
+        if (!$this->teamMatchStatuses->contains($teamMatchStatus)) {
+            $this->teamMatchStatuses->add($teamMatchStatus);
+            $teamMatchStatus->setTeam($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTeamMatchStatus(TeamMatchStatus $teamMatchStatus): static
+    {
+        if ($this->teamMatchStatuses->removeElement($teamMatchStatus)) {
+            // set the owning side to null (unless already changed)
+            if ($teamMatchStatus->getTeam() === $this) {
+                $teamMatchStatus->setTeam(null);
+            }
+        }
 
         return $this;
     }
