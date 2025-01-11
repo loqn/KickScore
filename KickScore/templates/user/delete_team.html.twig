@@ -32,13 +32,13 @@
                                     </svg>
                                 </div>
                                 <div class="ml-3">
-                                    <h3 class="text-sm font-medium text-red-800">
+                                    <h3 class="text-md font-medium text-red-800">
                                         Action impossible
                                     </h3>
                                     <div class="mt-2 text-sm text-red-700">
                                         <p>
-                                            L'utilisateur {{ user.FirstName }} {{ user.name }} ne peut pas être supprimé car il fait partie d'une équipe active.
-                                            Veuillez d'abord retirer l'utilisateur de son équipe ou assigner un nouveau membre.
+                                            L'utilisateur {{ user.FirstName }} {{ user.name }} ne peut pas être supprimé car il est le créateur d'une équipe. <br>
+                                            Vous avez le choix de supprimer l'équipe et tous ses membres, ou de ne rien faire.
                                         </p>
                                     </div>
                                 </div>
@@ -49,13 +49,13 @@
                         <div class="space-y-6">
                             <div>
                                 <p class="text-sm font-medium text-slate-500">Nom de l'équipe</p>
-                                <p class="mt-1 text-slate-800">{{ user.team.name }}</p>
+                                <p class="mt-1 text-slate-800">{{ user.member.team.name }}</p>
                             </div>
 
                             <div>
                                 <p class="text-sm font-medium text-slate-500 mb-2">Membres de l'équipe</p>
                                 <div class="bg-slate-50 rounded-lg divide-y divide-slate-200">
-                                    {% for teammate in user.team.members %}
+                                    {% for teammate in user.member.team.members %}
                                         <div class="p-4 flex items-center justify-between">
                                             <div>
                                                 <p class="text-sm font-medium text-slate-700">
@@ -78,12 +78,12 @@
                     <div class="p-6 bg-slate-50 rounded-b-lg flex items-center justify-between">
                         <div class="flex items-center space-x-3">
                             <a href="{{ path('app_user_edit', {'id': user.id}) }}"
-                               class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm">
-                                Modifier l'utilisateur
+                               class="px-4 py-2 bg-red-800 text-white rounded-lg hover:bg-red-900 transition-colors font-medium shadow-sm">
+                                Supprimer l'équipe
                             </a>
-                            <a href="{{ path('app_team_edit', {'id': user.team.id}) }}"
+                            <a href="{{ path('app_team_edit', {'id': user.member.team.id}) }}"
                                class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-medium">
-                                Gérer l'équipe
+                                Annuler
                             </a>
                         </div>
                     </div>

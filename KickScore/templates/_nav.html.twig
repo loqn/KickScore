@@ -40,6 +40,7 @@
                     <span>Liste des matchs</span>
                 </a>
                 {% if not is_granted('ROLE_ORGANIZER') %}
+                    {% if not app.user.member %}
                     <a href="{{ path('app_team') }}"
                        class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors w-full text-left flex items-center gap-2">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -49,7 +50,8 @@
                         </svg>
                         <span>Créer une équipe</span>
                     </a>
-                    {% if app.user and app.user.member and app.user.member.team %}
+                    {% endif %}
+                    {% if app.user.member and app.user.member.team %}
                         <a href="{{ path('app_team_edit', {id: app.user.member.team.id}) }}"
                            class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors w-full text-left flex items-center gap-2">
                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"

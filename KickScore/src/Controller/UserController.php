@@ -127,7 +127,7 @@ final class UserController extends AbstractController
         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
     }
 
-    #[Route('/delete-team/{id}', name: 'app_delete_team', methods: ['GET'])]
+    #[Route('/delete-team-warn/{id}', name: 'app_delete_user_team_warn', methods: ['GET'])]
     public function deleteTeam(User $user, EntityManagerInterface $entityManager): Response
     {
         return $this->render('user/delete_team.html.twig', [

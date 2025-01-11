@@ -119,19 +119,19 @@ class MeetController extends AbstractController
                 $championships = $entityManager->getRepository(Championship::class)->findAll();
                 if ($championships) {
                     foreach ($championships as $chp) {
-                        if ($chp->getDateStart() < $date_start && $chp->getDateEnd() > $date_end) {
+                        if ($chp->getStartDate() < $date_start && $chp->getEndDate() > $date_end) {
                             $this->addFlash('error', 'Un championnat est déjà en cours sur ces dates.');
                             return $this->redirectToRoute('app_meet');
                         }
-                        if ($chp->getDateStart() < $date_end && $chp->getDateEnd() > $date_end) {
+                        if ($chp->getStartDate() < $date_end && $chp->getEndDate() > $date_end) {
                             $this->addFlash('error', 'Un championnat est déjà en cours sur ces dates.');
                             return $this->redirectToRoute('app_meet');
                         }
-                        if ($chp->getDateStart() >= $date_start && $chp->getDateStart() <= $date_end) {
+                        if ($chp->getStartDate() >= $date_start && $chp->getStartDate() <= $date_end) {
                             $this->addFlash('error', 'Un championnat est déjà en cours sur ces dates.');
                             return $this->redirectToRoute('app_meet');
                         }
-                        if ($chp->getDateEnd() >= $date_start && $chp->getDateEnd() <= $date_end) {
+                        if ($chp->getEndDate() >= $date_start && $chp->getEndDate() <= $date_end) {
                             $this->addFlash('error', 'Un championnat est déjà en cours sur ces dates.');
                             return $this->redirectToRoute('app_meet');
                         }
@@ -143,8 +143,8 @@ class MeetController extends AbstractController
                 }
                 $championship = new Championship();
                 $championship->setName($name);
-                $championship->setDateStart($date_start);
-                $championship->setDateEnd($date_end);
+                $championship->setStartDate($date_start);
+                $championship->setEndDate($date_end);
                 $championship->setOrganizer($this->getUser());
                 $entityManager->persist($championship);
                 $this->addFlash('success', 'Championnat créé avec succès.');
@@ -263,6 +263,6 @@ class MeetController extends AbstractController
         $match->setDate(new \DateTime($request->request->get('date')));
         $entityManager->flush();
         $this->addFlash('success', 'Match mis à jour avec succès.');
-        return $this->redirectToRoute('app_meet');
+        return $this->redirectToRoute('app_match_list');
     }
 }

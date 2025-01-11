@@ -18,6 +18,18 @@ class ChampionshipRepository extends ServiceEntityRepository
         parent::__construct($registry, Championship::class);
     }
 
+    public function findOneByCurrentDate(): ?Championship
+    {
+        $currentDate = new \DateTime();
+
+        return $this->createQueryBuilder('c')
+            ->where('c.startDate <= :currentDate')
+            ->andWhere('c.endDate >= :currentDate')
+            ->setParameter('currentDate', $currentDate)
+            ->getQuery()
+            ->getOneOrNullResult();
+    }
+
     public function findTeamsByOrganizer(User $organizer): array
     {
         $results = $this->createQueryBuilder('c')

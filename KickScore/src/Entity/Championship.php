@@ -34,10 +34,10 @@ class Championship
     private Collection $fields;
 
     #[ORM\Column(name: 'CHP_DATE_START', type: Types::DATETIME_MUTABLE )]
-    private ?\DateTime $date_start;
+    private ?\DateTime $startDate;
 
     #[ORM\Column(name: 'CHP_DATE_END', type: Types::DATETIME_MUTABLE )]
-    private ?\DateTime $date_end;
+    private ?\DateTime $endDate;
 
     /**
      * @var Collection<int, TeamResults>
@@ -45,13 +45,13 @@ class Championship
     #[ORM\OneToMany(targetEntity: TeamResults::class, mappedBy: 'championship')]
     private Collection $teamResults;
 
-    #[ORM\Column(length: 2048, nullable: true)]
+    #[ORM\Column(name:'CHP_DESCRIPTION', length: 2048, nullable: true)]
     private ?string $description = null;
 
     public function __construct()
     {
-        $this->teams = new \Doctrine\Common\Collections\ArrayCollection();
-        $this->matches = new \Doctrine\Common\Collections\ArrayCollection();
+        $this->teams = new ArrayCollection();
+        $this->matches = new ArrayCollection();
         $this->teamResults = new ArrayCollection();
     }
 
@@ -78,8 +78,6 @@ class Championship
         }
         return $this;
     }
-
-
 
     public function getTeams(): Collection
     {
@@ -187,25 +185,25 @@ class Championship
         return $this;
     }
 
-    public function getDateStart(): ?\DateTime
+    public function getStartDate(): ?\DateTime
     {
-        return $this->date_start;
+        return $this->startDate;
     }
 
-    public function setDateStart(?\DateTime $date): static
+    public function setStartDate(?\DateTime $date): static
     {
-        $this->date_start = $date;
+        $this->startDate = $date;
         return $this;
     }
 
-    public function getDateEnd(): ?\DateTime
+    public function getEndDate(): ?\DateTime
     {
-        return $this->date_end;
+        return $this->endDate;
     }
 
-    public function setDateEnd(?\DateTime $date): static
+    public function setEndDate(?\DateTime $date): static
     {
-        $this->date_end = $date;
+        $this->endDate = $date;
         return $this;
     }
 

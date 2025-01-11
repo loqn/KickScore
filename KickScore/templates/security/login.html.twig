@@ -13,21 +13,21 @@
                     </span>
                 </h1>
 
-                {% for message in app.flashes('success') %}
-                    <div class="bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 mb-6">
-                        <p class="text-sm font-medium">{{ message }}</p>
-                    </div>
-                {% endfor %}
-                {% for message in app.flashes('error') %}
-                    <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 mb-6">
-                        <p class="text-sm font-medium">{{ message }}</p>
-                    </div>
-                {% endfor %}
-
                 <form method="post" class="space-y-6">
-                    {% if error %}
-                        <div class="p-4 text-red-700 bg-red-100 rounded-lg">
-                            {{ error.messageKey|trans(error.messageData, 'security') }}
+                    {% for message in app.flashes('success') %}
+                        <div class="bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 mb-6">
+                            <p class="text-sm font-medium">{{ message }}</p>
+                        </div>
+                    {% endfor %}
+                    {% for message in app.flashes('error') %}
+                        <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 mb-6">
+                            <p class="text-sm font-medium">{{ message }}</p>
+                        </div>
+                    {% endfor %}
+
+                    {% if app.request.get('error') == 'session_expired' %}
+                        <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 mb-6">
+                            <p class="text-sm font-medium">Votre session a expiré suite à une modification de vos données. Veuillez vous reconnecter.</p>
                         </div>
                     {% endif %}
 

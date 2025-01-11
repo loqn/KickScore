@@ -1,11 +1,13 @@
 <?php
 
 namespace App\Controller;
+
 use App\Entity\Championship;
 use App\Entity\Member;
 use App\Entity\Team;
 use App\Entity\TeamResults;
 use App\Entity\User;
+use App\Entity\Versus;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,13 +20,18 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class TeamController extends AbstractController
 {
     #[Route('/', name: 'app_team')]
-    public function index(EntityManagerInterface $entityManager,Request $request): Response
+    public function index(EntityManagerInterface $entityManager, Request $request): Response
     {
         $players = $entityManager->getRepository(User::class)->findAll();
 
         if (!$this->getUser()) {
             $this->addFlash('error', 'Vous devez être connecté pour créer une équipe.');
             return $this->redirectToRoute('app_login');
+        }
+
+        if($this->getUser()->getMember()) {
+            $this->addFlash('error', 'Vous êtes déjà membre d\'une équipe.');
+            return $this->redirectToRoute('app_team_edit', ['id' => $this->getUser()->getMember()->getTeam()->getId()]);
         }
 
         if ($this->isGranted('ROLE_ORGANIZER')) {
@@ -41,7 +48,7 @@ class TeamController extends AbstractController
     #[Route('/create', name: 'app_team_create', methods: ['POST', 'GET'])]
     public function create(Request $request, EntityManagerInterface $entityManager): Response
     {
-        if($request->getMethod() !== 'POST'){
+        if ($request->getMethod() !== 'POST') {
             $this->addFlash('error', 'Erreur : Vous ne pouvez pas accéder à cette page.');
             return $this->redirectToRoute('app_error');
         }
@@ -55,6 +62,8 @@ class TeamController extends AbstractController
         }
         $name = $request->request->get('name');
         $structure = $request->request->get('structure');
+        $creator_id = $request->request->get('user_id');
+        $creator = $entityManager->getRepository(User::class)->find($creator_id);
         if (empty($name)) {
             $this->addFlash('error', 'Erreur : le nom de l\'équipe ne peut pas être vide.');
             return $this->redirectToRoute('app_team');
@@ -65,30 +74,29 @@ class TeamController extends AbstractController
         $team->setWin(0);
         $team->setDraw(0);
         $team->setLose(0);
+        $team->setCreator($creator);
         $points = 0;
         $gameplayed = 0;
         $team->setPoints($points);
         $team->setGamePlayed($gameplayed);
 
-        if ($request->request->get('userJoin')) {
-            $member = new Member();
-            $member->setUser($this->getUser());
-            $member->setTeam($team);
-            $member->setFname($this->getUser()->getFirstName());
-            $member->setName($this->getUser()->getName());
-            $member->setEmail($this->getUser()->getMail());
-            $this->getUser()->setMember($member);
-            $this->getUser()->getMember()->setTeam($team);
-            $team->addMember($member);
-        }
+        $member = new Member();
+        $member->setUser($this->getUser());
+        $member->setTeam($team);
+        $member->setFname($this->getUser()->getFirstName());
+        $member->setName($this->getUser()->getName());
+        $member->setEmail($this->getUser()->getMail());
+        $this->getUser()->setMember($member);
+        $this->getUser()->getMember()->setTeam($team);
+        $team->addMember($member);
 
         $entityManager->persist($team);
         $entityManager->flush();
         $this->addFlash('success', 'L\'équipe a été créée avec succès.');
-        if($request->request->get('userJoin')){
+        if ($request->request->get('userJoin')) {
             return $this->redirectToRoute('app_team_edit', ['id' => $team->getId()]);
         }
-        return $this->redirectToRoute('app_team');
+        return $this->redirectToRoute('app_team_edit', ['id' => $team->getId()]);
     }
 
     #[Route('/edit/add_member', name: 'app_team_add_member', methods: ['POST'])]
@@ -212,20 +220,105 @@ class TeamController extends AbstractController
         if (!$this->isGranted('ROLE_ORGANIZER')) {
             throw $this->createAccessDeniedException('You can only remove members from your own team.');
         }
-        $user = $member->getUser();
-        $user->getMember()->setTeam(null);
-        $user->removeMember();
-        $entityManager->persist($user);
+
+        //if the member is the creator of the team
+        if ($member->getTeam()->getCreator() === $member->getUser()) {
+            $csrfToken = $this->container->get('security.csrf.token_manager')->getToken('delete' . $member->getTeam()->getId())->getValue();
+
+            $this->addFlash('error', '
+    <div class="flex justify-between items-center">
+        <div>Retirer le créateur de l\'équipe revient à supprimer l\'équipe. Êtes-vous sûr ?</div>
+        <div class="flex space-x-4">
+            <form method="POST" action="' . $this->generateUrl('app_delete_team', ['id' => $member->getTeam()->getId()]) . '" style="display: inline;">
+                <input type="hidden" name="_token" value="' . $csrfToken . '">
+                <button 
+                    type="submit"
+                    style="background-color: #991b1b; color: white; transition: background-color 0.3s ease;" 
+                    onmouseover="this.style.backgroundColor=\'#7f1d1d\'" 
+                    onmouseout="this.style.backgroundColor=\'#991b1b\'" 
+                    class="px-4 py-2 rounded-lg">
+                    Supprimer l\'équipe
+                </button>
+            </form>
+            <button 
+                style="background-color: #10b981; color: white; transition: background-color 0.3s ease;" 
+                onmouseover="this.style.backgroundColor=\'#059669\'" 
+                onmouseout="this.style.backgroundColor=\'#10b981\'" 
+                class="px-4 py-2 rounded-lg">
+                <a href="' . $this->generateUrl('app_team_edit', ['id' => $member->getTeam()->getId()]) . '">Annuler</a>
+            </button>
+        </div>
+    </div>
+');
+
+            return $this->redirectToRoute('app_team_edit', ['id' => $member->getTeam()->getId()]);
+        }
+
+        $team_id = $member->getTeam()->getId();
+        $member->getTeam()->removeMember($member);
         $entityManager->remove($member);
         $entityManager->flush();
-        $this->addFlash('success', 'Member removed successfully');
-        return $this->redirectToRoute('app_team_edit', ['id' => $member->getTeam()->getId()]);
+        $this->addFlash('success', 'Le membre a été retiré avec succès.');
+        return $this->redirectToRoute('app_team');
     }
+
+    #[Route('/delete/{id}', name: 'app_delete_team', methods: ['POST'])]
+    public function delete(Request $request, Team $team, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
+    {
+        if ($this->isCsrfTokenValid('delete' . $team->getId(), $request->getPayload()->getString('_token'))) {
+            $logger->info('Starting team deletion process for team: ' . $team->getName());
+
+            try {
+                $versusAsGreen = $entityManager->getRepository(Versus::class)->findBy([
+                    'greenTeam' => $team
+                ]);
+                foreach ($versusAsGreen as $versus) {
+                    $versus->setGreenTeam(null);
+                    $entityManager->remove($versus);
+                }
+
+                $versusAsBlue = $entityManager->getRepository(Versus::class)->findBy([
+                    'blueTeam' => $team
+                ]);
+                foreach ($versusAsBlue as $versus) {
+                    $versus->setBlueTeam(null);
+                    $entityManager->remove($versus);
+                }
+
+                $entityManager->flush();
+
+                foreach ($team->getMembers() as $member) {
+                    if ($user = $member->getUser()) {
+                        $member->setUser(null);
+                        $user->setMember(null);
+                        $entityManager->persist($user);
+                    }
+                    $team->removeMember($member);
+                    $entityManager->remove($member);
+                }
+
+                foreach ($team->getTeamResults() as $teamResult) {
+                    $entityManager->remove($teamResult);
+                }
+
+                $entityManager->remove($team);
+                $entityManager->flush();
+
+                $logger->info('Team deletion completed successfully');
+            } catch (\Exception $e) {
+                $logger->error('Error during deletion: ' . $e->getMessage());
+                throw $e;
+            }
+        }
+
+        return $this->redirectToRoute('app_team', [], Response::HTTP_SEE_OTHER);
+    }
+
     #[Route('/teams/ranking', name: 'app_teams_ranking')]
     public function ranking(TeamRepository $teamRepository): Response
     {
         $teams = $teamRepository->findAllTeamsByPoints();
-        
+
         return $this->render('team/ranking.html.twig', [
             'teams' => $teams
         ]);

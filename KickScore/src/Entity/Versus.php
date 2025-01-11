@@ -36,8 +36,8 @@ class Versus
     #[ORM\JoinColumn(name: 'CHP_ID', referencedColumnName: 'CHP_ID')]
     private ?Championship $championship = null;
 
-    #[ORM\Column(length: 512, nullable: true)]
-    private ?string $description = null;
+    #[ORM\Column(name:'MAT_COMMENTARY', length: 512, nullable: true)]
+    private ?string $commentary = null;
 
     public function getChampionship(): ?Championship
     {
@@ -61,7 +61,7 @@ class Versus
         return $this->blueTeam;
     }
 
-    public function setBlueTeam(Team $blueTeam): static
+    public function setBlueTeam(?Team $blueTeam): static
     {
         $this->blueTeam = $blueTeam;
 
@@ -73,7 +73,7 @@ class Versus
         return $this->greenTeam;
     }
 
-    public function setGreenTeam(Team $greenTeam): static
+    public function setGreenTeam(?Team $greenTeam): static
     {
         $this->greenTeam = $greenTeam;
 
@@ -121,14 +121,14 @@ class Versus
         return $this;
     }
 
-    public function getDescription(): ?string
+    public function getCommentary(): ?string
     {
-        return $this->description;
+        return $this->commentary;
     }
 
-    public function setDescription(?string $description): static
+    public function setCommentary(?string $commentary): static
     {
-        $this->description = $description;
+        $this->commentary = $commentary;
 
         return $this;
     }
