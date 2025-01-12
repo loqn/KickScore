@@ -14,8 +14,8 @@ class Championship
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column (name: 'CHP_ID')]
-    private ?int $id = null;
+    #[ORM\Column(name: 'CHP_ID', type: 'integer')]
+    private ?int $id = null;    
 
     #[ORM\Column(name: "CHP_NAME", length: 32, nullable: true)]
     private ?string $name = null;

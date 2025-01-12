@@ -1,0 +1,28 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello TournamentController!{% endblock %}
+
+{% block body %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Liste des Tournois</title>
+</head>
+<body>
+    <h1>Choisissez un Tournoi</h1>
+    {{ form_start(form) }}
+        {{ form_row(form.tournament) }}
+    {{ form_end(form) }}
+    {% if matches is not null %}
+        <div class="matches">
+            {{ matches.blueTeam.name }} vs {{ matches.greenTeam.name }}
+            Score: {{ matches.blueScore }} - {{ matches.greenScore }}
+        </div>
+    {% endif %}
+</body>
+</html>
+
+
+{% endblock %}
