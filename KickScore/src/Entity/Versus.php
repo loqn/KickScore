@@ -48,11 +48,11 @@ class Versus
     #[ORM\JoinColumn(name: 'STS_ID', referencedColumnName: 'STS_ID', nullable: false)]
     private ?Status $globalStatus = null;
 
-    #[ORM\ManyToOne(inversedBy: 'versuses')]
+    #[ORM\ManyToOne(targetEntity: Timeslot::class, inversedBy: 'versuses')]
     #[ORM\JoinColumn(name: 'TSL_ID', referencedColumnName: 'TSL_ID', nullable: true)]
     private ?Timeslot $timeslot = null;
 
-    #[ORM\ManyToOne(inversedBy: 'versuses')]
+    #[ORM\ManyToOne(targetEntity: Field::class, inversedBy: 'versuses')]
     #[ORM\JoinColumn(name: 'FLD_ID', referencedColumnName: 'FLD_ID', nullable: true)]
     private ?Field $field = null;
 
@@ -176,7 +176,6 @@ class Versus
     public function removeTeamMatchStatus(TeamMatchStatus $teamMatchStatus): static
     {
         if ($this->teamMatchStatuses->removeElement($teamMatchStatus)) {
-            // set the owning side to null (unless already changed)
             if ($teamMatchStatus->getVersus() === $this) {
                 $teamMatchStatus->setVersus(null);
             }
@@ -219,5 +218,10 @@ class Versus
         $this->field = $field;
 
         return $this;
+    }
+
+    public function setStatus(Status $status)
+    {
+        $this->globalStatus = $status;
     }
 }

@@ -15,7 +15,7 @@
 </head>
 <body>
 {% if is_granted('IS_IMPERSONATOR') %}
-    <div class="fixed w-full bg-blue-900 hover:bg-blue-800 transition ease-in duration-200 border-slate-200 px-4 py-1.5 text-xs">
+    <div class="fixed w-full bg-blue-900 hover:bg-blue-800 transition ease-in duration-200 border-slate-200 px-4 py-1.5 text-xs z-[60]">
         <div class="max-w-7xl mx-auto flex justify-between items-center">
         <span class="flex items-center gap-2 text-white">
             <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" viewBox="0 0 20 20" fill="currentColor">
@@ -24,7 +24,7 @@
             <span class="font-medium">Mode incarnation :</span>
             {{ app.user.mail }}
         </span>
-            <a href="?_switch_user=_exit"
+            <a href="{{ path('app_exit_impersonation') }}?_switch_user=_exit"
                class="flex items-center gap-1 text-white hover:text-gray-200 transition-colors font-medium">
                 <span>Quitter</span>
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-3.5 w-3.5" viewBox="0 0 20 20" fill="currentColor">

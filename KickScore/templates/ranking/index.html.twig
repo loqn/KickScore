@@ -6,19 +6,19 @@
     <div class="bg-gradient-to-br from-slate-50 to-white min-h-screen">
         <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
             {# header #}
-            <div class="mb-6 md:mb-8 flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center">
+            <div class="mb-6 xl:mb-8 flex flex-col space-y-4 xl:space-y-0 xl:flex-row xl:justify-between xl:items-center">
                 <div class="flex-1">
-                    <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 text-center md:text-left">
+                    <h1 class="text-2xl xl:text-3xl font-bold text-slate-800 text-center xl:text-left">
                         Classement des équipes
-                        <span class="block mt-1 text-sm sm:text-base md:text-lg text-slate-600 font-normal">
-                Consultez les performances de chaque équipe
-            </span>
+                        <span class="block mt-1 text-base xl:text-lg text-slate-600 font-normal">
+                            Consultez les performances de chaque équipe
+                        </span>
                     </h1>
                 </div>
 
-                <div class="text-center md:text-left">
+                <div class="text-center xl:text-left">
                     <select id="championshipSelect"
-                            class="block w-full md:w-auto min-w-[200px] rounded-lg border border-slate-200 bg-white px-4 py-3 pr-10 text-base text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                            class="block w-full xl:w-auto min-w-[200px] rounded-lg border border-slate-200 bg-white px-4 py-3 pr-10 text-base text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
                         {% for championship in championships %}
                             <option value="{{ championship.id }}" {{ selectedChampionshipId == championship.id ? 'selected' : '' }}>
                                 {{ championship.name }}
@@ -39,7 +39,7 @@
                 </div>
             {% endfor %}
 
-            {# Table responsive #}
+            {# table #}
             <div class="bg-white rounded-lg shadow-sm border border-slate-200">
                 <div class="overflow-x-auto">
                     <div class="inline-block min-w-full">
@@ -91,8 +91,8 @@
                                                 <span class="font-medium text-gray-900">{{ team.name }}</span>
                                                 {# mobile #}
                                                 <span class="sm:hidden text-xs text-gray-500">
-                            {{ results ? "#{results.gamesPlayed}MJ · #{results.wins}V · #{results.draws}N · #{results.losses}D" : "Pas de données" }}
-                        </span>
+                                                    {{ results ? "#{results.gamesPlayed}MJ · #{results.wins}V · #{results.draws}N · #{results.losses}D" : "Pas de données" }}
+                                                </span>
                                             </div>
                                         </td>
                                         <td class="hidden sm:table-cell px-3 sm:px-6 py-4 whitespace-nowrap text-sm text-gray-500 text-center">{{ results ? results.gamesPlayed : '-' }}</td>

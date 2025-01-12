@@ -25,7 +25,6 @@ services:
     App\Security\Authenticator:
         class: App\Security\Authenticator
         public: true
-
     app.security_listener:
         class: App\EventListener\SecurityListener
         arguments:

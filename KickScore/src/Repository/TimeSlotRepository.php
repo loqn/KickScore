@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\TimeSlot;
+use App\Entity\Timeslot;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<TimeSlot>
+ * @extends ServiceEntityRepository<Timeslot>
  */
 class TimeSlotRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, TimeSlot::class);
+        parent::__construct($registry, Timeslot::class);
     }
 
 //    /**
-//     * @return TimeSlot[] Returns an array of TimeSlot objects
+//     * @return Timeslot[] Returns an array of Timeslot objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -31,7 +31,7 @@ class TimeSlotRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?TimeSlot
+//    public function findOneBySomeField($value): ?Timeslot
 //    {
 //        return $this->createQueryBuilder('t')
 //            ->andWhere('t.exampleField = :val')

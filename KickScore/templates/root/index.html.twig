@@ -124,9 +124,9 @@
 
                         <div class="pt-10 flex flex-wrap gap-4 justify-center">
                             {% if is_granted('ROLE_ORGANIZER') %}
-                                <a href="{{ path('app_meet') }}"
+                                <a href="{{ path('app_championship') }}"
                                    class="group relative px-8 py-4 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition-all duration-300 font-medium text-lg shadow-md hover:shadow-xl">
-                                    <span class="relative z-10">Création</span>
+                                    <span class="relative z-10">Créer un championnat</span>
                                     <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-800 to-blue-900 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
                                 </a>
                                 <a href="{{ path('app_user_index') }}"
@@ -155,9 +155,13 @@
 
                 {# current matches & championship #}
                 {% if currentCompetition %}
+                    <hr>
                     <div class="space-y-8">
                         {# header #}
                         <div class="text-center">
+                            <h2 class="text-3xl font-bold text-slate-800">
+                                Championnat en cours
+                            </h2>
                             <h2 class="text-2xl font-bold text-slate-800">
                                 {{ currentCompetition.name }}
                             </h2>
@@ -168,44 +172,102 @@
 
                         {# matches list #}
                         {% if currentCompetition.matches|length > 0 %}
-                            <div class="grid gap-4">
-                                <h3 class="text-xl font-semibold text-center text-slate-800">Matchs en cours</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {% for match in currentCompetition.matches %}
-                                        <div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100">
-                                            <div class="flex justify-between items-center">
-                                                <div class="flex-1 text-right">
-                                                    <span class="font-medium text-green-700">{{ match.greenTeam.name }}</span>
+                            <div class="grid gap-8">
+                                {# current matches #}
+                                {% set currentMatches = [] %}
+                                {% set upcomingMatches = [] %}
+
+                                {% for match in currentCompetition.matches %}
+                                    {% set now = "now"|date("Y-m-d H:i:s") %}
+                                    {% set startDateTime = match.timeslot.start|date("Y-m-d H:i:s") %}
+                                    {% set endDateTime = match.timeslot.end|date("Y-m-d H:i:s") %}
+
+                                    {% if match.timeslot.start|date("Y-m-d") == "now"|date("Y-m-d") %}
+                                        {% if startDateTime <= now and now <= endDateTime %}
+                                            {% set currentMatches = currentMatches|merge([match]) %}
+                                        {% elseif startDateTime > now %}
+                                            {% set upcomingMatches = upcomingMatches|merge([match]) %}
+                                        {% endif %}
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if currentMatches|length > 0 %}
+                                    <div class="grid gap-4">
+                                        <h3 class="text-xl font-semibold text-center text-slate-800">Matchs en cours</h3>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            {% for match in currentMatches %}
+                                                <div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100">
+                                                    <div class="flex justify-between items-center">
+                                                        <div class="flex-1 text-right">
+                                                            <span class="font-medium text-green-700">{{ match.greenTeam.name }}</span>
+                                                        </div>
+                                                        <div class="px-6 flex items-center space-x-3">
+                                                            <span class="text-2xl font-bold text-green-900">{{ match.greenScore }}</span>
+                                                            <span class="text-slate-400">vs</span>
+                                                            <span class="text-2xl font-bold text-blue-900">{{ match.blueScore }}</span>
+                                                        </div>
+                                                        <div class="flex-1">
+                                                            <span class="font-medium text-blue-700">{{ match.blueTeam.name }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-2 text-center text-sm text-slate-600">
+                                                        {{ match.timeslot.start|date('H:i') }} - {{ match.timeslot.end|date('H:i') }} • {{ match.field.name }}
+                                                    </div>
                                                 </div>
-                                                <div class="px-6 flex items-center space-x-3">
-                                                    <span class="text-2xl font-bold text-green-900">{{ match.greenScore }}</span>
-                                                    <span class="text-slate-400">vs</span>
-                                                    <span class="text-2xl font-bold text-blue-900">{{ match.blueScore }}</span>
-                                                </div>
-                                                <div class="flex-1">
-                                                    <span class="font-medium text-blue-700">{{ match.blueTeam.name }}</span>
-                                                </div>
-                                            </div>
-                                            {#                                                <div class="mt-2 text-center text-sm text-slate-600">#}
-                                            {#                                                    {{ match.startTime|date('H:i') }} - {{ match.field }}#}
-                                            {#                                                </div>#}
+                                            {% endfor %}
                                         </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        {% else %}
-                            <div class="text-center text-slate-600">
-                                Aucun match en cours pour le moment
+                                    </div>
+                                {% endif %}
+
+                                {# upcoming matches #}
+                                {% if upcomingMatches|length > 0 %}
+                                    <div class="grid gap-4">
+                                        <h3 class="text-xl font-semibold text-center text-slate-800">Matchs à venir aujourd'hui</h3>
+                                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                            {% for match in upcomingMatches %}
+                                                <div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100">
+                                                    <div class="flex justify-between items-center">
+                                                        <div class="flex-1 text-right">
+                                                            <span class="font-medium text-green-700">{{ match.greenTeam.name }}</span>
+                                                        </div>
+                                                        <div class="px-6 flex items-center space-x-3">
+                                                            <span class="text-2xl font-bold text-slate-400">VS</span>
+                                                        </div>
+                                                        <div class="flex-1">
+                                                            <span class="font-medium text-blue-700">{{ match.blueTeam.name }}</span>
+                                                        </div>
+                                                    </div>
+                                                    <div class="mt-2 text-center text-sm text-slate-600">
+                                                        {{ match.timeslot.start|date('H:i') }} - {{ match.timeslot.end|date('H:i') }} • {{ match.field.name }}
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                {% endif %}
+
+                                {% if currentMatches|length == 0 and upcomingMatches|length == 0 %}
+                                    <div class="text-center text-slate-600">
+                                        Aucun match en cours ou à venir aujourd'hui
+                                    </div>
+                                {% endif %}
                             </div>
                         {% endif %}
                     </div>
                 {% endif %}
 
                 <div class="pt-8 flex justify-center">
-                    <a href="{{ path('app_match_list') }}"
+                    {% if not currentCompetition %}
+                    <a href="{{ path('app_match_list')}}"
                        class="px-8 py-4 bg-white text-blue-900 rounded-xl hover:bg-slate-50 transition-all duration-300 font-medium text-lg border border-blue-100 shadow-md hover:shadow-lg hover:border-blue-200">
                         Voir les matchs
                     </a>
+                    {% else %}
+                    <a href="{{ path('app_match_list', {'championship': currentCompetition.id}) }}"
+                        class="px-8 py-4 bg-white text-blue-900 rounded-xl hover:bg-slate-50 transition-all duration-300 font-medium text-lg border border-blue-100 shadow-md hover:shadow-lg hover:border-blue-200">
+                        Voir les matchs
+                    </a>
+                    {% endif %}
                 </div>
             </div>
         </div>

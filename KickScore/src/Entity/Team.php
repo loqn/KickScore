@@ -34,22 +34,6 @@ class Team
     #[ORM\Column(name: 'TEA_STRUCTURE', length: 32, nullable: true)]
     private ?string $structure = null;
 
-    #[ORM\Column(name: 'TEA_GAMEPLAYED', nullable: true)]
-    private ?int $gamePlayed = null;
-
-    #[ORM\Column(name: 'TEA_WIN', nullable: true)]
-    private ?int $win = null;
-
-    #[ORM\Column(name: 'TEA_DRAW', nullable: true)]
-    private ?int $draw = null;
-
-    #[ORM\Column(name: 'TEA_LOSE', nullable: true)]
-    private ?int $lose = null;
-
-    #[ORM\Column(name: 'TEA_POINTS', nullable: true)]
-    private ?int $points = null;
-
-
     /**
      * @var Collection<int, Member>
      */
@@ -72,12 +56,28 @@ class Team
     #[ORM\OneToMany(targetEntity: TeamMatchStatus::class, mappedBy: 'team')]
     private Collection $teamMatchStatuses;
 
+    /**
+     * @var Collection<int, Tournament>
+     */
+    #[ORM\ManyToMany(targetEntity: Tournament::class, inversedBy: 'teams')]
+    #[ORM\JoinTable(
+        name: 'T_TOURNAMENT_TEAM_TRT',
+        joinColumns: [
+            new ORM\JoinColumn(name: 'TEA_ID', referencedColumnName: 'TEA_ID')
+        ],
+        inverseJoinColumns: [
+            new ORM\JoinColumn(name: 'TRM_ID', referencedColumnName: 'TRM_ID')
+        ]
+    )]
+    private Collection $tournaments;
+
     public function __construct()
     {
         $this->members = new ArrayCollection();
         $this->championships = new ArrayCollection();
         $this->teamResults = new ArrayCollection();
         $this->teamMatchStatuses = new ArrayCollection();
+        $this->tournaments = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -124,61 +124,6 @@ class Team
     public function setStructure(?string $structure): static
     {
         $this->structure = $structure;
-
-        return $this;
-    }
-
-    public function setGamePlayed(?int $gamePlayed): static
-    {
-        $this->gamePlayed = $gamePlayed;
-
-        return $this;
-    }
-
-    public function getWin(): ?int
-    {
-        return $this->win;
-    }
-
-    public function setWin(?int $win): static
-    {
-        $this->win = $win;
-
-        return $this;
-    }
-
-    public function getDraw(): ?int
-    {
-        return $this->draw;
-    }
-
-    public function setDraw(?int $draw): static
-    {
-        $this->draw = $draw;
-
-        return $this;
-    }
-
-    public function getLose(): ?int
-    {
-        return $this->lose;
-    }
-
-    public function setLose(?int $lose): static
-    {
-        $this->lose = $lose;
-
-        return $this;
-    }
-
-    public function getPoints(): ?int
-    {
-        return $this->points;
-    }
-
-    public function setPoints(?int $points): static
-    {
-        $this->points = $points;
 
         return $this;
     }
@@ -278,6 +223,33 @@ class Team
             if ($teamMatchStatus->getTeam() === $this) {
                 $teamMatchStatus->setTeam(null);
             }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Tournament>
+     */
+    public function getTournaments(): Collection
+    {
+        return $this->tournaments;
+    }
+
+    public function addTournament(Tournament $tournament): static
+    {
+        if (!$this->tournaments->contains($tournament)) {
+            $this->tournaments->add($tournament);
+            $tournament->addTeam($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTournament(Tournament $tournament): static
+    {
+        if ($this->tournaments->removeElement($tournament)) {
+            $tournament->removeTeam($this);
         }
 
         return $this;

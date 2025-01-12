@@ -10,7 +10,7 @@ use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Table(name: 'T_TIMESLOT_TSL')]
 #[ORM\Entity(repositoryClass: TimeSlotRepository::class)]
-class TimeSlot
+class Timeslot
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
@@ -84,7 +84,6 @@ class TimeSlot
     public function removeVersus(Versus $versus): static
     {
         if ($this->versuses->removeElement($versus)) {
-            // set the owning side to null (unless already changed)
             if ($versus->getTimeslot() === $this) {
                 $versus->setTimeslot(null);
             }
