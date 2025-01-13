@@ -231,7 +231,7 @@ class MeetController extends AbstractController
             $this->addFlash('error', 'Impossible de faire jouer une équipe contre elle-même.');
             return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
         }
-        $currentDateTime = new \DateTime();
+        $currentDateTime = (new \DateTime())->modify('+1 hour');
 
         $match->setGreenTeam($greenTeam);
         $match->setBlueTeam($blueTeam);
