@@ -1,10 +1,36 @@
+on: 'on'
+roleorganizer: 'Organizer Role'
+createfield: 'Create a new field'
+addfieldchamp: 'Add a field to the championship'
+namefield: 'Field name'
+isnertfieldname: 'Enter the name of the field'
+generateteam: 'Generate a team'
+gp: 'GP'
+nomember: "No member in this team"
+manageteam_label: 'Manage team'
+newpasseword: 'New password'
+stayblank: "Leave blank to keep the current password"
+cancel: 'Cancel'
+teamlist: 'Team list'
+confirmmdp: 'Confirm password'
+deleteteam: "Delete the team"
+user_label: 'User'
+organizer_label: 'Organizer'
 modifychampionship: 'Modify the championship'
+championship_list:
+    title: "Championships List"
+    subtitle: "Manage championships and their teams"
+    new_championship: "New Championship"
+    
+modifyaccount: "Modify the account information"
+modifyuser: "Modify the user"
 modifyinfo: 'Modification of the championship information'
 deletefield: 'Field to delete'
 selectedfield: 'Selected field'
 validemodify: 'Save changes'
 newchampion: "of a new championship"
-classicreation: 'Classic creation'
+classiccreation: 'Classic creation'
+manageteamactive: "Manage all registered teams"
 generatetournament: 'Generate a tournament'
 tournamentname: 'Tournament name'
 tournamentoptions: 'Tournament options'
@@ -22,7 +48,22 @@ useractive: 'Active user'
 matchprogress: "Matches coming today"
 nomatch: "No match in progress or coming today"
 seematch: "See the matches"
-
+endmatch: "Match over for today"
+end: "End"
+teamboard: "Team dashboard"
+member: "Member"
+organizeby: "Organized by"
+team_label: 'Teams'
+leavechamp: 'Leave the championship'
+wins: 'Wins'
+looses: 'Losses'
+draws: 'Draws'
+goals: 'Goals'
+noinscription: "This team is not registered in any championship at the moment."
+addmember: 'Add a member'
+add: 'Add'
+nonewmem: 'No new member'
+actionimpossible: 'Action impossible'
 nav:
     from: 'From'
     to: 'To'
@@ -30,13 +71,13 @@ nav:
     championshipinlive: 'Championship in progress'
     startnow: 'Start now'
     firstname: 'First name'
-    sourcechampionship: 'source championship'
+    sourcechampionship: 'Source championship'
     newchampion: "of a new championship"
     home: 'Home'
     ranking: 'Ranking'
     matches: 'Match List'
     login: 'Login'
-    team: 'Team'
+    teams: 'Team'
     start: 'Start'
     createteam: 'Create a team'
     logout: 'Logout'
@@ -239,3 +280,9 @@ team_members: "Team Members"
 concerned_member: "Concerned Member"
 edit_user: "Edit User"
 manage_team: "Manage Team"
+manageuserchamp: "Manage Users and Championships"
+users: "Users"
+manage: "Manage"
+championships: "Championships"
+generatematch: "Generate a match"
+noteamfound: "No team found"

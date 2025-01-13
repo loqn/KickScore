@@ -113,8 +113,8 @@
                             <span class="bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
                                 {{ 'nav.welcome' | trans }} {{ app.user.FirstName }}
                             </span>
-                        <span class="block mt-3 bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent">
-                                sur KickScore
+                            <span class="block mt-3 bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent">
+                                {{'on' | trans}} KickScore
                             </span>
                     </h1>
 
@@ -168,7 +168,7 @@
                         </p>
                     </div>
 
-                    {# Matches Display #}
+                    {# matches list #}
                     {% if currentCompetition.matches|length > 0 %}
                         {# Define status configurations #}
                         {% set statusConfig = {
@@ -234,14 +234,9 @@
                             {% set scheduledMatches = currentCompetition.matches|filter(match => match.globalStatus.name == 'SCHEDULED') %}
                             {% set completedMatches = currentCompetition.matches|filter(match => match.globalStatus.name == 'COMPLETED') %}
 
-                            {# Display sections #}
-                            {{ _self.matchSection('Matchs en cours', inProgressMatches, statusConfig) }}
-                            {{ _self.matchSection('Matchs à venir', scheduledMatches, statusConfig) }}
-                            {{ _self.matchSection('Matchs terminés', completedMatches, statusConfig) }}
-
-                            {% if inProgressMatches|length == 0 and scheduledMatches|length == 0 and completedMatches|length == 0 %}
+                            {% if currentMatches|length == 0 and upcomingMatches|length == 0 and pastMatches|length == 0 %}
                                 <div class="text-center text-slate-600">
-                                    Aucun match aujourd'hui
+                                    {{'nomatch' | trans}}
                                 </div>
                             {% endif %}
                         </div>
