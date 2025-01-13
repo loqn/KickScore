@@ -13,6 +13,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\HttpFoundation\BinaryFileResponse;
+use Symfony\Component\HttpFoundation\ResponseHeaderBag;
+//import date 
+use DateTime;
+
+
 
 
 class MeetController extends AbstractController
@@ -265,4 +271,82 @@ class MeetController extends AbstractController
         $this->addFlash('success', 'Match mis à jour avec succès.');
         return $this->redirectToRoute('app_match_list');
     }
+
+
+
+    #[Route('/meet/exportIcal/{id}', name: 'app_calendar_export_single', methods: ['GET'])]
+    public function downloadSingleChampionship(int $id, EntityManagerInterface $entityManager): Response {
+        $championships = $entityManager->getRepository(Championship::class)->find($id);
+        
+        if (!$championships) {
+            throw $this->createNotFoundException('Championship not found');
+        }
+        
+        $calendarContent = $this->generateCalendarContent($championships);
+        
+        $response = new Response($calendarContent);
+        $response->headers->set('Content-Type', 'text/calendar; charset=utf-8');
+        $response->headers->set('Content-Disposition', sprintf('attachment; filename="championship.ical"', $championships->getId()));
+        
+        return $response;
+    }
+
+    public function generateCalendarContent(Championship $championships): string
+    {
+        $calendar = "BEGIN:VCALENDAR\r\n";
+        $calendar .= "VERSION:2.0\r\n";
+        $calendar .= "PRODID:-//KickScore//Championship Calendar//EN\r\n";
+        $calendar .= "CALSCALE:GREGORIAN\r\n";
+        $calendar .= "METHOD:PUBLISH\r\n";
+
+        foreach ($championships->getMatches() as $match) {
+            $calendar .= $this->createEvent($match);
+        }
+
+        $calendar .= "END:VCALENDAR\r\n";
+
+        return $calendar;
+    }
+
+    private function createEvent(Versus $match): string
+    {
+        $event = "BEGIN:VEVENT\r\n";
+        
+        $event .= sprintf("UID:%s@yourorganization.com\r\n", $match->getId());
+        
+        $startDate = $match->getDate()->format('Ymd\THis\Z');
+        //$endDate = $championship->getEndDate()->format('Ymd\THis\Z');
+        
+        $event .= sprintf("DTSTAMP:%s\r\n", (new DateTime())->format('Ymd\THis\Z'));
+        $event .= sprintf("DTSTART:%s\r\n", $startDate);
+        //$event .= sprintf("DTEND:%s\r\n", $endDate);
+        $event .= sprintf("SUMMARY:%s\r\n", $this->escapeString($match->getChampionship()->getName()));
+        if ($match->getChampionship()->getDescription()) {
+            $event .= sprintf("DESCRIPTION:%s\r\n", $this->escapeString($match->getChampionship()->getDescription()));
+        }
+        if ($match->getChampionship()->getOrganizer()) {
+            $event .= sprintf("ORGANIZER:CN=%s\r\n", $this->escapeString($match->getChampionship()->getOrganizer()->getName()));
+        }
+        $teams = [];
+        foreach ($match->getTeams() as $team) {
+            $teams[] = $team->getName();
+        }
+        if (!empty($teams)) {
+            $event .= sprintf("DESCRIPTION:Participating teams: %s\r\n",
+                $this->escapeString(implode(', ', $teams))
+            );
+        }
+        $event .= "END:VEVENT\r\n";
+        return $event;
+    }
+
+    private function escapeString(string $string): string
+    {
+        return str_replace(
+            ['\\', "\r\n", "\n", "\r", ',', ';'],
+            ['\\\\', '\n', '\n', '\n', '\,', '\;'],
+            $string
+        );
+    }
+    
 }
