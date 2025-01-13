@@ -1,4 +1,37 @@
+modifychampionship: 'Modify the championship'
+modifyinfo: 'Modification of the championship information'
+deletefield: 'Field to delete'
+selectedfield: 'Selected field'
+validemodify: 'Save changes'
+newchampion: "of a new championship"
+classicreation: 'Classic creation'
+generatetournament: 'Generate a tournament'
+tournamentname: 'Tournament name'
+tournamentoptions: 'Tournament options'
+3match: 'Match for 3rd place'
+simplifymanage: "Simplified management"
+explain: "Create and manage your tournaments in a few clicks. Intuitive interface for all organizers."
+followmatch: "Follow matches"
+explainmatch: "Follow the scores and rankings of your teams. Stay informed of the progress of the matches."
+manageteam: "Team management"
+explainmanageteam: "Easily create and manage your teams. Follow the performances and statistics of each team."
+organizedmatch: "Organized matches"
+tournament: 'Tournament'
+activeteams: 'Active teams'
+useractive: 'Active user'
+matchprogress: "Matches coming today"
+nomatch: "No match in progress or coming today"
+seematch: "See the matches"
+
 nav:
+    from: 'From'
+    to: 'To'
+    matchinlive: 'Match in progress'
+    championshipinlive: 'Championship in progress'
+    startnow: 'Start now'
+    firstname: 'First name'
+    sourcechampionship: 'source championship'
+    newchampion: "of a new championship"
     home: 'Home'
     ranking: 'Ranking'
     matches: 'Match List'
@@ -12,8 +45,8 @@ nav:
     profile: 'Profile'
     admin: 'Administration'
     managechampionship: 'Manage your championships'
-    withsimplicity: 'With simplicity'
-    explainkickscore: 'KickScore can help you organize your RoboCup tournaments.'
+    withsimplicity: 'with simplicity'
+    explainkickscore: 'KickScore helps you organize your RoboCup tournaments with modern and intuitive tools.'
     myteam: 'My team'
     controlepanel: 'Control panel'
     creation: 'Creation'

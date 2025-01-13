@@ -1,4 +1,36 @@
+modifychampionship: 'Modifier le championnat'
+modifyinfo: 'Modification des informations du championnat'
+deletefield: 'Terrain à supprimer'
+selectedfield: 'Terrain sélectionné'
+validemodify: 'Enregistrer les modifications'
+newchampion: "d'un nouveau championnat"
+classicreation: 'Création classique'
+generatetournament: 'Générer un tournoi'
+tournamentname: 'Nom du tournoi'
+tournamentoptions: 'Options du tournoi'
+3match: 'Match pour la 3ème place'
+simplifymanage: "Gestion simplifiée"
+explain: "Créez et gérez vos tournois en quelques clics. Interface intuitive pour tous les organisateurs."
+followmatch: "Suivi des matchs"
+explainmatch: "Suivez les scores et les classements de vos équipes. Restez informé de l'avancement des matchs."
+manageteam: "Gestion des équipes"
+explainmanageteam: "Créez et gérez facilement vos équipes. Suivez les performances et statistiques de chaque équipe."
+organizedmatch: "Match organisés"
+tournament: 'Tournoi'
+activeteams: 'Équipes actives'
+useractive: 'Utilisateur actif'
+matchprogress: "Matchs à venir aujourd'hui"
+nomatch: "Aucun match en cours ou à venir aujourd'hui"
+seematch: "Voir les matchs"
+
 nav:
+    from: 'De'
+    to: 'À'
+    matchinlive: 'Match en cours'
+    championshipinlive: 'Championnat en cours'
+    startnow: 'Commencez maintenant'
+    sourcechampionship: 'championnat source '
+    newchampion: "d'un nouveau championnat"
     firstname: 'Prénom'
     lastname: 'Nom'
     email: 'Adresse email'
@@ -16,7 +48,7 @@ nav:
     admin: 'Administration'
     managechampionship: 'Gérer vos championnats'
     withsimplicity: 'avec simplicité'
-    explainkickscore: 'KickScore peut vous aider à organiser vos tournois de RoboCup.'
+    explainkickscore: "KickScore vous accompagne dans l'organisation de vos tournois de RoboCup avec des outils modernes et intuitifs."
     myteam: 'Mon équipe'
     controlepanel: 'Panneau de contrôle'
     creation: 'Création'
@@ -40,7 +72,7 @@ nav:
     verify: 'Vérifier'
     goalblue: 'Buts bleus'
     goalgreen: 'Buts verts'
-    importefile: 'Importer un fichier'
+    importfile: 'Importer un fichier'
     import: 'Importer'
     selectchamp: 'Sélectionnez un championnat'
     exportchampionship: 'Exporter les données du championnat'
@@ -55,6 +87,8 @@ nav:
     noteamnochamp: " Aucune équipe trouvée pour ce championnat."
     createmanually: "Créer manuellement"
     validdate : "Date valide pour un futur match"
+    startdate: "Date de début"
+    enddate: "Date de fin"
 user_list:
     title: "Liste des utilisateurs"
     subtitle: "Gérez les utilisateurs de la plateforme"

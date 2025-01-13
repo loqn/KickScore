@@ -8,16 +8,16 @@
             <div class="max-w-3xl mx-auto">
                 <div class="mb-8 flex items-center justify-between">
                     <h1 class="text-3xl font-bold text-slate-800">
-                        Modifier le championnat
+                        {{'modifychampionship' | trans}}
                         <span class="block mt-1 text-lg text-slate-600 font-normal">
-                            Modification des informations du championnat
+                            {{'modifyinfo' | trans}}
                         </span>
                     </h1>
 
                     <div class="space-x-3">
                         <a href="{{ path('app_user_index') }}"
                            class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-medium">
-                            Retour à la liste
+                            {{'user.profile.back_to_list' | trans}}
                         </a>
                     </div>
                 </div>
@@ -35,7 +35,7 @@
                                 </div>
 
                                 <div>
-                                    <label for="terrain" class="block text-sm font-medium text-slate-700 mb-2">Terrain à supprimer</label>
+                                    <label for="terrain" class="block text-sm font-medium text-slate-700 mb-2">{{'deletefield' | trans}}</label>
                                     <select id="terrain" name="terrain" class="block w-full rounded-md border-slate-200 shadow-sm focus:border-blue-500 focus:ring-blue-500">
                                         {% for terrain in fields %}
                                             <option value="{{ terrain.id }}"{% if terrain.id == select %}selected{% endif %}>{{ terrain.name }}</option>
@@ -45,7 +45,7 @@
                                 </div>
 
                                 <div id="terrainConfirmation" class="hidden text-sm text-slate-600 mb-2">
-                                    Terrain sélectionné :
+                                    {{'selectedfield' | trans}}
                                 </div>
                                 <script>
                                     document.getElementById('terrain').addEventListener('change', function() {
@@ -60,7 +60,7 @@
                                 <div class="p-6 bg-slate-50 rounded-b-lg flex items-center space-x-3">
                                     <button type="submit"
                                             class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm">
-                                        Enregistrer les modifications
+                                        {{'validmodify' | trans}}
                                     </button>
                                 </div>
                             </form>

@@ -24,25 +24,25 @@
                     <div class="text-center space-y-6">
                         <h1 class="text-6xl font-bold tracking-tight">
                             <span class="bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                                Gérez vos championnats
+                                {{'nav.managechampionship' | trans}}
                             </span>
                             <span class="block mt-3 bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent">
-                                en toute simplicité
+                                {{'nav.withsimplicity' | trans}}
                             </span>
                         </h1>
                         <p class="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-                            KickScore vous accompagne dans l'organisation de vos tournois de RoboCup avec des outils
-                            modernes et intuitifs.
+                        {{'nav.explainkickscore' | trans}}
+                            
                         </p>
                         <div class="pt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
                             <a href="{{ path('app_register') }}"
                                class="group relative px-8 py-4 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition-all duration-300 font-medium text-lg shadow-md hover:shadow-xl w-full sm:w-auto">
-                                <span class="relative z-10">Commencer maintenant</span>
+                                <span class="relative z-10">{{'nav.startnow' | trans}}</span>
                                 <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-800 to-blue-900 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
                             </a>
                             <a href="{{ path('app_login') }}"
                                class="px-8 py-4 bg-white text-blue-900 rounded-xl hover:bg-slate-50 transition-all duration-300 font-medium text-lg border border-blue-100 shadow-md hover:shadow-lg hover:border-blue-200 w-full sm:w-auto">
-                                Se connecter
+                                {{'nav.login' | trans}}
                             </a>
                         </div>
                     </div>
@@ -57,9 +57,8 @@
                                           d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
                                 </svg>
                             </div>
-                            <h3 class="text-xl font-semibold text-slate-800 mb-2">Gestion simplifiée</h3>
-                            <p class="text-slate-600">Créez et gérez vos tournois en quelques clics. Interface intuitive
-                                pour tous les organisateurs.</p>
+                            <h3 class="text-xl font-semibold text-slate-800 mb-2">{{'simplifymanage' | trans}}</h3>
+                            <p class="text-slate-600">{{'explain' | trans }}</p>
                         </div>
 
                         <div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100">
@@ -70,9 +69,8 @@
                                           d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
                                 </svg>
                             </div>
-                            <h3 class="text-xl font-semibold text-slate-800 mb-2">Suivi des matchs</h3>
-                            <p class="text-slate-600">Suivez les scores et les classements de vos équipes. Restez informé de
-                                l'avancement des matchs.</p>
+                            <h3 class="text-xl font-semibold text-slate-800 mb-2">{{'followmatch' | trans}}</h3>
+                            <p class="text-slate-600">{{'explainmatch' | trans}}</p>
                         </div>
 
                         <div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100">
@@ -83,9 +81,8 @@
                                           d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
                                 </svg>
                             </div>
-                            <h3 class="text-xl font-semibold text-slate-800 mb-2">Gestion d'équipes</h3>
-                            <p class="text-slate-600">Créez et gérez facilement vos équipes. Suivez les performances et
-                                statistiques de chaque équipe.</p>
+                            <h3 class="text-xl font-semibold text-slate-800 mb-2">{{'manageteam' | trans}}</h3>
+                            <p class="text-slate-600">{{'explainmanageteam' | trans}}</p>
                         </div>
                     </div>
 
@@ -93,19 +90,19 @@
                     <div class="grid grid-cols-2 md:grid-cols-4 gap-8 py-12">
                         <div class="text-center">
                             <div class="text-3xl font-bold text-blue-900">100+</div>
-                            <div class="text-slate-600">Matchs organisés</div>
+                            <div class="text-slate-600">{{'organizedmatch' | trans}}</div>
                         </div>
                         <div class="text-center">
                             <div class="text-3xl font-bold text-blue-900">50+</div>
-                            <div class="text-slate-600">Équipes actives</div>
+                            <div class="text-slate-600">{{'activeteams' | trans}} </div>
                         </div>
                         <div class="text-center">
                             <div class="text-3xl font-bold text-blue-900">10+</div>
-                            <div class="text-slate-600">Tournois</div>
+                            <div class="text-slate-600">{{'tournament' | trans}}</div>
                         </div>
                         <div class="text-center">
                             <div class="text-3xl font-bold text-blue-900">500+</div>
-                            <div class="text-slate-600">Utilisateurs</div>
+                            <div class="text-slate-600">{{'useractive' | trans}}</div>
                         </div>
                     </div>
 
@@ -113,7 +110,7 @@
                     <div class="text-center space-y-6">
                         <h1 class="text-6xl font-bold tracking-tight">
                             <span class="bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                                Bienvenue {{ app.user.FirstName }}
+                                {{'nav.welcome' | trans}} {{ app.user.FirstName }}
                             </span>
                             <span class="block mt-3 bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent">
                                 sur KickScore
@@ -126,12 +123,12 @@
                             {% if is_granted('ROLE_ORGANIZER') %}
                                 <a href="{{ path('app_championship') }}"
                                    class="group relative px-8 py-4 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition-all duration-300 font-medium text-lg shadow-md hover:shadow-xl">
-                                    <span class="relative z-10">Créer un championnat</span>
+                                    <span class="relative z-10">{{'championship_management.create' | trans}}</span>
                                     <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-800 to-blue-900 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
                                 </a>
                                 <a href="{{ path('app_user_index') }}"
                                    class="group relative px-8 py-4 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition-all duration-300 font-medium text-lg shadow-md hover:shadow-xl">
-                                    <span class="relative z-10">Panneau de contrôle</span>
+                                    <span class="relative z-10">{{'nav.controlepanel' | trans}}</span>
                                     <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-800 to-blue-900 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
                                 </a>
                             {% elseif is_granted('ROLE_USER') and not is_granted('ROLE_ORGANIZER') %}
@@ -144,7 +141,7 @@
                                 {% else %}
                                     <a href="{{ path('app_team') }}"
                                        class="group relative px-8 py-4 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition-all duration-300 font-medium text-lg shadow-md hover:shadow-xl">
-                                        <span class="relative z-10">Créer une équipe</span>
+                                        <span class="relative z-10">{{'nav.createteam' | trans }}</span>
                                         <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-800 to-blue-900 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
                                     </a>
                                 {% endif %}
@@ -160,13 +157,13 @@
                         {# header #}
                         <div class="text-center">
                             <h2 class="text-3xl font-bold text-slate-800">
-                                Championnat en cours
+                                {{'nav.championshipinlive' | trans}}
                             </h2>
                             <h2 class="text-2xl font-bold text-slate-800">
                                 {{ currentCompetition.name }}
                             </h2>
                             <p class="text-slate-600">
-                                Du {{ currentCompetition.startDate|date('d/m/Y') }} au {{ currentCompetition.endDate|date('d/m/Y') }}
+                                {{'nav.from' | trans }} {{ currentCompetition.startDate|date('d/m/Y') }} {{'nav.to' | trans}} {{ currentCompetition.endDate|date('d/m/Y') }}
                             </p>
                         </div>
 
@@ -193,7 +190,7 @@
 
                                 {% if currentMatches|length > 0 %}
                                     <div class="grid gap-4">
-                                        <h3 class="text-xl font-semibold text-center text-slate-800">Matchs en cours</h3>
+                                        <h3 class="text-xl font-semibold text-center text-slate-800">{{'matchinlive' | trans}}s</h3>
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             {% for match in currentMatches %}
                                                 <div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100">
@@ -222,7 +219,7 @@
                                 {# upcoming matches #}
                                 {% if upcomingMatches|length > 0 %}
                                     <div class="grid gap-4">
-                                        <h3 class="text-xl font-semibold text-center text-slate-800">Matchs à venir aujourd'hui</h3>
+                                        <h3 class="text-xl font-semibold text-center text-slate-800">{{"matchprogress" | trans}}</h3>
                                         <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                             {% for match in upcomingMatches %}
                                                 <div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100">
@@ -248,7 +245,7 @@
 
                                 {% if currentMatches|length == 0 and upcomingMatches|length == 0 %}
                                     <div class="text-center text-slate-600">
-                                        Aucun match en cours ou à venir aujourd'hui
+                                        {{"nomatch" | trans}}
                                     </div>
                                 {% endif %}
                             </div>
@@ -260,12 +257,12 @@
                     {% if not currentCompetition %}
                     <a href="{{ path('app_match_list')}}"
                        class="px-8 py-4 bg-white text-blue-900 rounded-xl hover:bg-slate-50 transition-all duration-300 font-medium text-lg border border-blue-100 shadow-md hover:shadow-lg hover:border-blue-200">
-                        Voir les matchs
+                         {{"seematch" | trans}}
                     </a>
                     {% else %}
                     <a href="{{ path('app_match_list', {'championship': currentCompetition.id}) }}"
                         class="px-8 py-4 bg-white text-blue-900 rounded-xl hover:bg-slate-50 transition-all duration-300 font-medium text-lg border border-blue-100 shadow-md hover:shadow-lg hover:border-blue-200">
-                        Voir les matchs
+                        {{"seematch" | trans}}
                     </a>
                     {% endif %}
                 </div>
