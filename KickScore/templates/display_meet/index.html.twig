@@ -1,0 +1,97 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello DisplayMeetController!{% endblock %}
+
+{% block body %}
+<div class="h-[calc(100vh-2rem)]">
+    <div class="h-full bg-gradient-to-br from-slate-50 to-white rounded-xl p-8">
+        <div class="max-w-4xl mx-auto">
+            {# Header Section #}
+            <div class="mb-8">
+                <h1 class="text-3xl font-bold text-slate-800">
+                    Calendrier des Matches
+                    <span class="block mt-1 text-lg text-slate-600 font-normal">
+                        Matches en cours et à venir
+                    </span>
+                </h1>
+            </div>
+
+            {# Current Match Section #}
+            <div class="mb-8">
+                <h2 class="text-xl font-semibold text-slate-800 mb-4">Match en cours</h2>
+                {% if currentMatch %}
+                    <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+                        <div class="flex items-center justify-between">
+                            <div class="flex items-center space-x-4">
+                                <span class="font-medium text-lg text-slate-800">{{ currentMatch.team1.name }}</span>
+                                <span class="text-2xl font-bold text-slate-700">{{ currentMatch.score1 ?? '0' }}</span>
+                                <span class="text-slate-400 font-medium">vs</span>
+                                <span class="text-2xl font-bold text-slate-700">{{ currentMatch.score2 ?? '0' }}</span>
+                                <span class="font-medium text-lg text-slate-800">{{ currentMatch.team2.name }}</span>
+                            </div>
+                            <div class="text-right">
+                                <div class="text-sm text-slate-600">{{ currentMatch.field.name }}</div>
+                                <div class="text-sm font-medium text-green-600">En cours</div>
+                            </div>
+                        </div>
+                    </div>
+                {% else %}
+                    <div class="bg-slate-50 rounded-lg p-6 text-center text-slate-600">
+                        Aucun match en cours
+                    </div>
+                {% endif %}
+            </div>
+
+            {# Upcoming Matches Section #}
+            <div>
+                <h2 class="text-xl font-semibold text-slate-800 mb-4">Prochains matches</h2>
+                {% if upcomingMatches|length > 0 %}
+                    <div class="space-y-4">
+                        {% for match in upcomingMatches %}
+                            <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-center space-x-4">
+                                        <span class="font-medium text-slate-800">{{ match.team1.name }}</span>
+                                        <span class="text-slate-400 font-medium">vs</span>
+                                        <span class="font-medium text-slate-800">{{ match.team2.name }}</span>
+                                    </div>
+                                    <div class="text-right">
+                                        <div class="text-sm text-slate-600">{{ match.field.name }}</div>
+                                        <div class="text-sm text-slate-600">
+                                            {{ match.scheduledTime|date('d/m/Y H:i') }}
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                {% else %}
+                    <div class="bg-slate-50 rounded-lg p-6 text-center text-slate-600">
+                        Aucun match programmé
+                    </div>
+                {% endif %}
+            </div>
+
+            {# Pagination if needed #}
+            {% if upcomingMatches|length >= 10 %}
+                <div class="mt-6 flex justify-center">
+                    <nav class="flex space-x-2" aria-label="Pagination">
+                        {% if currentPage > 1 %}
+                            <a href="{{ path('app_matches', {page: currentPage - 1}) }}"
+                               class="px-3 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200">
+                                Précédent
+                            </a>
+                        {% endif %}
+                        {% if hasNextPage %}
+                            <a href="{{ path('app_matches', {page: currentPage + 1}) }}"
+                               class="px-3 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200">
+                                Suivant
+                            </a>
+                        {% endif %}
+                    </nav>
+                </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
