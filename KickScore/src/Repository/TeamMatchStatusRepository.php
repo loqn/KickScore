@@ -2,22 +2,22 @@
 
 namespace App\Repository;
 
-use App\Entity\Timeslot;
+use App\Entity\TeamMatchStatus;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Persistence\ManagerRegistry;
 
 /**
- * @extends ServiceEntityRepository<Timeslot>
+ * @extends ServiceEntityRepository<TeamMatchStatus>
  */
-class TimeSlotRepository extends ServiceEntityRepository
+class TeamMatchStatusRepository extends ServiceEntityRepository
 {
     public function __construct(ManagerRegistry $registry)
     {
-        parent::__construct($registry, Timeslot::class);
+        parent::__construct($registry, TeamMatchStatus::class);
     }
 
 //    /**
-//     * @return Timeslot[] Returns an array of Timeslot objects
+//     * @return TeamMatchStatus[] Returns an array of TeamMatchStatus objects
 //     */
 //    public function findByExampleField($value): array
 //    {
@@ -31,7 +31,7 @@ class TimeSlotRepository extends ServiceEntityRepository
 //        ;
 //    }
 
-//    public function findOneBySomeField($value): ?Timeslot
+//    public function findOneBySomeField($value): ?TeamMatchStatus
 //    {
 //        return $this->createQueryBuilder('t')
 //            ->andWhere('t.exampleField = :val')

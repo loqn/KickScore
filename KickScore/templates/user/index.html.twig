@@ -1,86 +1,379 @@
 {% extends 'base.html.twig' %}
 
 {% block title %}{{ 'user_list.title'|trans }} - KickScore{% endblock %}
+{% block title %}Administration - KickScore{% endblock %}
 
 {% block body %}
     <div class="bg-gradient-to-br from-slate-50 to-white min-h-screen">
         <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
-            <div class="mb-8">
-                <div class="mb-6 md:mb-8 flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center">
-                    <div class="flex-1">
-                        <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 text-center md:text-left">
-                            {{ 'user_list.title'|trans }}
-                            <span class="block mt-1 text-sm sm:text-base md:text-lg text-slate-600 font-normal">
-                                {{ 'user_list.subtitle'|trans }}
-                            </span>
-                        </h1>
+            <h1 class="text-3xl sm:text-4xl font-bold text-slate-800 text-center mb-8">
+                Administration
+                <span class="block mt-2 text-lg sm:text-2xl text-blue-900 font-medium" id="subtitle">
+                    Gestion des utilisateurs et championnats
+                </span>
+            </h1>
+
+            {# flash #}
+            {% for message in app.flashes('user_success') %}
+                <div class="bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 mb-6">
+                    <p class="text-sm font-medium">{{ message }}</p>
+                </div>
+            {% endfor %}
+            {% for message in app.flashes('error') %}
+                <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 mb-6">
+                    <p class="text-sm font-medium">{{ message }}</p>
+                </div>
+            {% endfor %}
+
+            <!-- tabs -->
+            <nav class="w-full border-b border-slate-200 mb-6 overflow-y-hidden overflow-x-auto sticky top-0 bg-white z-10">
+                <div class="flex justify-center min-w-max mx-auto">
+                    <div class="flex min-w-max">
+                        <button id="tab_users"
+                                class="px-4 sm:px-6 py-2 sm:py-3 text-sm font-medium border-b-2 border-transparent hover:border-slate-300 hover:text-slate-600 transition-colors relative sm:-mb-[2px] rounded-t-lg sm:rounded-none">
+                        <span class="flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                 fill="currentColor">
+                                <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                            </svg>
+                            Utilisateurs
+                        </span>
+                        </button>
+                        <button id="tab_championships"
+                                class="px-4 sm:px-6 py-2 sm:py-3 text-sm font-medium border-b-2 border-transparent hover:border-slate-300 hover:text-slate-600 transition-colors relative sm:-mb-[2px] rounded-t-lg sm:rounded-none">
+                        <span class="flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trophy-fill" viewBox="0 0 16 16">
+                                <path d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5q0 .807-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33 33 0 0 1 2.5.5m.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935m10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935"/>
+                            </svg>
+                            Championnats
+                        </span>
+                        </button>
+                        <button id="tab_teams"
+                                class="px-4 sm:px-6 py-2 sm:py-3 text-sm font-medium border-b-2 border-transparent hover:border-slate-300 hover:text-slate-600 transition-colors relative sm:-mb-[2px] rounded-t-lg sm:rounded-none">
+                        <span class="flex items-center justify-center gap-2">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20"
+                                 fill="currentColor">
+                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
+                            </svg>
+                            Équipes
+                        </span>
+                        </button>
                     </div>
                 </div>
+            </nav>
 
-                {# Flash messages remain unchanged #}
+            <!-- users -->
+            <div id="panel_users" class="hidden">
+                <div class="bg-white rounded-lg shadow-sm border border-slate-200">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-6 border-b border-slate-200">
+                        <div class="flex-1">
+                            <h2 class="text-xl font-bold text-slate-800">
+                                Liste des utilisateurs
+                                <span class="block mt-1 text-sm text-slate-600 font-normal">
+                                    Gérez les utilisateurs de la plateforme
+                                </span>
+                            </h2>
+                        </div>
 
-                <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-x-auto">
-                    <table class="w-full">
-                        <thead class="bg-slate-50 border-b border-slate-200">
-                        <tr>
-                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-slate-700">
-                                {{ 'user_list.table.name'|trans }}
-                            </th>
-                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-slate-700">
-                                {{ 'user_list.table.firstname'|trans }}
-                            </th>
-                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-slate-700">
-                                {{ 'user_list.table.email'|trans }}
-                            </th>
-                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-slate-700">
-                                {{ 'user_list.table.role'|trans }}
-                            </th>
-                            <th class="px-4 sm:px-6 py-3 sm:py-4 text-left text-xs sm:text-sm font-medium text-slate-700">
-                                {{ 'user_list.table.actions'|trans }}
-                            </th>
-                        </tr>
-                        </thead>
-                        <tbody class="divide-y divide-slate-200">
-                        {% for user in users %}
-                            <tr class="hover:bg-slate-50 transition-colors">
-                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-slate-600 whitespace-nowrap">
-                                    {{ user.name }}
-                                </td>
-                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-slate-600 whitespace-nowrap">
-                                    {{ user.FirstName }}
-                                </td>
-                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-slate-600">
-                                    {{ user.mail }}
-                                </td>
-                                <td class="px-4 sm:px-6 py-3 sm:py-4">
-                                    <span class="px-2 sm:px-3 py-1 text-xs font-medium rounded-full
+                        <div class="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
+                            <!-- Barre de recherche -->
+                            <div class="relative w-full sm:w-64">
+                                <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
+                                    <svg class="w-4 h-4 text-slate-500" viewBox="0 0 20 20" fill="currentColor">
+                                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+                                    </svg>
+                                </div>
+                                <input
+                                        type="text"
+                                        id="userSearch"
+                                        class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                                        placeholder="Rechercher un utilisateur..."
+                                >
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="overflow-x-auto">
+                        <div class="inline-block min-w-full">
+                            <div class="overflow-hidden">
+                                <table class="min-w-full divide-y divide-slate-200">
+                                    <thead class="bg-slate-50">
+                                    <tr>
+                                        <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                            Nom
+                                        </th>
+                                        <th scope="col" class="hidden sm:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                            Prénom
+                                        </th>
+                                        <th scope="col" class="hidden sm:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                            Email
+                                        </th>
+                                        <th scope="col" class="hidden sm:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                            Rôle
+                                        </th>
+                                        <th scope="col" class="px-3 sm:px-6 py-3 text-right text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                            Actions
+                                        </th>
+                                    </tr>
+                                    </thead>
+                                    <tbody class="bg-white divide-y divide-slate-200">
+                                    {% for user in users %}
+                                        <tr class="hover:bg-slate-50 transition-colors">
+                                            <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
+                                                <div class="flex flex-col sm:flex-row gap-1">
+                                                    <span class="font-medium text-slate-900">{{ user.name }}</span>
+                                                    <!-- Version mobile uniquement -->
+                                                    <div class="sm:hidden text-xs text-slate-500">
+                                                        <div>{{ user.FirstName }}</div>
+                                                        <div>{{ user.mail }}</div>
+                                                        <div class="mt-1">
+                                                <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full
+                                                    {% if user.isOrganizer %}
+                                                        bg-purple-100 text-purple-800
+                                                    {% else %}
+                                                        bg-blue-100 text-blue-800
+                                                    {% endif %}">
+                                                    <svg class="w-3 h-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                                                    </svg>
+                                                    {{ user.isOrganizer ? 'Organisateur' : 'Utilisateur' }}
+                                                </span>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="hidden sm:table-cell px-3 sm:px-6 py-4 text-sm text-slate-600 whitespace-nowrap">
+                                                {{ user.FirstName }}
+                                            </td>
+                                            <td class="hidden sm:table-cell px-3 sm:px-6 py-4 text-sm text-slate-600">
+                                                {{ user.mail }}
+                                            </td>
+                                            <td class="hidden sm:table-cell px-3 sm:px-6 py-4">
+                                    <span class="inline-flex items-center px-2 sm:px-3 py-1 text-xs font-medium rounded-full
                                         {% if user.isOrganizer %}
                                             bg-purple-100 text-purple-800
                                         {% else %}
                                             bg-blue-100 text-blue-800
                                         {% endif %}">
-                                        {{ user.isOrganizer ? 'user_list.table.organizer'|trans : 'user_list.table.user'|trans }}
+                                        <svg class="w-3 h-3 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
+                                        </svg>
+                                        {{ user.isOrganizer ? 'Organisateur' : 'Utilisateur' }}
                                     </span>
+                                            </td>
+                                            <td class="px-3 sm:px-6 py-4 text-xs sm:text-sm whitespace-nowrap text-right">
+                                                <div class="flex justify-end items-center space-x-2 sm:space-x-3">
+                                                    <a href="{{ path('app_user_show', {'id': user.id}) }}"
+                                                       class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium">
+                                                        <svg class="w-3 h-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                                            <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                                                            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+                                                        </svg>
+                                                        <span class="hidden sm:inline">Voir</span>
+                                                    </a>
+                                                    <a href="{{ path('app_user_edit', {'id': user.id}) }}"
+                                                       class="inline-flex items-center text-slate-600 hover:text-slate-800 font-medium">
+                                                        <svg class="w-3 h-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                                                        </svg>
+                                                        <span class="hidden sm:inline">Modifier</span>
+                                                    </a>
+                                                    <a href="{{ path('app_impersonate', {'id': user.id}) }}"
+                                                       class="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium">
+                                                        <svg class="w-3 h-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                                            <path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clip-rule="evenodd"/>
+                                                        </svg>
+                                                        <span class="hidden sm:inline">Incarner</span>
+                                                    </a>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    {% else %}
+                                        <tr>
+                                            <td colspan="5" class="px-3 sm:px-6 py-6 text-center text-sm text-slate-600">
+                                                Aucun utilisateur n'a été trouvé.
+                                            </td>
+                                        </tr>
+                                    {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="px-6 py-4 flex items-center justify-between border-t border-slate-200">
+                        <div class="flex items-center gap-2">
+                            <button id="prevPage" class="px-3 py-1 border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                </svg>
+                            </button>
+                            <div id="pagination" class="flex items-center gap-1">
+                            </div>
+                            <button id="nextPage" class="px-3 py-1 border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- championships -->
+            <div id="panel_championships" class="hidden">
+                <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-x-auto">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-6 border-b border-slate-200">
+                        <h2 class="text-xl font-bold text-slate-800">
+                            Liste des championnats
+                            <span class="block mt-1 text-sm text-slate-600 font-normal">
+                                Gérez les championnats et leurs équipes
+                            </span>
+                        </h2>
+
+                        {% if is_granted('ROLE_ORGANIZER') %}
+                            <a href="{{ path('app_championship') }}"
+                               class="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm text-center">
+                                Nouveau championnat
+                            </a>
+                        {% endif %}
+                    </div>
+
+                    <table class="w-full">
+                        <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                Nom du championnat
+                            </th>
+                            <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                Équipes
+                            </th>
+                            <th scope="col" class="px-3 sm:px-6 py-3 text-right text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                Actions
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                        {% for championship in championships %}
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-4 sm:px-6 py-3 sm:py-4">
+                                    <div class="flex items-center cursor-pointer"
+                                         onclick="toggleChampionship('championship-{{ championship.id }}')">
+                                        <span class="text-xs sm:text-sm text-slate-600">{{ championship.name }}</span>
+                                        <svg class="w-4 h-4 text-slate-500 transform transition-transform duration-200 ml-2"
+                                             id="championship-icon-{{ championship.id }}"
+                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                             fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                  clip-rule="evenodd"/>
+                                        </svg>
+                                    </div>
                                 </td>
-                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm space-x-2 sm:space-x-3 whitespace-nowrap">
-                                    <a href="{{ path('app_user_show', {'id': user.id}) }}"
-                                       class="text-blue-600 hover:text-blue-800 font-medium">
-                                        {{ 'user_list.table.view'|trans }}
-                                    </a>
-                                    <a href="{{ path('app_user_edit', {'id': user.id}) }}"
-                                       class="text-slate-600 hover:text-slate-800 font-medium">
-                                        {{ 'user_list.table.edit'|trans }}
-                                    </a>
-                                    <a href="{{ path('app_user_impersonate', {'id': user.id}) }}"
-                                       class="text-indigo-600 hover:text-indigo-800 font-medium">
-                                        {{ 'user_list.table.impersonate'|trans }}
-                                    </a>
+                                <td class="px-4 sm:px-6 py-3 sm:py-4">
+                            <span class="inline-flex items-center px-2 sm:px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                                <svg class="w-3 h-3 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
+                                </svg>
+                                {{ championship.teams|length }}
+                            </span>
+                                </td>
+                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm whitespace-nowrap">
+                                    <div class="flex items-center space-x-4">
+                                        <form action="{{ path('app_generate_match', {'id': championship.id}) }}"
+                                              method="post" class="inline">
+                                            <input type="hidden" name="chp_id" value="{{ championship.id }}">
+                                            <button type="submit"
+                                                    class="px-3 py-1.5 text-xs font-medium bg-white text-slate-800 rounded-lg hover:bg-blue-800 hover:text-white border border-blue-800 transition-colors">
+                                                Générer matchs
+                                            </button>
+                                        </form>
+                                    </div>
+                                </td>
+                            </tr>
+                            <tr class="hidden" id="championship-{{ championship.id }}">
+                                <td colspan="3" class="p-0">
+                                    <div class="bg-slate-50 px-4 sm:px-6 py-4">
+                                        <div class="bg-white rounded-lg shadow-sm border border-slate-200">
+                                            {% for team in championship.teams %}
+                                                <div class="border-b border-slate-200 last:border-b-0">
+                                                    <div class="flex items-center justify-between px-4 py-3 hover:bg-slate-50">
+                                                        <div class="flex flex-1 items-center cursor-pointer"
+                                                             onclick="toggleTeam('team-{{ team.id }}')">
+                                                            <span class="text-sm font-medium text-slate-700">{{ team.name }}</span>
+                                                            <span class="ml-3 px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                                                        {{ team.members|length > 1 ? team.members|length ~ ' membres' : team.members|length ~ ' membre' }}
+                                                    </span>
+                                                            <svg class="w-4 h-4 text-slate-500 transform transition-transform duration-200 ml-2"
+                                                                 id="team-icon-{{ team.id }}"
+                                                                 xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                                                 fill="currentColor">
+                                                                <path fill-rule="evenodd"
+                                                                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                                      clip-rule="evenodd"/>
+                                                            </svg>
+                                                        </div>
+                                                        <a href="{{ path('app_team_edit', {'id': team.id}) }}"
+                                                           class="ml-4 px-3 py-1.5 text-xs font-medium bg-blue-900 text-white hover:bg-blue-800 rounded-md transition-colors">
+                                                            Gérer l'équipe
+                                                        </a>
+                                                    </div>
+                                                    <div class="hidden" id="team-{{ team.id }}">
+                                                        <div class="px-4 py-3 bg-slate-50 border-t border-slate-200">
+                                                            <table class="w-full">
+                                                                <thead>
+                                                                <tr>
+                                                                    <th class="px-3 py-2 text-left text-xs font-medium text-slate-700">
+                                                                        Nom
+                                                                    </th>
+                                                                    <th class="px-3 py-2 text-left text-xs font-medium text-slate-700">
+                                                                        Prénom
+                                                                    </th>
+                                                                    <th class="px-3 py-2 text-left text-xs font-medium text-slate-700">
+                                                                        Email
+                                                                    </th>
+                                                                    <th class="px-3 py-2 text-left text-xs font-medium text-slate-700">
+                                                                        Rôle
+                                                                    </th>
+                                                                </tr>
+                                                                </thead>
+                                                                <tbody class="divide-y divide-slate-100">
+                                                                {% for member in team.members %}
+                                                                    <tr class="hover:bg-white">
+                                                                        <td class="px-3 py-2 text-xs text-slate-600">{{ member.name }}</td>
+                                                                        <td class="px-3 py-2 text-xs text-slate-600">{{ member.fname }}</td>
+                                                                        <td class="px-3 py-2 text-xs text-slate-600">{{ member.email }}</td>
+                                                                        <td class="px-3 py-2">
+                                                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-slate-100 text-slate-800">
+                                                                            Membre
+                                                                        </span>
+                                                                        </td>
+                                                                    </tr>
+                                                                {% else %}
+                                                                    <tr>
+                                                                        <td colspan="4"
+                                                                            class="px-3 py-4 text-center text-xs text-slate-600">
+                                                                            Aucun membre dans cette équipe.
+                                                                        </td>
+                                                                    </tr>
+                                                                {% endfor %}
+                                                                </tbody>
+                                                            </table>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% else %}
+                                                <div class="px-4 py-4 text-center text-sm text-slate-600">
+                                                    Aucune équipe dans ce championnat.
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
                                 </td>
                             </tr>
                         {% else %}
                             <tr>
-                                <td colspan="5" class="px-4 sm:px-6 py-6 sm:py-8 text-center text-sm text-slate-600">
-                                    {{ 'user_list.no_users'|trans }}
+                                <td colspan="3" class="px-4 sm:px-6 py-6 sm:py-8 text-center text-sm text-slate-600">
+                                    Aucun championnat n'a été trouvé.
                                 </td>
                             </tr>
                         {% endfor %}
@@ -89,129 +382,138 @@
                 </div>
             </div>
 
-            {# Section Championnats #}
- <div class="mt-12">
-    <div class="mb-6 flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4">
-        <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800">
-            {{ 'championship_list.title'|trans }}
-            <span class="block mt-1 text-sm sm:text-base md:text-lg text-slate-600 font-normal">
-                {{ 'championship_list.subtitle'|trans }}
-            </span>
-        </h1>
+            <!-- teams Panel -->
+            <div id="panel_teams" class="hidden">
+                <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-x-auto">
+                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-6 border-b border-slate-200">
+                        <h2 class="text-xl font-bold text-slate-800">
+                            Liste des équipes
+                            <span class="block mt-1 text-sm text-slate-600 font-normal">
+                    Gérez toutes les équipes inscrites
+                </span>
+                        </h2>
+                    </div>
 
-        {% if is_granted('ROLE_ORGANIZER') %}
-            <a href="{{ path('app_meet') }}"
-               class="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm text-center">
-                {{ 'championship_list.new_championship'|trans }}
-            </a>
-        {% endif %}
-    </div>
-
-    <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-hidden">
-        <div class="divide-y divide-slate-200">
-            {% for championship in championships %}
-                <div class="hover:bg-slate-50">
-                    <div class="flex items-center justify-between px-4 sm:px-6 py-4 cursor-pointer"
-                         onclick="toggleChampionship('championship-{{ championship.id }}')">
-                        <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                            <h2 class="text-base sm:text-lg font-medium text-slate-800">{{ championship.name }}</h2>
-                            <span class="px-2 sm:px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800 w-fit">
-                                {{ 'championship_list.teams_count'|trans({'%count%': championship.teams|length}) }}
+                    <table class="w-full">
+                        <thead class="bg-slate-50 border-b border-slate-200">
+                        <tr>
+                            <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                Nom de l'équipe
+                            </th>
+                            <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                Membres
+                            </th>
+                            <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                Championnats
+                            </th>
+                            <th scope="col" class="px-3 sm:px-6 py-3 text-right text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                Actions
+                            </th>
+                        </tr>
+                        </thead>
+                        <tbody class="divide-y divide-slate-200">
+                        {% for team in teams %}
+                            <tr class="hover:bg-slate-50 transition-colors">
+                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm text-slate-600">
+                                    {{ team.name }}
+                                </td>
+                                <td class="px-4 sm:px-6 py-3 sm:py-4">
+                            <span class="inline-flex items-center px-2 sm:px-3 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
+                                <svg class="w-3 h-3 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"/>
+                                </svg>
+                                {{ team.members|length }}
                             </span>
-                        </div>
-                        <svg class="w-5 h-5 text-slate-500 transform transition-transform duration-200 flex-shrink-0"
-                             id="championship-icon-{{ championship.id }}"
-                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                            <path fill-rule="evenodd"
-                                  d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                  clip-rule="evenodd"/>
-                        </svg>
-                    </div>
-
-                    <div class="hidden bg-slate-50" id="championship-{{ championship.id }}">
-                        {% for team in championship.teams %}
-                            <div class="border-t border-slate-200">
-                                <div class="flex items-center justify-between px-6 sm:px-8 py-3 hover:bg-slate-100">
-                                    <div class="flex flex-1 items-center cursor-pointer"
-                                         onclick="toggleTeam('team-{{ team.id }}')">
-                                        <div class="flex flex-col sm:flex-row sm:items-center gap-2 sm:gap-4">
-                                            <h3 class="text-sm sm:text-base font-medium text-slate-700">{{ team.name }}</h3>
-                                            <span class="px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800 w-fit">
-                                                {{ 'championship_list.team.members_count'|trans({'%count%': team.members|length}) }}
-                                            </span>
-                                        </div>
-                                        <svg class="w-4 h-4 text-slate-500 transform transition-transform duration-200 flex-shrink-0 ml-4"
-                                             id="team-icon-{{ team.id }}"
-                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z" clip-rule="evenodd"/>
-                                        </svg>
-                                    </div>
-                                    <a href="{{ path('app_team_edit', {'id': team.id}) }}"
-                                       class="ml-4 px-3 py-1.5 text-xs font-medium bg-blue-900 text-white hover:bg-blue-800 rounded-md transition-colors">
-                                        {{ 'championship_list.team.manage'|trans }}
-                                    </a>
-                                </div>
-
-                                <div class="hidden" id="team-{{ team.id }}">
-                                    <div class="px-4 sm:px-8 py-3 bg-white border-t border-slate-200 overflow-x-auto">
-                                        <table class="w-full">
-                                            <thead class="bg-slate-50">
-                                            <tr>
-                                                <th class="px-3 sm:px-4 py-2 text-left text-xs font-medium text-slate-700">
-                                                    {{ 'championship_list.team.table.name'|trans }}
-                                                </th>
-                                                <th class="px-3 sm:px-4 py-2 text-left text-xs font-medium text-slate-700">
-                                                    {{ 'championship_list.team.table.firstname'|trans }}
-                                                </th>
-                                                <th class="px-3 sm:px-4 py-2 text-left text-xs font-medium text-slate-700">
-                                                    {{ 'championship_list.team.table.email'|trans }}
-                                                </th>
-                                                <th class="px-3 sm:px-4 py-2 text-left text-xs font-medium text-slate-700">
-                                                    {{ 'championship_list.team.table.role'|trans }}
-                                                </th>
-                                            </tr>
-                                            </thead>
-                                            <tbody class="divide-y divide-slate-100">
-                                            {% for member in team.members %}
-                                                <tr class="hover:bg-slate-50">
-                                                    <td class="px-3 sm:px-4 py-2 text-xs text-slate-600">{{ member.name }}</td>
-                                                    <td class="px-3 sm:px-4 py-2 text-xs text-slate-600">{{ member.fname }}</td>
-                                                    <td class="px-3 sm:px-4 py-2 text-xs text-slate-600">{{ member.email }}</td>
-                                                    <td class="px-3 sm:px-4 py-2">
-                                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-slate-100 text-slate-800">
-                                                            {{ 'championship_list.team.table.member'|trans }}
-                                                        </span>
-                                                    </td>
-                                                </tr>
-                                            {% else %}
-                                                <tr>
-                                                    <td colspan="4" class="px-3 sm:px-4 py-4 text-center text-xs text-slate-600">
-                                                        {{ 'championship_list.team.no_members'|trans }}
-                                                    </td>
-                                                </tr>
+                                </td>
+                                <td class="px-4 sm:px-6 py-3 sm:py-4">
+                                    <div class="flex flex-wrap gap-2">
+                                        {% if team.championships %}
+                                            {% for championship in team.championships %}
+                                                {% set colors = [
+                                                    {'bg': 'bg-indigo-100', 'text': 'text-indigo-800'},
+                                                    {'bg': 'bg-purple-100', 'text': 'text-purple-800'},
+                                                    {'bg': 'bg-pink-100', 'text': 'text-pink-800'},
+                                                    {'bg': 'bg-rose-100', 'text': 'text-rose-800'},
+                                                    {'bg': 'bg-orange-100', 'text': 'text-orange-800'}
+                                                ] %}
+                                                {% set colorIndex = loop.index0 % colors|length %}
+                                                <span class="inline-flex items-center px-2 sm:px-3 py-1 text-xs font-medium rounded-full {{ colors[colorIndex].bg }} {{ colors[colorIndex].text }}">
+                                            <svg class="w-3 h-3 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                                                <path d="M6 2a1 1 0 00-1 1v1H4a2 2 0 00-2 2v10a2 2 0 002 2h12a2 2 0 002-2V6a2 2 0 00-2-2h-1V3a1 1 0 10-2 0v1H7V3a1 1 0 00-1-1zm0 5a1 1 0 000 2h8a1 1 0 100-2H6z"/>
+                                            </svg>
+                                            {{ championship.name }}
+                                        </span>
                                             {% endfor %}
-                                            </tbody>
-                                        </table>
+                                        {% else %}
+                                            <span class="text-xs text-slate-500">Aucun championnat</span>
+                                        {% endif %}
                                     </div>
-                                </div>
-                            </div>
+                                </td>
+                                <td class="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm whitespace-nowrap">
+                                    <a href="{{ path('app_team_edit', {'id': team.id}) }}"
+                                       class="text-blue-600 hover:text-blue-800 font-medium">
+                                        Gérer
+                                    </a>
+                                </td>
+                            </tr>
                         {% else %}
-                            <div class="px-6 sm:px-8 py-4 text-center text-sm text-slate-600 border-t border-slate-200">
-                                {{ 'championship_list.no_teams'|trans }}
-                            </div>
+                            <tr>
+                                <td colspan="4" class="px-4 sm:px-6 py-6 sm:py-8 text-center text-sm text-slate-600">
+                                    Aucune équipe n'a été trouvée.
+                                </td>
+                            </tr>
                         {% endfor %}
-                    </div>
+                        </tbody>
+                    </table>
                 </div>
-            {% else %}
-                <div class="px-4 sm:px-6 py-6 sm:py-8 text-center text-sm text-slate-600">
-                    {{ 'championship_list.no_championships'|trans }}
-                </div>
-            {% endfor %}
+            </div>
+
         </div>
     </div>
-</div>
 
     <script>
+        const tabs = {
+            users: document.getElementById('tab_users'),
+            championships: document.getElementById('tab_championships'),
+            teams: document.getElementById('tab_teams')
+        };
+
+        const panels = {
+            users: document.getElementById('panel_users'),
+            championships: document.getElementById('panel_championships'),
+            teams: document.getElementById('panel_teams')
+        };
+
+        const subtitle = document.getElementById('subtitle');
+
+        function activateTab(tabId) {
+            Object.values(tabs).forEach(tab => {
+                tab.classList.remove('text-blue-900', 'border-blue-900', 'bg-white');
+                tab.classList.add('text-slate-500', 'border-transparent');
+            });
+            tabs[tabId].classList.add('text-blue-900', 'border-blue-900', 'bg-white');
+            tabs[tabId].classList.remove('text-slate-500', 'border-transparent');
+
+            Object.values(panels).forEach(panel => panel.classList.add('hidden'));
+            panels[tabId].classList.remove('hidden');
+
+            const subtitles = {
+                users: "Gestion des utilisateurs",
+                championships: "Gestion des championnats",
+                teams: "Gestion des équipes"
+            };
+            subtitle.textContent = subtitles[tabId];
+
+            localStorage.setItem('activeTab', tabId);
+        }
+
+        const savedTab = localStorage.getItem('activeTab') || 'users';
+        activateTab(savedTab);
+
+        Object.keys(tabs).forEach(tabId => {
+            tabs[tabId].addEventListener('click', () => activateTab(tabId));
+        });
+
         function toggleChampionship(id) {
             const content = document.getElementById(id);
             const icon = document.getElementById('championship-icon-' + id.split('-')[1]);
@@ -225,5 +527,116 @@
             content.classList.toggle('hidden');
             icon.classList.toggle('rotate-180');
         }
+
+        // Search bar
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.querySelector('#userSearch');
+            const tbody = document.querySelector('tbody');
+            const paginationContainer = document.querySelector('#pagination');
+            const prevButton = document.querySelector('#prevPage');
+            const nextButton = document.querySelector('#nextPage');
+            const startIndexSpan = document.querySelector('#startIndex');
+            const endIndexSpan = document.querySelector('#endIndex');
+            const totalItemsSpan = document.querySelector('#totalItems');
+
+            const itemsPerPage = 8;
+            let currentPage = 1;
+            let filteredRows = [];
+
+            function filterRows(searchTerm) {
+                const rows = Array.from(tbody.querySelectorAll('tr')).filter(row => !row.querySelector('td[colspan]'));
+
+                filteredRows = searchTerm ? rows.filter(row => {
+                    const name = row.querySelector('td:first-child')?.textContent || '';
+                    const firstName = row.querySelector('td:nth-child(2)')?.textContent || '';
+                    const email = row.querySelector('td:nth-child(3)')?.textContent || '';
+
+                    return [name, firstName, email].some(text =>
+                        text.toLowerCase().includes(searchTerm.toLowerCase())
+                    );
+                }) : rows;
+
+                return filteredRows;
+            }
+
+            function updatePagination() {
+                const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+                paginationContainer.innerHTML = '';
+
+                for (let i = 1; i <= totalPages; i++) {
+                    const button = document.createElement('button');
+                    button.textContent = i;
+                    button.className = `px-3 py-1 border border-slate-200 rounded-lg hover:bg-slate-50 ${
+                        currentPage === i ? 'bg-blue-50 border-blue-200 text-blue-600' : ''
+                    }`;
+                    button.addEventListener('click', () => {
+                        currentPage = i;
+                        displayRows();
+                    });
+                    paginationContainer.appendChild(button);
+                }
+
+                prevButton.disabled = currentPage === 1;
+                nextButton.disabled = currentPage === totalPages;
+
+                const startIndex = (currentPage - 1) * itemsPerPage + 1;
+                const endIndex = Math.min(startIndex + itemsPerPage - 1, filteredRows.length);
+                startIndexSpan.textContent = filteredRows.length > 0 ? startIndex : 0;
+                endIndexSpan.textContent = endIndex;
+                totalItemsSpan.textContent = filteredRows.length;
+            }
+
+            function displayRows() {
+                const start = (currentPage - 1) * itemsPerPage;
+                const end = start + itemsPerPage;
+
+                tbody.querySelectorAll('tr').forEach(row => {
+                    row.style.display = 'none';
+                });
+
+                filteredRows.slice(start, end).forEach(row => {
+                    row.style.display = '';
+                });
+
+                const noResultsRow = tbody.querySelector('tr td[colspan]')?.closest('tr');
+                if (noResultsRow) noResultsRow.remove();
+
+                if (filteredRows.length === 0) {
+                    const noResultsRow = document.createElement('tr');
+                    noResultsRow.innerHTML = `
+                <td colspan="5" class="px-3 sm:px-6 py-6 text-center text-sm text-slate-600">
+                    Aucun utilisateur trouvé pour cette recherche.
+                </td>
+            `;
+                    tbody.appendChild(noResultsRow);
+                }
+
+                updatePagination();
+            }
+
+            searchInput.addEventListener('input', function(e) {
+                currentPage = 1;
+                filterRows(e.target.value);
+                displayRows();
+            });
+
+            prevButton.addEventListener('click', function() {
+                if (currentPage > 1) {
+                    currentPage--;
+                    displayRows();
+                }
+            });
+
+            nextButton.addEventListener('click', function() {
+                const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+                if (currentPage < totalPages) {
+                    currentPage++;
+                    displayRows();
+                }
+            });
+
+            filterRows('');
+            displayRows();
+        });
     </script>
 {% endblock %}

@@ -32,7 +32,7 @@
                                     </svg>
                                 </div>
                                 <div class="ml-3">
-                                    <h3 class="text-sm font-medium text-red-800">
+                                    <h3 class="text-md font-medium text-red-800">
                                         Action impossible
                                     </h3>
                                     <div class="mt-2 text-sm text-red-700">
@@ -54,7 +54,7 @@
                             <div>
                                 <p class="text-sm font-medium text-slate-500 mb-2"><span>{{'team_members' | trans}} </span></p>
                                 <div class="bg-slate-50 rounded-lg divide-y divide-slate-200">
-                                    {% for teammate in user.team.members %}
+                                    {% for teammate in user.member.team.members %}
                                         <div class="p-4 flex items-center justify-between">
                                             <div>
                                                 <p class="text-sm font-medium text-slate-700">
@@ -77,12 +77,12 @@
                     <div class="p-6 bg-slate-50 rounded-b-lg flex items-center justify-between">
                         <div class="flex items-center space-x-3">
                             <a href="{{ path('app_user_edit', {'id': user.id}) }}"
-                               class="px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm">
-                                <span>{{'edit_user' | trans}} </span>
+                               class="px-4 py-2 bg-red-800 text-white rounded-lg hover:bg-red-900 transition-colors font-medium shadow-sm">
+                                Supprimer l'équipe
                             </a>
-                            <a href="{{ path('app_team_edit', {'id': user.team.id}) }}"
+                            <a href="{{ path('app_team_edit', {'id': user.member.team.id}) }}"
                                class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-medium">
-                                <span>{{'manage_team' | trans}} </span>
+                                Annuler
                             </a>
                         </div>
                     </div>

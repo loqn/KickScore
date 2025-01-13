@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\VersusRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -15,11 +17,11 @@ class Versus
     #[ORM\Column(name: 'MAT_ID')]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(targetEntity: Team::class)]  // CORRECT
-    #[ORM\JoinColumn(name: 'TEA_ID', referencedColumnName: 'TEA_ID')]
+    #[ORM\ManyToOne(targetEntity: Team::class)]
+    #[ORM\JoinColumn(name: 'TEA_ID_MAT_TEAMBLUE', referencedColumnName: 'TEA_ID')]
     private ?Team $blueTeam = null;
 
-    #[ORM\ManyToOne(targetEntity: Team::class)]  // CORRECT
+    #[ORM\ManyToOne(targetEntity: Team::class)]
     #[ORM\JoinColumn(name: 'TEA_ID_MAT_TEAMGREEN', referencedColumnName: 'TEA_ID')]
     private ?Team $greenTeam = null;
 
@@ -35,6 +37,29 @@ class Versus
     #[ORM\ManyToOne(targetEntity: Championship::class, inversedBy: 'matches')]
     #[ORM\JoinColumn(name: 'CHP_ID', referencedColumnName: 'CHP_ID')]
     private ?Championship $championship = null;
+
+    #[ORM\Column(name:'MAT_COMMENTARY', length: 512, nullable: true)]
+    private ?string $commentary = null;
+
+    #[ORM\OneToMany(targetEntity: TeamMatchStatus::class, mappedBy: 'versus')]
+    private Collection $teamMatchStatuses;
+
+    #[ORM\ManyToOne]
+    #[ORM\JoinColumn(name: 'STS_ID', referencedColumnName: 'STS_ID', nullable: false)]
+    private ?Status $globalStatus = null;
+
+    #[ORM\ManyToOne(targetEntity: Timeslot::class, inversedBy: 'versuses')]
+    #[ORM\JoinColumn(name: 'TSL_ID', referencedColumnName: 'TSL_ID', nullable: true)]
+    private ?Timeslot $timeslot = null;
+
+    #[ORM\ManyToOne(targetEntity: Field::class, inversedBy: 'versuses')]
+    #[ORM\JoinColumn(name: 'FLD_ID', referencedColumnName: 'FLD_ID', nullable: true)]
+    private ?Field $field = null;
+
+    public function __construct()
+    {
+        $this->teamMatchStatuses = new ArrayCollection();
+    }
 
     public function getChampionship(): ?Championship
     {
@@ -58,7 +83,7 @@ class Versus
         return $this->blueTeam;
     }
 
-    public function setBlueTeam(Team $blueTeam): static
+    public function setBlueTeam(?Team $blueTeam): static
     {
         $this->blueTeam = $blueTeam;
 
@@ -70,11 +95,16 @@ class Versus
         return $this->greenTeam;
     }
 
-    public function setGreenTeam(Team $greenTeam): static
+    public function setGreenTeam(?Team $greenTeam): static
     {
         $this->greenTeam = $greenTeam;
 
         return $this;
+    }
+
+    public function getTeams(): array
+    {
+        return [$this->blueTeam, $this->greenTeam];
     }
 
     public function getGreenScore(): ?int
@@ -111,5 +141,87 @@ class Versus
         $this->date = $date;
 
         return $this;
+    }
+
+    public function getCommentary(): ?string
+    {
+        return $this->commentary;
+    }
+
+    public function setCommentary(?string $commentary): static
+    {
+        $this->commentary = $commentary;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, TeamMatchStatus>
+     */
+    public function getTeamMatchStatuses(): Collection
+    {
+        return $this->teamMatchStatuses;
+    }
+
+    public function addTeamMatchStatus(TeamMatchStatus $teamMatchStatus): static
+    {
+        if (!$this->teamMatchStatuses->contains($teamMatchStatus)) {
+            $this->teamMatchStatuses->add($teamMatchStatus);
+            $teamMatchStatus->setVersus($this);
+        }
+
+        return $this;
+    }
+
+    public function removeTeamMatchStatus(TeamMatchStatus $teamMatchStatus): static
+    {
+        if ($this->teamMatchStatuses->removeElement($teamMatchStatus)) {
+            if ($teamMatchStatus->getVersus() === $this) {
+                $teamMatchStatus->setVersus(null);
+            }
+        }
+
+        return $this;
+    }
+
+    public function getGlobalStatus(): ?Status
+    {
+        return $this->globalStatus;
+    }
+
+    public function setGlobalStatus(?Status $globalStatus): static
+    {
+        $this->globalStatus = $globalStatus;
+
+        return $this;
+    }
+
+    public function getTimeslot(): ?Timeslot
+    {
+        return $this->timeslot;
+    }
+
+    public function setTimeslot(?Timeslot $timeslot): static
+    {
+        $this->timeslot = $timeslot;
+
+        return $this;
+    }
+
+    public function getField(): ?Field
+    {
+        return $this->field;
+    }
+
+    public function setField(?Field $field): static
+    {
+        $this->field = $field;
+
+        return $this;
+    }
+
+    public function setStatus(Status $status)
+    {
+        $this->globalStatus = $status;
     }
 }
