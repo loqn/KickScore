@@ -372,29 +372,26 @@
                                     {% endfor %}
                                 </div>
                             </div>
-                        {% endif %}
-
-                                {% if currentMatches|length == 0 and upcomingMatches|length == 0 %}
-                                    <div class="text-center text-slate-600">
-                                        {{"nomatch" | trans}}
-                                    </div>
-                                {% endif %}
+                        {% if currentMatches|length == 0 and upcomingMatches|length == 0 %}
+                            <div class="text-center text-slate-600">
+                                {{"nomatch" | trans}}
                             </div>
                         {% endif %}
-                    </div>
+                        </div>
+                    {% endif %}
                 {% endif %}
 
                 <div class="pt-8 flex justify-center">
                     {% if not currentCompetition %}
-                    <a href="{{ path('app_match_list')}}"
-                       class="px-8 py-4 bg-white text-blue-900 rounded-xl hover:bg-slate-50 transition-all duration-300 font-medium text-lg border border-blue-100 shadow-md hover:shadow-lg hover:border-blue-200">
-                         {{"seematch" | trans}}
-                    </a>
+                        <a href="{{ path('app_match_list')}}"
+                           class="px-8 py-4 bg-white text-blue-900 rounded-xl hover:bg-slate-50 transition-all duration-300 font-medium text-lg border border-blue-100 shadow-md hover:shadow-lg hover:border-blue-200">
+                             {{"seematch" | trans}}
+                        </a>
                     {% else %}
-                    <a href="{{ path('app_match_list', {'championship': currentCompetition.id}) }}"
-                        class="px-8 py-4 bg-white text-blue-900 rounded-xl hover:bg-slate-50 transition-all duration-300 font-medium text-lg border border-blue-100 shadow-md hover:shadow-lg hover:border-blue-200">
-                        {{"seematch" | trans}}
-                    </a>
+                        <a href="{{ path('app_match_list', {'championship': currentCompetition.id}) }}"
+                            class="px-8 py-4 bg-white text-blue-900 rounded-xl hover:bg-slate-50 transition-all duration-300 font-medium text-lg border border-blue-100 shadow-md hover:shadow-lg hover:border-blue-200">
+                            {{"seematch" | trans}}
+                        </a>
                     {% endif %}
                 </div>
             </div>
