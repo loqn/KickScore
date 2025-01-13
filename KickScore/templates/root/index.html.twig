@@ -4,210 +4,257 @@
 
 {% block body %}
     <div class="min-h-[calc(100vh-2rem)] relative overflow-hidden">
-        <div class="absolute inset-0 bg-gradient-to-br from-slate-100 to-white">
-            <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_50%_120%,#3b82f6_0%,transparent_50%)]"></div>
-        </div>
+    <div class="absolute inset-0 bg-gradient-to-br from-slate-100 to-white">
+        <div class="absolute inset-0 opacity-10 bg-[radial-gradient(circle_at_50%_120%,#3b82f6_0%,transparent_50%)]"></div>
+    </div>
 
-        {# main content #}
-        <div class="relative h-full flex flex-col p-8">
-            <div class="max-w-6xl w-full mx-auto space-y-16">
-                <header class="w-full flex justify-center items-center py-6">
-                    <a href="{{ path('app_root') }}"
-                       class="inline-flex items-center group hover:opacity-90 transition-opacity">
-                        <img src="{{ asset("favicon.ico") }}" alt="KickScore icon" class="w-16 h-16 mr-4 object-contain">
-                        <h1 class="text-6xl font-semibold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                            KickScore
-                        </h1>
-                    </a>
-                </header>
-                {% if not app.user %}
-                    <div class="text-center space-y-6">
-                        <h1 class="text-6xl font-bold tracking-tight">
+    {# main content #}
+    <div class="relative h-full flex flex-col p-8">
+        <div class="max-w-6xl w-full mx-auto space-y-16">
+            <header class="w-full flex justify-center items-center py-6">
+                <a href="{{ path('app_root') }}"
+                   class="inline-flex items-center group hover:opacity-90 transition-opacity">
+                    <img src="{{ asset("favicon.ico") }}" alt="KickScore icon"
+                         class="w-16 h-16 mr-4 object-contain">
+                    <h1 class="text-6xl font-semibold bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+                        KickScore
+                    </h1>
+                </a>
+            </header>
+            {% if not app.user %}
+                <div class="text-center space-y-6">
+                    <h1 class="text-6xl font-bold tracking-tight">
                             <span class="bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                                Gérez vos championnats
+                                {{ 'nav.managechampionship' | trans }}
+                            </span>
+                        <span class="block mt-3 bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent">
+                                {{ 'nav.withsimplicity' | trans }}
+                            </span>
+                    </h1>
+                    <p class="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
+                        {{ 'nav.explainkickscore' | trans }}
+
+                    </p>
+                    <div class="pt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
+                        <a href="{{ path('app_register') }}"
+                           class="group relative px-8 py-4 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition-all duration-300 font-medium text-lg shadow-md hover:shadow-xl w-full sm:w-auto">
+                            <span class="relative z-10">{{ 'nav.startnow' | trans }}</span>
+                            <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-800 to-blue-900 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
+                        </a>
+                        <a href="{{ path('app_login') }}"
+                           class="px-8 py-4 bg-white text-blue-900 rounded-xl hover:bg-slate-50 transition-all duration-300 font-medium text-lg border border-blue-100 shadow-md hover:shadow-lg hover:border-blue-200 w-full sm:w-auto">
+                            {{ 'nav.login' | trans }}
+                        </a>
+                    </div>
+                </div>
+
+                {# app functions #}
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8">
+                    <div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100">
+                        <div class="mb-4 text-blue-900">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none"
+                                 viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-slate-800 mb-2">{{ 'simplifymanage' | trans }}</h3>
+                        <p class="text-slate-600">{{ 'explain' | trans }}</p>
+                    </div>
+
+                    <div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100">
+                        <div class="mb-4 text-blue-900">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none"
+                                 viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-slate-800 mb-2">{{ 'followmatch' | trans }}</h3>
+                        <p class="text-slate-600">{{ 'explainmatch' | trans }}</p>
+                    </div>
+
+                    <div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100">
+                        <div class="mb-4 text-blue-900">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none"
+                                 viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                      d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
+                            </svg>
+                        </div>
+                        <h3 class="text-xl font-semibold text-slate-800 mb-2">{{ 'manageteam' | trans }}</h3>
+                        <p class="text-slate-600">{{ 'explainmanageteam' | trans }}</p>
+                    </div>
+                </div>
+
+                {# stats #}
+                <div class="grid grid-cols-2 md:grid-cols-4 gap-8 py-12">
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-blue-900">100+</div>
+                        <div class="text-slate-600">{{ 'organizedmatch' | trans }}</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-blue-900">50+</div>
+                        <div class="text-slate-600">{{ 'activeteams' | trans }} </div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-blue-900">10+</div>
+                        <div class="text-slate-600">{{ 'tournament' | trans }}</div>
+                    </div>
+                    <div class="text-center">
+                        <div class="text-3xl font-bold text-blue-900">500+</div>
+                        <div class="text-slate-600">{{ 'useractive' | trans }}</div>
+                    </div>
+                </div>
+
+            {% else %}
+                <div class="text-center space-y-6">
+                    <h1 class="text-6xl font-bold tracking-tight">
+                            <span class="bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
+                                {{ 'nav.welcome' | trans }} {{ app.user.FirstName }}
                             </span>
                             <span class="block mt-3 bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent">
-                                en toute simplicité
+                                {{'on' | trans}} KickScore
                             </span>
-                        </h1>
-                        <p class="text-xl text-slate-600 max-w-2xl mx-auto leading-relaxed">
-                            KickScore vous accompagne dans l'organisation de vos tournois de RoboCup avec des outils
-                            modernes et intuitifs.
-                        </p>
-                        <div class="pt-10 flex flex-col sm:flex-row gap-4 justify-center items-center">
-                            <a href="{{ path('app_register') }}"
-                               class="group relative px-8 py-4 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition-all duration-300 font-medium text-lg shadow-md hover:shadow-xl w-full sm:w-auto">
-                                <span class="relative z-10">Commencer maintenant</span>
+                    </h1>
+
+                    {# actions #}
+
+                    <div class="pt-10 flex flex-wrap gap-4 justify-center">
+                        {% if is_granted('ROLE_ORGANIZER') %}
+                            <a href="{{ path('app_championship') }}"
+                               class="group relative px-8 py-4 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition-all duration-300 font-medium text-lg shadow-md hover:shadow-xl">
+                                <span class="relative z-10">{{ 'championship_management.create' | trans }}</span>
                                 <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-800 to-blue-900 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
                             </a>
-                            <a href="{{ path('app_login') }}"
-                               class="px-8 py-4 bg-white text-blue-900 rounded-xl hover:bg-slate-50 transition-all duration-300 font-medium text-lg border border-blue-100 shadow-md hover:shadow-lg hover:border-blue-200 w-full sm:w-auto">
-                                Se connecter
+                            <a href="{{ path('app_user_index') }}"
+                               class="group relative px-8 py-4 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition-all duration-300 font-medium text-lg shadow-md hover:shadow-xl">
+                                <span class="relative z-10">{{ 'nav.controlepanel' | trans }}</span>
+                                <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-800 to-blue-900 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
                             </a>
-                        </div>
-                    </div>
-
-                    {# app functions #}
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 pt-8">
-                        <div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100">
-                            <div class="mb-4 text-blue-900">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none"
-                                     viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2"/>
-                                </svg>
-                            </div>
-                            <h3 class="text-xl font-semibold text-slate-800 mb-2">Gestion simplifiée</h3>
-                            <p class="text-slate-600">Créez et gérez vos tournois en quelques clics. Interface intuitive
-                                pour tous les organisateurs.</p>
-                        </div>
-
-                        <div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100">
-                            <div class="mb-4 text-blue-900">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none"
-                                     viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
-                                </svg>
-                            </div>
-                            <h3 class="text-xl font-semibold text-slate-800 mb-2">Suivi des matchs</h3>
-                            <p class="text-slate-600">Suivez les scores et les classements de vos équipes. Restez informé de
-                                l'avancement des matchs.</p>
-                        </div>
-
-                        <div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100">
-                            <div class="mb-4 text-blue-900">
-                                <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10" fill="none"
-                                     viewBox="0 0 24 24" stroke="currentColor">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                          d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/>
-                                </svg>
-                            </div>
-                            <h3 class="text-xl font-semibold text-slate-800 mb-2">Gestion d'équipes</h3>
-                            <p class="text-slate-600">Créez et gérez facilement vos équipes. Suivez les performances et
-                                statistiques de chaque équipe.</p>
-                        </div>
-                    </div>
-
-                    {# stats #}
-                    <div class="grid grid-cols-2 md:grid-cols-4 gap-8 py-12">
-                        <div class="text-center">
-                            <div class="text-3xl font-bold text-blue-900">100+</div>
-                            <div class="text-slate-600">Matchs organisés</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-3xl font-bold text-blue-900">50+</div>
-                            <div class="text-slate-600">Équipes actives</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-3xl font-bold text-blue-900">10+</div>
-                            <div class="text-slate-600">Tournois</div>
-                        </div>
-                        <div class="text-center">
-                            <div class="text-3xl font-bold text-blue-900">500+</div>
-                            <div class="text-slate-600">Utilisateurs</div>
-                        </div>
-                    </div>
-
-                {% else %}
-                    <div class="text-center space-y-6">
-                        <h1 class="text-6xl font-bold tracking-tight">
-                            <span class="bg-gradient-to-r from-slate-900 to-slate-700 bg-clip-text text-transparent">
-                                Bienvenue {{ app.user.FirstName }}
-                            </span>
-                            <span class="block mt-3 bg-gradient-to-r from-blue-900 to-blue-700 bg-clip-text text-transparent">
-                                sur KickScore
-                            </span>
-                        </h1>
-
-                        {# actions #}
-
-                        <div class="pt-10 flex flex-wrap gap-4 justify-center">
-                            {% if is_granted('ROLE_ORGANIZER') %}
-                                <a href="{{ path('app_meet') }}"
+                        {% elseif is_granted('ROLE_USER') and not is_granted('ROLE_ORGANIZER') %}
+                            {% if app.user and app.user.member and app.user.member.team %}
+                                <a href="{{ path('app_team_edit', {id: app.user.member.team.id}) }}"
                                    class="group relative px-8 py-4 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition-all duration-300 font-medium text-lg shadow-md hover:shadow-xl">
-                                    <span class="relative z-10">Création</span>
+                                    <span class="relative z-10">Mon équipe</span>
                                     <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-800 to-blue-900 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
                                 </a>
-                                <a href="{{ path('app_user_index') }}"
+                            {% else %}
+                                <a href="{{ path('app_team') }}"
                                    class="group relative px-8 py-4 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition-all duration-300 font-medium text-lg shadow-md hover:shadow-xl">
-                                    <span class="relative z-10">Panneau de contrôle</span>
+                                    <span class="relative z-10">{{ 'nav.createteam' | trans }}</span>
                                     <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-800 to-blue-900 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
                                 </a>
-                            {% elseif is_granted('ROLE_USER') and not is_granted('ROLE_ORGANIZER') %}
-                                {% if app.user and app.user.member and app.user.member.team %}
-                                    <a href="{{ path('app_team_edit', {id: app.user.member.team.id}) }}"
-                                       class="group relative px-8 py-4 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition-all duration-300 font-medium text-lg shadow-md hover:shadow-xl">
-                                        <span class="relative z-10">Mon équipe</span>
-                                        <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-800 to-blue-900 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
-                                    </a>
-                                {% else %}
-                                    <a href="{{ path('app_team') }}"
-                                       class="group relative px-8 py-4 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition-all duration-300 font-medium text-lg shadow-md hover:shadow-xl">
-                                        <span class="relative z-10">Créer une équipe</span>
-                                        <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-800 to-blue-900 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
-                                    </a>
-                                {% endif %}
                             {% endif %}
-                        </div>
-                    </div>
-                {% endif %}
-
-                {# current matches & championship #}
-                {% if currentCompetition %}
-                    <div class="space-y-8">
-                        {# header #}
-                        <div class="text-center">
-                            <h2 class="text-2xl font-bold text-slate-800">
-                                {{ currentCompetition.name }}
-                            </h2>
-                            <p class="text-slate-600">
-                                Du {{ currentCompetition.startDate|date('d/m/Y') }} au {{ currentCompetition.endDate|date('d/m/Y') }}
-                            </p>
-                        </div>
-
-                        {# matches list #}
-                        {% if currentCompetition.matches|length > 0 %}
-                            <div class="grid gap-4">
-                                <h3 class="text-xl font-semibold text-center text-slate-800">Matchs en cours</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                    {% for match in currentCompetition.matches %}
-                                        <div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100">
-                                            <div class="flex justify-between items-center">
-                                                <div class="flex-1 text-right">
-                                                    <span class="font-medium text-green-700">{{ match.greenTeam.name }}</span>
-                                                </div>
-                                                <div class="px-6 flex items-center space-x-3">
-                                                    <span class="text-2xl font-bold text-green-900">{{ match.greenScore }}</span>
-                                                    <span class="text-slate-400">vs</span>
-                                                    <span class="text-2xl font-bold text-blue-900">{{ match.blueScore }}</span>
-                                                </div>
-                                                <div class="flex-1">
-                                                    <span class="font-medium text-blue-700">{{ match.blueTeam.name }}</span>
-                                                </div>
-                                            </div>
-                                            {#                                                <div class="mt-2 text-center text-sm text-slate-600">#}
-                                            {#                                                    {{ match.startTime|date('H:i') }} - {{ match.field }}#}
-                                            {#                                                </div>#}
-                                        </div>
-                                    {% endfor %}
-                                </div>
-                            </div>
-                        {% else %}
-                            <div class="text-center text-slate-600">
-                                Aucun match en cours pour le moment
-                            </div>
                         {% endif %}
                     </div>
-                {% endif %}
-
-                <div class="pt-8 flex justify-center">
-                    <a href="{{ path('app_match_list') }}"
-                       class="px-8 py-4 bg-white text-blue-900 rounded-xl hover:bg-slate-50 transition-all duration-300 font-medium text-lg border border-blue-100 shadow-md hover:shadow-lg hover:border-blue-200">
-                        Voir les matchs
-                    </a>
                 </div>
-            </div>
+            {% endif %}
+
+            {# current matches & championship #}
+            {% if currentCompetition %}
+                <hr>
+                <div class="space-y-8">
+                    {# Competition Header #}
+                    <div class="text-center">
+                        <h2 class="text-3xl font-bold text-slate-800">
+                            {{ 'nav.championshipinlive' | trans }}
+                        </h2>
+                        <h2 class="text-2xl font-bold text-slate-800">
+                            {{ currentCompetition.name }}
+                        </h2>
+                        <p class="text-slate-600">
+                            {{ 'nav.from' | trans }} {{ currentCompetition.startDate|date('d/m/Y') }} {{ 'nav.to' | trans }} {{ currentCompetition.endDate|date('d/m/Y') }}
+                        </p>
+                    </div>
+
+                    {# Matches Display #}
+                    {% if currentCompetition.matches|length > 0 %}
+                        {# Define status configurations #}
+                        {% set statusConfig = {
+                            'SCHEDULED': {'class': 'bg-yellow-100 text-yellow-800', 'text': 'À venir'},
+                            'IN_PROGRESS': {'class': 'bg-blue-100 text-blue-800', 'text': 'En cours'},
+                            'COMPLETED': {'class': 'bg-green-100 text-green-800', 'text': 'Terminé'},
+                            'CANCELED': {'class': 'bg-red-100 text-red-800', 'text': 'Annulé'},
+                            'FORFEITED': {'class': 'bg-orange-100 text-orange-800', 'text': 'Forfait'}
+                        } %}
+
+                        {# Match Card Macro #}
+                        {% macro matchCard(match, statusConfig) %}
+                            <div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100">
+                                <div class="mb-3">
+                                    <div class="text-center text-sm text-slate-900 font-medium">
+                                        {{ match.timeslot.start|date('H:i') }} - {{ match.timeslot.end|date('H:i') }}
+                                    </div>
+                                </div>
+
+                                <div class="space-y-2">
+                                    <div class="flex items-center justify-between text-sm">
+                            <span class="text-green-700 font-medium {% if match.teamMatchStatuses|filter(tms => tms.team.id == match.greenTeam.id and tms.status.name == 'FORFEITED')|length > 0 %}line-through opacity-50{% endif %}">
+                                {{ match.greenteam.name }}
+                            </span>
+                                        <span class="text-slate-900 font-bold text-lg">{{ match.globalStatus.name == 'SCHEDULED' ? '-' : match.greenscore }}</span>
+                                    </div>
+                                    <div class="flex items-center justify-between text-sm">
+                            <span class="text-blue-700 font-medium {% if match.teamMatchStatuses|filter(tms => tms.team.id == match.blueTeam.id and tms.status.name == 'FORFEITED')|length > 0 %}line-through opacity-50{% endif %}">
+                                {{ match.blueteam.name }}
+                            </span>
+                                        <span class="text-slate-900 font-bold text-lg">{{ match.globalStatus.name == 'SCHEDULED' ? '-' : match.bluescore }}</span>
+                                    </div>
+                                </div>
+
+                                <div class="mt-3 pt-3 border-t border-slate-100">
+                                    <div class="flex items-center justify-between">
+                                        <span class="text-xs text-slate-500">{{ match.field.name }}</span>
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ statusConfig[match.globalStatus.name].class }}">
+                                {{ statusConfig[match.globalStatus.name].text }}
+                            </span>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endmacro %}
+
+                        {# Match Section Macro #}
+                        {% macro matchSection(title, matches, statusConfig) %}
+                            {% if matches|length > 0 %}
+                                <div class="grid gap-4">
+                                    <h3 class="text-xl font-semibold text-center text-slate-800">{{ title }}</h3>
+                                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                                        {% for match in matches %}
+                                            {{ _self.matchCard(match, statusConfig) }}
+                                        {% endfor %}
+                                    </div>
+                                </div>
+                            {% endif %}
+                        {% endmacro %}
+
+                        <div class="grid gap-8">
+                            {# Filter matches by status #}
+                            {% set inProgressMatches = currentCompetition.matches|filter(match => match.globalStatus.name == 'IN_PROGRESS') %}
+                            {% set scheduledMatches = currentCompetition.matches|filter(match => match.globalStatus.name == 'SCHEDULED') %}
+                            {% set completedMatches = currentCompetition.matches|filter(match => match.globalStatus.name == 'COMPLETED') %}
+
+                            {# Display sections #}
+                            {{ _self.matchSection('Matchs en cours', inProgressMatches, statusConfig) }}
+                            {{ _self.matchSection('Matchs à venir', scheduledMatches, statusConfig) }}
+                            {{ _self.matchSection('Matchs terminés', completedMatches, statusConfig) }}
+
+                            {% if inProgressMatches|length == 0 and scheduledMatches|length == 0 and completedMatches|length == 0 %}
+                                <div class="text-center text-slate-600">
+                                    Aucun match aujourd'hui
+                                </div>
+                            {% endif %}
+                        </div>
+                    {% endif %}
+
+                    <div class="pt-8 flex justify-center">
+                        <a href="{{ path('app_match_list', currentCompetition ? {'championship': currentCompetition.id} : {}) }}"
+                           class="px-8 py-4 bg-white text-blue-900 rounded-xl hover:bg-slate-50 transition-all duration-300 font-medium text-lg border border-blue-100 shadow-md hover:shadow-lg hover:border-blue-200">
+                            {{ "seematch" | trans }}
+                        </a>
+                    </div>
+                </div>
+            {% endif %}
         </div>
     </div>
 {% endblock %}

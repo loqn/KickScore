@@ -13,11 +13,11 @@
     <span class="block mt-1 text-lg text-slate-600 font-normal">
         Plannifiez les matchs de vos compétitions
     </span>
-    <form id="form" class="bg-white p-6 rounded-lg shadow-md w-full max-w-sm" method="post" action="{{ path('app_meet_create') }}">
+    <form id="form" class="bg-white p-6 rounded-lg shadow-md w-full max-w-sm" method="post" action="{{ path('app_championship_create') }}">
 
         <!---------- Match ----------->
 
-        <!-- Select championship  -->
+        <!-- select championship  -->
         <div id="champ" class="mb-4 ">
             <label for="champ" class="block text-gray-700 font-medium mb-2">Compétition</label>
             <select id="champ" name="champ" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -27,7 +27,7 @@
             </select>
         </div>
 
-        <!-- Date -->
+        <!-- date -->
         <div class="mb-4 flex justify-center items-center flex-col" id="date">
             <label for="date" class="block text-gray-700 font-medium mb-2">Date du match</label>
             <input type="datetime-local" id="dateInput" name="date" placeholder="Date du match"
@@ -40,7 +40,7 @@
         </div>
 
 
-        <!-- Select team green  -->
+        <!-- select green team  -->
         <div id="greenTeam" class="mb-4 ">
             <label for="greenTeam" class="block text-gray-700 font-medium mb-2">Équipe verte</label>
             <select id="greenTeamSelect" name="greenTeam" class="w-full px-3 py-2 border bg-green-200 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -51,7 +51,7 @@
             </select>
         </div>
 
-        <!-- Select team blue  -->
+        <!-- select blue team  -->
         <div id="blueTeam" class="mb-4">
             <label for="blueTeam" class="block text-gray-700 font-medium mb-2">Équipe bleue</label>
             <select id="blueTeamSelect" name="blueTeam" class="w-full px-3 py-2 border bg-blue-200 border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
@@ -77,7 +77,7 @@
         <input type="hidden" name="addType" value="" id="addType">
 
 
-        <!-- Submit Button -->
+        <!-- submit button -->
         <button type="submit" class="bg-blue-500 hidden transition ease-in duration-200 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
             Créer
         </button>

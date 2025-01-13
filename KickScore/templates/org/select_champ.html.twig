@@ -8,9 +8,10 @@
             <div class="max-w-3xl mx-auto">
                 <div class="mb-8 flex items-center justify-between">
                     <h1 class="text-3xl font-bold text-slate-800">
-                        Sélectionner un championnat
+                        
                         <span class="block mt-1 text-lg text-slate-600 font-normal">
-                            Exporter les données du championnat
+                    
+                            <span>{{ 'nav.exportchampionship'|trans }}</span>
                         </span>
                     </h1>
                 </div>
@@ -18,12 +19,12 @@
                 <div class="bg-white rounded-lg shadow-sm border border-slate-200 divide-y divide-slate-200">
                     <form method="post" action="{{ path('download_orga') }}" id="championship-form">
                         <div class="p-6">
-                            <h2 class="text-xl font-semibold text-slate-800 mb-4">Sélection du championnat</h2>
+                            <h2 class="text-xl font-semibold text-slate-800 mb-4"><span>{{ 'nav.selectchamp'|trans }}</span></h2>
 
                             <div class="space-y-6">
                                 <div class="relative">
                                     <label for="championship" class="block text-sm font-medium text-slate-500 mb-2">
-                                        Championnats disponibles
+                                        <span>{{ 'nav.availablechampionships'|trans }}</span>
                                     </label>
                                     <div class="relative">
                                         <select
@@ -32,7 +33,7 @@
                                                 class="block w-full rounded-lg border border-slate-200 bg-white px-4 py-3 pr-10 text-base text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20 appearance-none"
                                                 required
                                         >
-                                            <option value="" disabled selected>Sélectionnez un championnat</option>
+                                            <option value="" disabled selected>{{'nav.selectchamp' | trans}}</option>
                                             {% for championship in championships %}
                                                 <option value="{{ championship.id }}" {% if championship.id == select %}selected{% endif %}
                                                         class="py-2">
@@ -47,7 +48,7 @@
                                         </div>
                                     </div>
                                     <p class="mt-2 text-sm text-slate-500">
-                                        Choisissez le championnat dont vous souhaitez exporter les données
+                                        <span>{{ 'nav.exportchampionship'|trans }}</span>
                                     </p>
                                 </div>
 
@@ -63,7 +64,7 @@
                                 <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" viewBox="0 0 20 20" fill="currentColor">
                                     <path fill-rule="evenodd" d="M3 17a1 1 0 011-1h12a1 1 0 110 2H4a1 1 0 01-1-1zm3.293-7.707a1 1 0 011.414 0L9 10.586V3a1 1 0 112 0v7.586l1.293-1.293a1 1 0 111.414 1.414l-3 3a1 1 0 01-1.414 0l-3-3a1 1 0 010-1.414z" clip-rule="evenodd" />
                                 </svg>
-                                <span>Télécharger</span>
+                                <span>{{ 'nav.download'|trans }}</span>
                             </button>
                         </div>
                     </form>

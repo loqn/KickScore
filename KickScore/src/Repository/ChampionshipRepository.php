@@ -30,7 +30,7 @@ class ChampionshipRepository extends ServiceEntityRepository
             ->getOneOrNullResult();
     }
 
-    public function findTeamsByOrganizer(User $organizer): array
+    public function findTeamsByOrganizer(?User $organizer): array
     {
         $results = $this->createQueryBuilder('c')
             ->select('c, t')
@@ -52,7 +52,7 @@ class ChampionshipRepository extends ServiceEntityRepository
     }
 
     //    /**
-    //     * @return Championship[] Returns an array of Championship objects
+    //     * @return championship[] Returns an array of championship objects
     //     */
     //    public function findByExampleField($value): array
     //    {
@@ -66,7 +66,7 @@ class ChampionshipRepository extends ServiceEntityRepository
     //        ;
     //    }
 
-    //    public function findOneBySomeField($value): ?Championship
+    //    public function findOneBySomeField($value): ?championship
     //    {
     //        return $this->createQueryBuilder('c')
     //            ->andWhere('c.exampleField = :val')

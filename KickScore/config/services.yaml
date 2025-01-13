@@ -4,6 +4,8 @@
 # Put parameters here that don't need to change on each machine where the app is deployed
 # https://symfony.com/doc/current/best_practices.html#use-parameters-for-application-configuration
 parameters:
+    app.supported_locales: ['en', 'fr']
+    kernel.default_locale: 'fr'
 
 services:
     # default configuration for services in *this* file
@@ -25,7 +27,6 @@ services:
     App\Security\Authenticator:
         class: App\Security\Authenticator
         public: true
-
     app.security_listener:
         class: App\EventListener\SecurityListener
         arguments:

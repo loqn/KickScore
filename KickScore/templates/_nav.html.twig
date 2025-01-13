@@ -1,5 +1,5 @@
-<nav class="fixed top-0 left-0 w-72 bg-slate-50 shadow-lg h-screen transform -translate-x-full transition-transform duration-300 ease-in-out z-30 overflow-y-auto">
-    <div class="p-4">
+<nav class="fixed top-0 left-0 w-72 bg-slate-50 shadow-lg h-screen transform -translate-x-full transition-transform duration-300 ease-in-out overflow-y-auto z-[70]">
+    <div class="p-4 flex flex-col h-full">
         <div class="mb-8">
             <h1 class="text-2xl font-semibold text-slate-800">
                 <a href="{{ path('app_root') }}" class=" flex items-center transition-colors">
@@ -9,7 +9,7 @@
             </h1>
         </div>
 
-        <div class="space-y-2">
+        <div class="space-y-2 flex-grow">
             {% if app.user %}
                 <div class="px-4 py-2 text-slate-600 border-b border-slate-200 mb-4 flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -27,7 +27,7 @@
                         <path d="M11 6h2v6h-2V6z"/>
                         <path d="M1 12h14v2H1v-2z"/>
                     </svg>
-                    <span>Classement</span>
+                    <span>{{ 'nav.ranking'| trans }}</span>
                 </a>
                 <a href="{{ path('app_match_list') }}"
                    class="flex items-center gap-2 px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors w-full text-left">
@@ -37,7 +37,7 @@
                               d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5"/>
                         <path d="M2.242 2.194a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.256-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194zm0 4a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.255-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194zm0 4a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.255-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194z"/>
                     </svg>
-                    <span>Liste des matchs</span>
+                    <span>{{ 'nav.matches'|trans }}</span>
                 </a>
                 {% if not is_granted('ROLE_ORGANIZER') %}
                     {% if not app.user.member %}
@@ -48,7 +48,7 @@
                             <path d="M8 15A7 7 0 1 1 8 1a7 7 0 0 1 0 14m0 1A8 8 0 1 0 8 0a8 8 0 0 0 0 16"/>
                             <path d="M8 4a.5.5 0 0 1 .5.5v3h3a.5.5 0 0 1 0 1h-3v3a.5.5 0 0 1-1 0v-3h-3a.5.5 0 0 1 0-1h3v-3A.5.5 0 0 1 8 4"/>
                         </svg>
-                        <span>Créer une équipe</span>
+                        <span>{{ 'nav.createteam'|trans }}</span>
                     </a>
                     {% endif %}
                     {% if app.user.member and app.user.member.team %}
@@ -58,19 +58,18 @@
                                  class="bi bi-people-fill flex-shrink-0" viewBox="0 0 16 16">
                                 <path d="M7 14s-1 0-1-1 1-4 5-4 5 3 5 4-1 1-1 1zm4-6a3 3 0 1 0 0-6 3 3 0 0 0 0 6m-5.784 6A2.24 2.24 0 0 1 5 13c0-1.355.68-2.75 1.936-3.72A6.3 6.3 0 0 0 5 9c-4 0-5 3-5 4s1 1 1 1zM4.5 8a2.5 2.5 0 1 0 0-5 2.5 2.5 0 0 0 0 5"/>
                             </svg>
-                            <span>Mon équipe</span>
+                            <span>{{ 'nav.myteam'|trans }}</span>
                         </a>
                     {% endif %}
                 {% endif %}
 
                 {% if is_granted('ROLE_ORGANIZER') %}
-                    <a href="{{ path('app_meet') }}"
+                    <a href="{{ path('app_championship') }}"
                        class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors w-full text-left flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                             class="bi bi-pencil-fill flex-shrink-0" viewBox="0 0 16 16">
-                            <path d="M12.854.146a.5.5 0 0 0-.707 0L10.5 1.793 14.207 5.5l1.647-1.646a.5.5 0 0 0 0-.708zm.646 6.061L9.793 2.5 3.293 9H3.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.5h.5a.5.5 0 0 1 .5.5v.207zm-7.468 7.468A.5.5 0 0 1 6 13.5V13h-.5a.5.5 0 0 1-.5-.5V12h-.5a.5.5 0 0 1-.5-.5V11h-.5a.5.5 0 0 1-.5-.5V10h-.5a.5.5 0 0 1-.175-.032l-.179.178a.5.5 0 0 0-.11.168l-2 5a.5.5 0 0 0 .65.65l5-2a.5.5 0 0 0 .168-.11z"/>
+                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trophy-fill" viewBox="0 0 16 16">
+                            <path d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5q0 .807-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33 33 0 0 1 2.5.5m.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935m10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935"/>
                         </svg>
-                        <span>Menu de création</span>
+                        <span>{{ 'nav.creationmenu'|trans }}</span>
                     </a>
                     <a href="{{ path('app_user_index') }}"
                        class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors w-full text-left flex items-center gap-2">
@@ -78,23 +77,10 @@
                              class="bi bi-gear-wide-connected flex-shrink-0" viewBox="0 0 16 16">
                             <path d="M7.068.727c.243-.97 1.62-.97 1.864 0l.071.286a.96.96 0 0 0 1.622.434l.205-.211c.695-.719 1.888-.03 1.613.931l-.08.284a.96.96 0 0 0 1.187 1.187l.283-.081c.96-.275 1.65.918.931 1.613l-.211.205a.96.96 0 0 0 .434 1.622l.286.071c.97.243.97 1.62 0 1.864l-.286.071a.96.96 0 0 0-.434 1.622l.211.205c.719.695.03 1.888-.931 1.613l-.284-.08a.96.96 0 0 0-1.187 1.187l.081.283c.275.96-.918 1.65-1.613.931l-.205-.211a.96.96 0 0 0-1.622.434l-.071.286c-.243.97-1.62.97-1.864 0l-.071-.286a.96.96 0 0 0-1.622-.434l-.205.211c-.695.719-1.888.03-1.613-.931l.08-.284a.96.96 0 0 0-1.186-1.187l-.284.081c-.96.275-1.65-.918-.931-1.613l.211-.205a.96.96 0 0 0-.434-1.622l-.286-.071c-.97-.243-.97-1.62 0-1.864l.286-.071a.96.96 0 0 0 .434-1.622l-.211-.205c-.719-.695-.03-1.888.931-1.613l.284.08a.96.96 0 0 0 1.187-1.186l-.081-.284c-.275-.96.918-1.65 1.613-.931l.205.211a.96.96 0 0 0 1.622-.434zM12.973 8.5H8.25l-2.834 3.779A4.998 4.998 0 0 0 12.973 8.5m0-1a4.998 4.998 0 0 0-7.557-3.779l2.834 3.78zM5.048 3.967l-.087.065zm-.431.355A4.98 4.98 0 0 0 3.002 8c0 1.455.622 2.765 1.615 3.678L7.375 8zm.344 7.646.087.065z"/>
                         </svg>
-                        <span>Panneau de contrôle</span>
+                        <span>{{ 'nav.controlepanel'|trans }}</span>
                     </a>
                 {% endif %}
 
-                <div class="pt-4 mt-4 border-t border-slate-200">
-                    <a href="{{ path('app_logout') }}"
-                       class="px-4 py-2 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-md transition-colors w-full text-left flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                             class="bi bi-box-arrow-left flex-shrink-0" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                  d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
-                            <path fill-rule="evenodd"
-                                  d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
-                        </svg>
-                        Se déconnecter
-                    </a>
-                </div>
             {% else %}
                 <a href="{{ path('app_ranking') }}"
                    class="px-4 py-2 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-md transition-colors w-full text-left flex items-center gap-2">
@@ -105,7 +91,7 @@
                         <path d="M11 6h2v6h-2V6z"/>
                         <path d="M1 12h14v2H1v-2z"/>
                     </svg>
-                    <span>Classement</span>
+                    <span>{{ 'nav.ranking'|trans }}</span>
                 </a>
                 <a href="{{ path('app_match_list') }}"
                    class="flex items-center gap-2 px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors w-full text-left">
@@ -115,7 +101,7 @@
                               d="M5 11.5a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5m0-4a.5.5 0 0 1 .5-.5h9a.5.5 0 0 1 0 1h-9a.5.5 0 0 1-.5-.5"/>
                         <path d="M2.242 2.194a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.256-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194zm0 4a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.255-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194zm0 4a.27.27 0 0 1 .516 0l.162.53c.035.115.14.194.258.194h.551c.259 0 .37.333.164.493l-.468.363a.28.28 0 0 0-.094.3l.173.569c.078.255-.213.462-.423.3l-.417-.324a.27.27 0 0 0-.328 0l-.417.323c-.21.163-.5-.043-.423-.299l.173-.57a.28.28 0 0 0-.094-.299l-.468-.363c-.206-.16-.095-.493.164-.493h.55a.27.27 0 0 0 .259-.194z"/>
                     </svg>
-                    <span>Liste des matchs</span>
+                    <span>{{ 'nav.matches'|trans }}</span>
                 </a>
                 <a href="{{ path('app_login') }}"
                    class="px-4 py-2 text-slate-600 hover:bg-slate-100 rounded-md transition-colors w-full text-left flex items-center gap-2">
@@ -124,7 +110,7 @@
                         <path d="M1.5 1a.5.5 0 0 0-.5.5v3a.5.5 0 0 1-1 0v-3A1.5 1.5 0 0 1 1.5 0h3a.5.5 0 0 1 0 1zM11 .5a.5.5 0 0 1 .5-.5h3A1.5 1.5 0 0 1 16 1.5v3a.5.5 0 0 1-1 0v-3a.5.5 0 0 0-.5-.5h-3a.5.5 0 0 1-.5-.5M.5 11a.5.5 0 0 1 .5.5v3a.5.5 0 0 0 .5.5h3a.5.5 0 0 1 0 1h-3A1.5 1.5 0 0 1 0 14.5v-3a.5.5 0 0 1 .5-.5m15 0a.5.5 0 0 1 .5.5v3a1.5 1.5 0 0 1-1.5 1.5h-3a.5.5 0 0 1 0-1h3a.5.5 0 0 0 .5-.5v-3a.5.5 0 0 1 .5-.5"/>
                         <path d="M3 14s-1 0-1-1 1-4 6-4 6 3 6 4-1 1-1 1zm8-9a3 3 0 1 1-6 0 3 3 0 0 1 6 0"/>
                     </svg>
-                    <span>Se connecter</span>
+                    <span>{{ 'nav.login'|trans }}</span>
                 </a>
                 <a href="{{ path('app_register') }}"
                    class="px-4 py-2 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-md transition-colors w-full text-left flex items-center gap-2">
@@ -133,24 +119,49 @@
                         <path d="M12.5 16a3.5 3.5 0 1 0 0-7 3.5 3.5 0 0 0 0 7m.5-5v1h1a.5.5 0 0 1 0 1h-1v1a.5.5 0 0 1-1 0v-1h-1a.5.5 0 0 1 0-1h1v-1a.5.5 0 0 1 1 0m-2-6a3 3 0 1 1-6 0 3 3 0 0 1 6 0M8 7a2 2 0 1 0 0-4 2 2 0 0 0 0 4"/>
                         <path d="M8.256 14a4.5 4.5 0 0 1-.229-1.004H3c.001-.246.154-.986.832-1.664C4.484 10.68 5.711 10 8 10q.39 0 .74.025c.226-.341.496-.65.804-.918Q8.844 9.002 8 9c-5 0-6 3-6 4s1 1 1 1z"/>
                     </svg>
-                    <span>S'enregistrer</span>
+                    <span>{{ 'nav.register'|trans }}</span>
                 </a>
             {% endif %}
         </div>
+        <div class="mt-auto pt-4 border-t border-slate-200">
+            {% if app.user %}
+                <a href="{{ path('app_logout') }}"
+                   class="px-4 py-2 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-md transition-colors w-full text-left flex items-center gap-2 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-box-arrow-left flex-shrink-0" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                              d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
+                        <path fill-rule="evenodd"
+                              d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
+                    </svg>
+                    <span>{{ 'nav.logout'|trans }}</span>
+                </a>
+            {% endif %}
+
+            <div class="flex items-center gap-2 px-4">
+                <button onclick="changeLanguage('fr')"
+                        class="flex items-center gap-2 px-3 py-2 rounded-md {{ app.request.locale == 'fr' ? 'bg-slate-200' : 'hover:bg-slate-100' }} transition-colors">
+                    <img src="https://flagcdn.com/20x15/fr.png" alt="FR" class="w-5">
+                    <span>FR</span>
+                </button>
+                <button onclick="changeLanguage('en')"
+                        class="flex items-center gap-2 px-3 py-2 rounded-md {{ app.request.locale == 'en' ? 'bg-slate-200' : 'hover:bg-slate-100' }} transition-colors">
+                    <img src="https://flagcdn.com/20x15/gb.png" alt="EN" class="w-5">
+                    <span>EN</span>
+                </button>
+            </div>
+        </div>
+    </div>
+</nav>
     </div>
 </nav>
 
 
-<div
-        onclick="toggleMenu()"
-        class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden transition-opacity duration-300"
-        id="overlay">
+
+<div onclick="toggleMenu()" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden transition-opacity duration-300" id="overlay">
 </div>
 
-<button
-        onclick="toggleMenu()"
-        class="fixed top-4 left-4 p-2 rounded-md bg-slate-50 text-slate-600 hover:bg-slate-100 transition-all duration-300 shadow-lg z-40"
-        id="menuButton">
+<button onclick="toggleMenu()" class=" {{ is_granted('IS_IMPERSONATOR') ? 'mt-4' : '' }} fixed top-4 left-4 p-2 rounded-md bg-slate-50 text-slate-600 hover:bg-slate-100 transition-all duration-300 shadow-lg z-[70]" id="menuButton">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16m-7 6h7"/>
     </svg>
@@ -169,13 +180,31 @@
         if (nav.classList.contains('-translate-x-full')) {
             overlay.classList.add('hidden');
             body.classList.remove('overflow-hidden');
+            {{ is_granted('IS_IMPERSONATOR') ?
+            'menuButton.classList.add("mt-4");' :
+            '' }}
             menuButton.style.left = '1rem';
             menuButton.classList.add('shadow-lg');
         } else {
             overlay.classList.remove('hidden');
             body.classList.add('overflow-hidden');
+            {{ is_granted('IS_IMPERSONATOR') ?
+            'menuButton.classList.remove("mt-4");' :
+            '' }}
             menuButton.style.left = '14rem';
             menuButton.classList.remove('shadow-lg');
         }
+    }
+
+    function changeLanguage(lang) {
+        let newPath = window.location.pathname;
+
+        newPath = newPath.replace(/^\/(?:fr|en)\//, '/' + lang + '/');
+
+        if (!newPath.match(/^\/(?:fr|en)\//)) {
+            newPath = '/' + lang + newPath;
+        }
+
+        window.location.href = newPath;
     }
 </script>

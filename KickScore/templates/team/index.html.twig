@@ -1,16 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Création d'une équipe - KickScore{% endblock %}
+{% block title %}{{ 'team_creation.title'|trans }} - KickScore{% endblock %}
 
 {% block body %}
     <div class="h-[calc(100vh-2rem)]">
         <div class="h-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-white rounded-xl p-8">
             <div class="w-full max-w-md">
                 <h1 class="text-4xl font-bold text-slate-800 text-center mb-8">
-                    Création
+                    {{ 'team_creation.title_short'|trans }}
                     <span class="block mt-2 text-blue-900 text-2xl font-medium">
-                    d'une nouvelle équipe
-                </span>
+                        {{ 'team_creation.subtitle'|trans }}
+                    </span>
                 </h1>
 
                 <form method="post" action="{{ path('app_team_create') }}"
@@ -43,7 +43,7 @@
                     <div class="pt-4">
                         <button type="submit"
                                 class="w-full px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
-                            Créer l'équipe
+                            {{ 'team_creation.create_button'|trans }}
                         </button>
                     </div>
                 </form>

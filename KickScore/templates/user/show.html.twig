@@ -1,44 +1,44 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Profil utilisateur - KickScore{% endblock %}
+{% block title %}{{ 'user.profile.title'|trans }} - KickScore{% endblock %}
 
 {% block body %}
     <div class="bg-gradient-to-br from-slate-50 to-white min-h-screen">
         <div class="max-w-3xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
             <div class="mb-6 sm:mb-8 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
                 <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 text-center md:text-left">
-                    Profil utilisateur
+                    {{ 'user.profile.title'|trans }}
                     <span class="block mt-1 text-sm sm:text-base md:text-lg text-slate-600 font-normal">
-            Détails du compte
-        </span>
+                        {{ 'user.profile.account_details'|trans }}
+                    </span>
                 </h1>
 
                 <div class="text-center md:text-left">
                     <a href="{{ path('app_user_index') }}"
                        class="inline-block w-full md:w-auto px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-medium">
-                        Retour à la liste
+                        {{ 'user.profile.back_to_list'|trans }}
                     </a>
                 </div>
             </div>
 
             <div class="bg-white rounded-lg shadow-sm border border-slate-200 divide-y divide-slate-200">
                 <div class="p-4 sm:p-6">
-                    <h2 class="text-lg sm:text-xl font-semibold text-slate-800 mb-4">Informations personnelles</h2>
+                    <h2 class="text-lg sm:text-xl font-semibold text-slate-800 mb-4">{{ 'user.profile.personal_info'|trans }}</h2>
                     <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
                         <div>
-                            <p class="text-sm font-medium text-slate-500">Prénom</p>
+                            <p class="text-sm font-medium text-slate-500">{{ 'user.profile.firstname'|trans }}</p>
                             <p class="mt-1 text-sm sm:text-base text-slate-800">{{ user.FirstName }}</p>
                         </div>
                         <div>
-                            <p class="text-sm font-medium text-slate-500">Nom</p>
+                            <p class="text-sm font-medium text-slate-500">{{ 'user.profile.lastname'|trans }}</p>
                             <p class="mt-1 text-sm sm:text-base text-slate-800">{{ user.name }}</p>
                         </div>
                         <div>
-                            <p class="text-sm font-medium text-slate-500">Email</p>
+                            <p class="text-sm font-medium text-slate-500">{{ 'user.profile.email'|trans }}</p>
                             <p class="mt-1 text-sm sm:text-base text-slate-800 break-all">{{ user.mail }}</p>
                         </div>
                         <div>
-                            <p class="text-sm font-medium text-slate-500">Rôle</p>
+                            <p class="text-sm font-medium text-slate-500">{{ 'user.profile.role'|trans }}</p>
                             <p class="mt-1">
                                 <span class="inline-flex px-2 sm:px-3 py-1 text-xs sm:text-sm font-medium rounded-full
                                     {% if user.isOrganizer %}
@@ -46,7 +46,7 @@
                                     {% else %}
                                         bg-blue-100 text-blue-800
                                     {% endif %}">
-                                    {{ user.isOrganizer ? 'Organisateur' : 'Utilisateur' }}
+                                    {{ user.isOrganizer ? 'user.profile.role_types.organizer'|trans : 'user.profile.role_types.user'|trans }}
                                 </span>
                             </p>
                         </div>
@@ -57,13 +57,13 @@
                     <div class="flex flex-row gap-3 xs:items-center">
                         <a href="{{ path('app_user_edit', {'id': user.id}) }}"
                            class="px-4 py-2 bg-blue-900 text-white text-center rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm">
-                            Modifier le profil
+                            {{ 'user.profile.edit_profile'|trans }}
                         </a>
                         {{ include('user/_delete_form.html.twig') }}
                     </div>
 
                     <p class="text-xs sm:text-sm text-slate-500 text-center sm:text-right">
-                        ID: {{ user.id }}
+                        {{ 'user.profile.id_label'|trans }}: {{ user.id }}
                     </p>
                 </div>
             </div>

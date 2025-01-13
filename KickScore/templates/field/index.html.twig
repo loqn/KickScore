@@ -5,19 +5,19 @@
     <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
         <div class="text-center">
             <h2 class="mt-6 text-3xl font-bold text-gray-900">
-                Create New Field
+                {{'createnewfield' | trans}}
             </h2>
             <p class="mt-2 text-sm text-gray-600">
-                Add a new field to your championship
+                {{'addfieldchamp' | trans}}
             </p>
         </div>
         
         <form method="post" action="{{ path('app_field_create') }}" class="mt-8 space-y-6">
             <div class="space-y-6">
-                <!-- Field Name Input -->
+                <!-- name -->
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700">
-                        Field Name
+                        {{'namefield' | trans}}
                     </label>
                     <div class="mt-1">
                         <input 
@@ -28,15 +28,15 @@
                             class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 
                                    focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 sm:text-sm
                                    bg-green-50/30 transition-all duration-200"
-                            placeholder="Enter field name"
+                            placeholder={{'insertfieldname' | trans}}
                         >
                     </div>
                 </div>
 
-                <!-- Championship Select -->
+                <!-- championship select -->
                 <div>
                     <label for="championship" class="block text-sm font-medium text-gray-700">
-                        Championship
+                        Championnat
                     </label>
                     <div class="mt-1 relative">
                         <select
@@ -47,7 +47,7 @@
                                    focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
                                    bg-white shadow-sm sm:text-sm appearance-none cursor-pointer"
                         >
-                            <option value="" disabled selected>Select a championship</option>
+                            <option value="" disabled selected>Choisir un championnat</option>
                             {% for championship in championships %}
                                 <option value="{{ championship.id }}" {% if championship.id == select %}selected{% endif %}>
                                     {{ championship.name }}
@@ -61,12 +61,12 @@
                         </div>
                     </div>
                     <p class="mt-2 text-sm text-gray-500">
-                        Choose the championship you want to add this field to
+                        Choisissez le championnat auquel le terrain appartiendra
                     </p>
                 </div>
             </div>
 
-            <!-- Submit Button -->
+            <!-- submit -->
             <div>
                 <button 
                     type="submit"
@@ -74,7 +74,7 @@
                            text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 
                            focus:ring-green-500 transition-colors duration-200"
                 >
-                    Create Field
+                    Créer le terrain
                 </button>
             </div>
         </form>

@@ -6,179 +6,529 @@
     <div class="bg-gradient-to-br from-slate-50 to-white min-h-screen">
         <div class="max-w-7xl mx-auto px-4 py-6 sm:px-6 lg:px-8">
             {# Header #}
-            <div class="mb-6 md:mb-8 flex flex-col space-y-4 md:space-y-0 md:flex-row md:justify-between md:items-center">
+            <div class="mb-6 xl:mb-8 flex flex-col space-y-4 xl:space-y-0 xl:flex-row xl:justify-between xl:items-center">
                 <div class="flex-1">
                     <h1 class="text-xl sm:text-2xl md:text-3xl font-bold text-slate-800 text-center md:text-left">
-                        Liste des matchs par compétition
+                        <span>{{ 'nav.matches'|trans }}</span>
                         <span class="block mt-1 text-sm sm:text-base md:text-lg text-slate-600 font-normal">
-                Consultez les performances de chaque équipe au sein de chaque compétition.
+                 <span>{{ 'nav.consultmatch'|trans }}</span>
             </span>
                     </h1>
                 </div>
 
-                <div class="flex flex-col sm:flex-row gap-3 items-center">
-                    <select id="championshipSelect"
-                            class="block w-full sm:w-auto min-w-[200px] rounded-lg border border-slate-200 bg-white px-4 py-3 pr-10 text-base text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
-                        {% for championship in championships %}
-                            <option value="{{ championship.id }}">
-                                {{ championship.name }}
-                            </option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </div>
-
-            {% for message in app.flashes('user_success') %}
-                <div class="bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 mb-6">
-                    <p class="text-sm font-medium">{{ message }}</p>
-                </div>
-            {% endfor %}
-            {% for message in app.flashes('user_error') %}
-                <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 mb-6">
-                    <p class="text-sm font-medium">{{ message }}</p>
-                </div>
-            {% endfor %}
-
-            {% for championship in championships %}
-                <div id="championship-{{ championship.id }}" class="bg-white rounded-lg shadow-sm border border-slate-200 {% if not loop.first %}hidden{% endif %}">
-                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200">
-                        <h2 class="text-lg sm:text-xl font-semibold text-slate-800">{{ championship.name }}</h2>
-
-                        {% if app.user and app.user.member and app.user.member.team %}
-                            {% if championship in app.user.member.team.championships %}
-                                <form action="{{ path('leave_championship', {'id': championship.id}) }}" method="POST">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('join' ~ championship.id) }}">
-                                    <button type="submit"
-                                            class="w-full sm:w-auto px-4 py-2 bg-red-400 text-white text-sm rounded-lg hover:bg-red-500 transition-colors font-medium shadow-sm">
-                                        Quitter
-                                    </button>
-                                </form>
-                            {% else %}
-                                <form action="{{ path('join_championship', {'id': championship.id}) }}" method="POST">
-                                    <input type="hidden" name="_token" value="{{ csrf_token('join' ~ championship.id) }}">
-                                    <button type="submit"
-                                            class="w-full sm:w-auto px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors font-medium shadow-sm">
-                                        Rejoindre
-                                    </button>
-                                </form>
+            <div class="flex flex-col sm:flex-row gap-3 items-center text-center xl:text-left">
+                <select id="championshipSelect"
+                        class="block w-full xl:w-auto min-w-[200px] rounded-lg border border-slate-200 bg-white px-4 py-3 pr-10 text-base text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                    {% for championship in championships %}
+                        <option value="{{ championship.id }}">
+                            {{ championship.name }}
+                        </option>
+                    {% endfor %}
+                </select>
+                <select id="fieldSelect"
+                        class="block w-full xl:w-auto min-w-[200px] rounded-lg border border-slate-200 bg-white px-4 py-3 pr-10 text-base text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                    <option value="all">Tous les terrains</option>
+                    {% set fields = [] %}
+                    {% for championship in championships %}
+                        {% for match in championship.matches %}
+                            {% if match.field.name not in fields %}
+                                {% set fields = fields|merge([match.field.name]) %}
                             {% endif %}
-                        {% endif %}
-                        <form action="{{ path('app_calendar_export_single', {'id': championship.id}) }}" method="GET">
-                            <input type="hidden" name="_token" value="{{ csrf_token('export' ~ championship.id) }}">
-                            <button type="submit"
-                                    class="w-full sm:w-auto px-4 py-2 bg-blue-900 text-white text-sm rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm">
-                                Exporter
-                            </button>
-                        </form>
-                    </div>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for field in fields|sort %}
+                        <option value="{{ field }}">{{ field }}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
 
-                    <div class="overflow-x-auto">
-                        <div class="inline-block min-w-full">
-                            <div class="overflow-hidden">
-                                <table class="min-w-full divide-y divide-slate-200">
-                                    <thead class="bg-slate-50">
-                                    <tr>
-                                        <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                                            Date
+        {% for message in app.flashes('user_success') %}
+            <div class="bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 mb-6">
+                <p class="text-sm font-medium">{{ message }}</p>
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('success') %}
+            <div class="bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 mb-6">
+                <p class="text-sm font-medium">{{ message }}</p>
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('user_error') %}
+            <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 mb-6">
+                <p class="text-sm font-medium">{{ message }}</p>
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('error') %}
+            <div class="bg-red-50 border border-red-200 text-red-800 rounded-lg p-4 mb-6">
+                <p class="text-sm font-medium">{{ message }}</p>
+            </div>
+        {% endfor %}
+
+        {# tabs #}
+        <div class="mb-6 border-b border-slate-200">
+            <nav class="-mb-px flex space-x-6" aria-label="Tabs">
+                <button
+                        id="tab-list"
+                        class="py-4 px-1 border-b-2 border-blue-900 text-blue-900 font-medium text-sm whitespace-nowrap"
+                >
+                    Vue Liste
+                </button>
+                <button
+                        id="tab-schedule"
+                        class="py-4 px-1 border-b-2 border-transparent text-slate-500 hover:text-slate-700 hover:border-slate-300 font-medium text-sm whitespace-nowrap"
+                >
+                    Vue Planning
+                </button>
+            </nav>
+        </div>
+
+        {# list #}
+        <div id="view-list">
+            {% for championship in championships %}
+            <div id="championship-{{ championship.id }}"
+                 class="bg-white rounded-lg shadow-sm border border-slate-200 {% if not loop.first %}hidden{% endif %}">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200">
+                    <h2 class="text-lg sm:text-xl font-semibold text-slate-800">{{ championship.name }}</h2>
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                        <div class="flex gap-2">
+                            <a href="{{ path('export_orga', {'id': championship.id}) }}"
+                               class="inline-flex items-center px-3 py-1.5 bg-slate-600 text-white text-xs sm:text-sm rounded-lg hover:bg-slate-700 transition-colors font-medium shadow-sm">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                </svg>
+                                Exporter
+                            </a>
+                            <a href="{{ path('app_ranking', {'id': championship.id}) }}"
+                               class="inline-flex items-center px-3 py-1.5 bg-blue-900 text-white text-xs sm:text-sm rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                </svg>
+                                Classement
+                            </a>
+                        </div>
+                    </div>
+                    {% if app.user and app.user.member and app.user.member.team %}
+                        {% if championship in app.user.member.team.championships %}
+                            <form action="{{ path('leave_championship', {'id': championship.id}) }}" method="POST">
+                                <input type="hidden" name="_token"
+                                       value="{{ csrf_token('join' ~ championship.id) }}">
+                                <button type="submit"
+                                        class="w-full sm:w-auto px-4 py-2 bg-red-400 text-white text-sm rounded-lg hover:bg-red-500 transition-colors font-medium shadow-sm">
+                                    Quitter
+                                </button>
+                            </form>
+                        {% else %}
+                            <form action="{{ path('join_championship', {'id': championship.id}) }}" method="POST">
+                                <input type="hidden" name="_token"
+                                       value="{{ csrf_token('join' ~ championship.id) }}">
+                                <button type="submit"
+                                        class="w-full sm:w-auto px-4 py-2 bg-green-600 text-white text-sm rounded-lg hover:bg-green-700 transition-colors font-medium shadow-sm">
+                                    Rejoindre
+                                </button>
+                            </form>
+                        {% endif %}
+                    {% endif %}
+                </div>
+
+                <div class="overflow-x-auto">
+                    <div class="inline-block min-w-full">
+                        <div class="overflow-hidden">
+                            <table class="min-w-full divide-y divide-slate-200">
+                                <thead class="bg-slate-50">
+                                <tr>
+                                    <th scope="col"
+                                        class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                        Créneau
+                                    </th>
+                                    <th scope="col"
+                                        class="hidden sm:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                        Équipe verte
+                                    </th>
+                                    <th scope="col"
+                                        class="hidden sm:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                        Équipe bleue
+                                    </th>
+                                    <th scope="col"
+                                        class="hidden sm:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                        Terrain
+                                    </th>
+                                    <th scope="col"
+                                        class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                        Score
+                                    </th>
+                                    <th scope="col"
+                                        class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                        Statut
+                                    </th>
+                                    {% if is_granted('ROLE_ORGANIZER') %}
+                                        <th scope="col"
+                                            class="px-3 sm:px-6 py-3 text-right text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                            Actions
                                         </th>
-                                        <th scope="col" class="hidden sm:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                                            Équipe verte
-                                        </th>
-                                        <th scope="col" class="hidden sm:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                                            Équipe bleue
-                                        </th>
-                                        <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                                            Score
-                                        </th>
-                                        {% if is_granted('ROLE_ORGANIZER') %}
-                                            <th scope="col" class="px-3 sm:px-6 py-3 text-right text-xs font-medium text-slate-700 uppercase tracking-wider">
-                                                Actions
-                                            </th>
-                                        {% endif %}
-                                    </tr>
-                                    </thead>
-                                    <tbody class="bg-white divide-y divide-slate-200">
-                                    {% for match in championship.matches %}
-                                        <tr class="hover:bg-slate-50 transition-colors">
-                                            <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
-                                                <div class="flex flex-col sm:flex-row gap-1">
-                                                    <span class="text-xs sm:text-sm text-slate-600">{{ match.date|date('d/m/Y H:i') }}</span>
-                                                    <!-- Version mobile uniquement -->
-                                                    <div class="sm:hidden text-xs text-slate-500">
-                                                        <div class="text-green-700 font-bold">{{ match.greenteam.name }}</div>
-                                                        <div class="text-blue-700 font-bold">{{ match.blueteam.name }}</div>
-                                                    </div>
+                                    {% endif %}
+                                </tr>
+                                </thead>
+                                <tbody class="bg-white divide-y divide-slate-200">
+                                {% for match in championship.matches %}
+                                <tr class="hover:bg-slate-50 transition-colors">
+                                    <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
+                                        <div class="flex flex-col gap-1">
+                                                    <span class="text-xs sm:text-sm font-medium text-slate-800">
+                                                        {{ match.timeslot.start|date('d/m/Y') }}
+                                                    </span>
+                                            <span class="text-xs text-slate-500">
+                                                        Créneau : {{ match.timeslot.start|date('H:i') }} - {{ match.timeslot.end|date('H:i') }}
+                                                    </span>
+                                            <!--  mobile -->
+                                            <div class="sm:hidden text-xs text-slate-500">
+                                                <div class="{% if match.teamMatchStatuses|filter(tms => tms.team.id == match.greenTeam.id and tms.status.name == 'FORFEITED')|length > 0 %}px-2 py-1 -mx-2 bg-red-50 border border-red-100 rounded-md{% endif %}">
+                                                    <div class="text-green-700 font-bold">{{ match.greenteam.name }}</div>
                                                 </div>
-                                            </td>
-                                            <td class="hidden sm:table-cell px-3 sm:px-6 py-4 text-xs sm:text-sm text-slate-600">
-                                                {{ match.greenteam.name }}
-                                            </td>
-                                            <td class="hidden sm:table-cell px-3 sm:px-6 py-4 text-xs sm:text-sm text-slate-600">
-                                                {{ match.blueteam.name }}
-                                            </td>
-                                            <td class="px-3 sm:px-6 py-4">
-                                                <span class="text-green-700 font-bold text-base sm:text-lg">{{ match.greenscore }}</span>
-                                                <span class="text-slate-600 font-bold text-base sm:text-lg"> - </span>
-                                                <span class="text-blue-700 font-bold text-base sm:text-lg">{{ match.bluescore }}</span>
-                                            </td>
-                                            {% if is_granted('ROLE_ORGANIZER') %}
-                                                <td class="px-3 sm:px-6 py-4 text-right">
-                                                    <a href="{{ path('edit_match', {'id': match.id}) }}"
-                                                       class="inline-flex items-center px-3 py-1.5 bg-blue-900 text-white text-xs sm:text-sm rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm">
-                                                        <svg class="w-3 h-3 mr-1 sm:hidden" viewBox="0 0 20 20" fill="currentColor">
-                                                            <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
-                                                        </svg>
-                                                        <span>Modifier</span>
-                                                    </a>
-                                                </td>
-                                            {% endif %}
-                                        </tr>
-                                    {% else %}
-                                        <tr>
-                                            <td colspan="{{ is_granted('ROLE_ORGANIZER') ? 5 : 4 }}" class="px-3 sm:px-6 py-6 text-center text-xs sm:text-sm text-slate-600">
-                                                Il n'y a aucun match dans ce championnat.
-                                            </td>
-                                        </tr>
-                                    {% endfor %}
-                                    </tbody>
-                                </table>
-                            </div>
+                                                <div class="{% if match.teamMatchStatuses|filter(tms => tms.team.id == match.blueTeam.id and tms.status.name == 'FORFEITED')|length > 0 %}px-2 py-1 -mx-2 mt-1 bg-red-50 border border-red-100 rounded-md{% endif %}">
+                                                    <div class="text-blue-700 font-bold">{{ match.blueteam.name }}</div>
+                                                </div>
+                                                <div class="mt-1">Terrain : {{ match.field.name }}</div>
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="hidden sm:table-cell px-3 sm:px-6 py-4 text-xs sm:text-sm {% if match.teamMatchStatuses|filter(tms => tms.team.id == match.greenTeam.id and tms.status.name == 'FORFEITED')|length > 0 %}bg-red-50 border border-red-100 rounded-md{% else %}text-slate-600{% endif %}">
+                                        {{ match.greenteam.name }}
+                                    </td>
+                                    <td class="hidden sm:table-cell px-3 sm:px-6 py-4 text-xs sm:text-sm {% if match.teamMatchStatuses|filter(tms => tms.team.id == match.blueTeam.id and tms.status.name == 'FORFEITED')|length > 0 %}bg-red-50 border border-red-100 rounded-md{% else %}text-slate-600{% endif %}">
+                                        {{ match.blueteam.name }}
+                                    </td>
+                                    <td class="hidden sm:table-cell px-3 sm:px-6 py-4 text-xs sm:text-sm text-slate-600">
+                                        {{ match.field.name }}
+                                    </td>
+                                    <td class="px-3 sm:px-6 py-4">
+                                        {% if match.globalStatus.name == 'FORFEITED' %}
+                                            <span class="bg-orange-100 text-orange-800 px-2.5 py-0.5 rounded-full text-xs">Forfait</span>
+                                        {% elseif match.globalStatus.name == 'COMING' %}
+                                            <span class="text-slate-500 text-sm">À venir</span>
+                                        {% else %}
+                                            <span class="text-green-700 font-bold text-base sm:text-lg">{{ match.greenscore }}</span>
+                                            <span class="text-slate-600 font-bold text-base sm:text-lg"> - </span>
+                                            <span class="text-blue-700 font-bold text-base sm:text-lg">{{ match.bluescore }}</span>
+                                        {% endif %}
+                                    </td>
+                                    <td class="px-3 sm:px-6 py-4">
+                                        {% set statusClass = {
+                                            'COMING': 'bg-yellow-100 text-yellow-800',
+                                            'IN_PROGRESS': 'bg-blue-100 text-blue-800',
+                                            'DONE': 'bg-green-100 text-green-800',
+                                            'CANCELED': 'bg-red-100 text-red-800',
+                                            'FORFEITED': 'bg-orange-100 text-orange-800'
+                                        } %}
+                                        {% set statusText = {
+                                            'COMING': 'À venir',
+                                            'IN_PROGRESS': 'En cours',
+                                            'DONE': 'Terminé',
+                                            'CANCELED': 'Annulé',
+                                            'FORFEITED': 'Forfait'
+                                        } %}
+                                        <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ statusClass[match.globalStatus.name] }}">
+                                                    {{ statusText[match.globalStatus.name] }}
+                                                </span>
+                                    </td>
+                                    {% if is_granted('ROLE_ORGANIZER') %}
+                                    <td class="px-3 sm:px-6 py-4 text-right">
+                                        <a href="{{ path('edit_match', {'id': match.id}) }}"
+                                           class="inline-flex items-center px-3 py-1.5 bg-blue-900 text-white text-xs sm:text-sm rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm">
+                                            <svg class="w-3 h-3 mr-1 sm:hidden" viewBox="0 0 20 20"
+                                                 fill="currentColor">
+                                                <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                                            </svg>
+                                            <span>Modifier</span>
+                                        </a>
+                                    </td>
+                                    {% endif %}
+                                </tr>
+                                {% else %}
+                                    <tr>
+                                        <td colspan="{{ is_granted('ROLE_ORGANIZER') ? 7 : 6 }}"
+                                            class="px-3 sm:px-6 py-6 text-center text-xs sm:text-sm text-slate-600">
+                                            Il n'y a aucun match dans ce championnat.
+                                        </td>
+                                    </tr>
+                                {% endfor %}
+                                </tbody>
+                            </table>
                         </div>
                     </div>
                 </div>
-            {% else %}
-                <div class="bg-white rounded-lg shadow-sm border border-slate-200 px-4 sm:px-6 py-6 sm:py-8 text-center text-sm sm:text-base text-slate-600">
-                    Aucun championnat n'a été trouvé.
-                </div>
+            </div>
             {% endfor %}
         </div>
+
+        {# planning #}
+        <div id="view-schedule" class="hidden">
+            <div class="bg-white rounded-lg shadow-sm border border-slate-200">
+                <div class="p-6 border-b border-slate-200">
+                    <div class="grid gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
+                        {% for championship in championships %}
+                            {% for match in championship.matches %}
+                                {# Dans la vue planning, modifions la div de la carte de match #}
+                                <div class="p-4 border border-slate-200 rounded-lg bg-white hover:shadow-md transition-shadow match-card"
+                                     data-field="{{ match.field.name }}"
+                                     data-status="{{ match.globalStatus.name }}"
+                                     data-championship="{{ championship.id }}">
+                                    <div class="mb-3">
+                                        <div class="text-sm font-medium text-slate-900">
+                                            {{ match.timeslot.start|date('l d F')|capitalize }}
+                                        </div>
+                                        <div class="text-xs text-slate-500">
+                                            {{ match.timeslot.start|date('H:i') }} - {{ match.timeslot.end|date('H:i') }}
+                                        </div>
+                                        <div class="text-xs font-medium text-blue-900">
+                                            {{ championship.name }}
+                                        </div>
+                                    </div>
+
+                                    <div class="space-y-2">
+                                        <div class="flex items-center justify-between text-sm">
+                                                <span class="text-green-700 font-medium {% if match.teamMatchStatuses|filter(tms => tms.team.id == match.greenTeam.id and tms.status.name == 'FORFEITED')|length > 0 %}line-through opacity-50{% endif %}">
+                                                    {{ match.greenteam.name }}
+                                                </span>
+                                            <span class="text-slate-900 font-bold">
+                                                    {% if match.globalStatus.name == 'FORFEITED' %}
+                                                        -
+                                                    {% elseif match.globalStatus.name == 'COMING' %}
+                                                        -
+                                                    {% else %}
+                                                        {{ match.greenscore }}
+                                                    {% endif %}
+                                                </span>
+                                        </div>
+                                        <div class="flex items-center justify-between text-sm">
+                                                <span class="text-blue-700 font-medium {% if match.teamMatchStatuses|filter(tms => tms.team.id == match.blueTeam.id and tms.status.name == 'FORFEITED')|length > 0 %}line-through opacity-50{% endif %}">
+                                                    {{ match.blueteam.name }}
+                                                </span>
+                                            <span class="text-slate-900 font-bold">
+                                                    {% if match.globalStatus.name == 'FORFEITED' %}
+                                                        -
+                                                    {% elseif match.globalStatus.name == 'COMING' %}
+                                                        -
+                                                    {% else %}
+                                                        {{ match.bluescore }}
+                                                    {% endif %}
+                                                </span>
+                                        </div>
+                                    </div>
+
+                                    <div class="mt-3 pt-3 border-t border-slate-100">
+                                        <div class="flex items-center justify-between">
+                                            <span class="text-xs text-slate-500">{{ match.field.name }}</span>
+                                            {% set statusClass = {
+                                                'COMING': 'bg-yellow-100 text-yellow-800',
+                                                'IN_PROGRESS': 'bg-blue-100 text-blue-800',
+                                                'DONE': 'bg-green-100 text-green-800',
+                                                'CANCELED': 'bg-red-100 text-red-800',
+                                                'FORFEITED': 'bg-orange-100 text-orange-800'
+                                            } %}
+                                            {% set statusText = {
+                                                'COMING': 'À venir',
+                                                'IN_PROGRESS': 'En cours',
+                                                'DONE': 'Terminé',
+                                                'CANCELED': 'Annulé',
+                                                'FORFEITED': 'Forfait'
+                                            } %}
+                                            <span class="inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium {{ statusClass[match.globalStatus.name] }}">
+                                                    {{ statusText[match.globalStatus.name] }}
+                                                </span>
+                                        </div>
+
+                                        {% if is_granted('ROLE_ORGANIZER') %}
+                                            <div class="mt-2 flex justify-end">
+                                                <a href="{{ path('edit_match', {'id': match.id}) }}"
+                                                   class="inline-flex items-center px-2 py-1 text-xs font-medium text-blue-900 hover:text-blue-800">
+                                                    <svg class="w-3 h-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                                                    </svg>
+                                                    Modifier
+                                                </a>
+                                            </div>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        {% else %}
+                            <div class="col-span-full p-6 text-center text-sm text-slate-600">
+                                Aucun match n'a été trouvé.
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {# filters for planning #}
+                <div class="px-6 py-4 bg-slate-50 rounded-b-lg border-t border-slate-200">
+                    <div class="flex flex-wrap gap-4">
+                        <select id="scheduleFieldSelect"
+                                class="block w-full sm:w-auto rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                            <option value="all">Tous les terrains</option>
+                            {% set fields = [] %}
+                            {% for championship in championships %}
+                                {% for match in championship.matches %}
+                                    {% if match.field.name not in fields %}
+                                        {% set fields = fields|merge([match.field.name]) %}
+                                    {% endif %}
+                                {% endfor %}
+                            {% endfor %}
+                            {% for field in fields|sort %}
+                                <option value="{{ field }}">{{ field }}</option>
+                            {% endfor %}
+                        </select>
+
+                        <select id="scheduleStatusSelect"
+                                class="block w-full sm:w-auto rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
+                            <option value="all">Tous les statuts</option>
+                            <option value="COMING">À venir</option>
+                            <option value="IN_PROGRESS">En cours</option>
+                            <option value="DONE">Terminé</option>
+                            <option value="CANCELED">Annulé</option>
+                            <option value="FORFEITED">Forfait</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
+</div>
 
     <script>
-        // Set initial selected option based on URL parameter or first championship
         const urlParams = new URLSearchParams(window.location.search);
         const championshipId = urlParams.get('championship') || document.getElementById('championshipSelect').value;
-        document.getElementById('championshipSelect').value = championshipId;
+        const fieldName = urlParams.get('field') || 'all';
 
-        // Show the selected championship's matches
-        const showChampionship = (id) => {
+        document.getElementById('championshipSelect').value = championshipId;
+        document.getElementById('fieldSelect').value = fieldName;
+
+        const filterMatches = () => {
+            const selectedChampionshipId = document.getElementById('championshipSelect').value;
+            const selectedField = document.getElementById('fieldSelect').value;
+
             document.querySelectorAll('[id^="championship-"]').forEach(div => {
                 div.classList.add('hidden');
             });
-            document.getElementById(`championship-${id}`).classList.remove('hidden');
+            const championshipDiv = document.getElementById(`championship-${selectedChampionshipId}`);
+            championshipDiv.classList.remove('hidden');
+
+            const rows = championshipDiv.querySelectorAll('tbody tr');
+            rows.forEach(row => {
+                if (row.querySelector('td')) {
+                    const fieldCell = row.querySelector('td:nth-child(4)');
+                    if (fieldCell) {
+                        const fieldName = fieldCell.textContent.trim();
+                        if (selectedField === 'all' || fieldName === selectedField) {
+                            row.style.display = '';
+                        } else {
+                            row.style.display = 'none';
+                        }
+                    }
+                }
+            });
+
+            const visibleRows = Array.from(rows).filter(row => row.style.display !== 'none');
+            const noMatchesRow = championshipDiv.querySelector('.no-matches');
+
+            if (visibleRows.length === 0 && !noMatchesRow) {
+                const tbody = championshipDiv.querySelector('tbody');
+                const colSpan = document.querySelector('th[scope="col"]') ? document.querySelectorAll('th[scope="col"]').length : 6;
+                const emptyRow = document.createElement('tr');
+                emptyRow.classList.add('no-matches');
+                emptyRow.innerHTML = `
+                    <td colspan="${colSpan}" class="px-3 sm:px-6 py-6 text-center text-xs sm:text-sm text-slate-600">
+                        Aucun match trouvé pour ce terrain.
+                    </td>
+                `;
+                tbody.appendChild(emptyRow);
+            } else if (visibleRows.length > 0 && noMatchesRow) {
+                noMatchesRow.remove();
+            }
         };
 
-        // Show initial championship
-        showChampionship(championshipId);
+        filterMatches();
 
-        // Handle championship selection change
         document.getElementById('championshipSelect').addEventListener('change', function() {
-            const championshipId = this.value;
-            showChampionship(championshipId);
-            // Update URL without page reload
             const url = new URL(window.location);
-            url.searchParams.set('championship', championshipId);
+            url.searchParams.set('championship', this.value);
             window.history.pushState({}, '', url);
+            filterMatches();
         });
+
+        document.getElementById('fieldSelect').addEventListener('change', function() {
+            const url = new URL(window.location);
+            url.searchParams.set('field', this.value);
+            window.history.pushState({}, '', url);
+            filterMatches();
+        });
+
+        //tabs
+        document.getElementById('tab-list').addEventListener('click', function() {
+            this.classList.add('border-blue-900', 'text-blue-900');
+            this.classList.remove('border-transparent', 'text-slate-500');
+            document.getElementById('tab-schedule').classList.remove('border-blue-900', 'text-blue-900');
+            document.getElementById('tab-schedule').classList.add('border-transparent', 'text-slate-500');
+
+            document.getElementById('view-list').classList.remove('hidden');
+            document.getElementById('view-schedule').classList.add('hidden');
+            document.getElementById('fieldSelect').classList.remove('hidden');
+        });
+
+        document.getElementById('tab-schedule').addEventListener('click', function() {
+            this.classList.add('border-blue-900', 'text-blue-900');
+            this.classList.remove('border-transparent', 'text-slate-500');
+            document.getElementById('tab-list').classList.remove('border-blue-900', 'text-blue-900');
+            document.getElementById('tab-list').classList.add('border-transparent', 'text-slate-500');
+
+            document.getElementById('view-schedule').classList.remove('hidden');
+            document.getElementById('view-list').classList.add('hidden');
+            document.getElementById('fieldSelect').classList.add('hidden');
+        });
+
+        const filterScheduleMatches = () => {
+            const selectedChampionshipId = document.getElementById('championshipSelect').value;
+            const selectedField = document.getElementById('scheduleFieldSelect').value;
+            const selectedStatus = document.getElementById('scheduleStatusSelect').value;
+            const matches = document.querySelectorAll('.match-card');
+            let visibleCount = 0;
+
+            matches.forEach(match => {
+                const championshipMatch = match.dataset.championship === selectedChampionshipId;
+                const fieldMatch = selectedField === 'all' || match.dataset.field === selectedField;
+                const statusMatch = selectedStatus === 'all' || match.dataset.status === selectedStatus;
+
+                if (championshipMatch && fieldMatch && statusMatch) {
+                    match.classList.remove('hidden');
+                    visibleCount++;
+                } else {
+                    match.classList.add('hidden');
+                }
+            });
+
+            const noMatchesMsg = document.querySelector('#view-schedule .col-span-full');
+            if (visibleCount === 0 && !noMatchesMsg) {
+                const grid = document.querySelector('#view-schedule .grid');
+                const message = document.createElement('div');
+                message.className = 'col-span-full p-6 text-center text-sm text-slate-600';
+                message.textContent = 'Aucun match ne correspond aux critères sélectionnés.';
+                grid.appendChild(message);
+            } else if (visibleCount > 0 && noMatchesMsg) {
+                noMatchesMsg.remove();
+            }
+        };
+
+        filterScheduleMatches();
+
+        document.getElementById('championshipSelect').addEventListener('change', function() {
+            const url = new URL(window.location);
+            url.searchParams.set('championship', this.value);
+            window.history.pushState({}, '', url);
+
+            filterMatches();
+            filterScheduleMatches();
+        });
+
+        document.getElementById('scheduleFieldSelect')?.addEventListener('change', filterScheduleMatches);
+        document.getElementById('scheduleStatusSelect')?.addEventListener('change', filterScheduleMatches);
     </script>
 {% endblock %}

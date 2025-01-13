@@ -8,6 +8,7 @@ use App\Entity\Team;
 use App\Entity\TeamResults;
 use App\Entity\User;
 use App\Entity\Versus;
+use App\Repository\TeamRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -35,8 +36,8 @@ class TeamController extends AbstractController
         }
 
         if ($this->isGranted('ROLE_ORGANIZER')) {
-            $this->addFlash('error', 'Organizers can\'t create teams.');
-            return $this->redirectToRoute('app_root');
+            $this->addFlash('error', 'Les organisateurs ne peuvent pas créer d\'équipe.');
+            return $this->redirectToRoute('app_error');
         }
 
         return $this->render('team/index.html.twig', [
@@ -53,9 +54,21 @@ class TeamController extends AbstractController
             return $this->redirectToRoute('app_error');
         }
 
-        if ($this->isGranted('ROLE_ORGANIZER')) {
-            throw $this->createAccessDeniedException("organizers can't create teams.");
+        if (!$this->getUser()) {
+            $this->addFlash('error', 'Vous devez être connecté pour créer une équipe.');
+            return $this->redirectToRoute('app_login');
         }
+
+        if($this->getUser()->getMember()) {
+            $this->addFlash('error', 'Vous êtes déjà membre d\'une équipe.');
+            return $this->redirectToRoute('app_team_edit', ['id' => $this->getUser()->getMember()->getTeam()->getId()]);
+        }
+
+        if ($this->isGranted('ROLE_ORGANIZER')) {
+            $this->addFlash('error', 'Les organisateurs ne peuvent pas créer d\'équipe.');
+            return $this->redirectToRoute('app_error');
+        }
+
         if ($entityManager->getRepository(Team::class)->findOneBy(['name' => $request->request->get('name')])) {
             $this->addFlash('error', 'Erreur : une équipe possède déjà ce nom.');
             return $this->redirectToRoute('app_team');
@@ -69,23 +82,17 @@ class TeamController extends AbstractController
             return $this->redirectToRoute('app_team');
         }
         $team = new Team();
-        $team->setName($name);
-        $team->setStructure($structure);
-        $team->setWin(0);
-        $team->setDraw(0);
-        $team->setLose(0);
-        $team->setCreator($creator);
-        $points = 0;
-        $gameplayed = 0;
-        $team->setPoints($points);
-        $team->setGamePlayed($gameplayed);
+        $team->setName($name)
+            ->setStructure($structure)
+            ->setCreator($creator);
 
         $member = new Member();
-        $member->setUser($this->getUser());
-        $member->setTeam($team);
-        $member->setFname($this->getUser()->getFirstName());
-        $member->setName($this->getUser()->getName());
-        $member->setEmail($this->getUser()->getMail());
+        $member->setUser($this->getUser())
+            ->setTeam($team)
+            ->setFname($this->getUser()->getFirstName())
+            ->setName($this->getUser()->getName())
+            ->setEmail($this->getUser()->getMail());
+
         $this->getUser()->setMember($member);
         $this->getUser()->getMember()->setTeam($team);
         $team->addMember($member);
@@ -93,9 +100,6 @@ class TeamController extends AbstractController
         $entityManager->persist($team);
         $entityManager->flush();
         $this->addFlash('success', 'L\'équipe a été créée avec succès.');
-        if ($request->request->get('userJoin')) {
-            return $this->redirectToRoute('app_team_edit', ['id' => $team->getId()]);
-        }
         return $this->redirectToRoute('app_team_edit', ['id' => $team->getId()]);
     }
 
@@ -114,7 +118,6 @@ class TeamController extends AbstractController
             if (!$teamCreator) {
                 throw $this->createNotFoundException('Le créateur de l\'équipe n\'a pas été trouvé');
             }
-            $user = $teamCreator;
         } else {
             $user = $this->getUser();
             if (!$user) {
@@ -162,12 +165,7 @@ class TeamController extends AbstractController
         $entityManager->flush();
 
         if ($addedCount > 0) {
-            $this->addFlash(
-                'success',
-                $addedCount === 1
-                    ? 'Le membre a été ajouté avec succès.'
-                    : $addedCount . ' membres ajoutés avec succès.'
-            );
+            $this->addFlash('success',$addedCount === 1 ? 'Le membre a été ajouté avec succès.': $addedCount . ' membres ajoutés avec succès.');
         } else {
             $this->addFlash('info', 'Aucun membre ajouté.');
         }
@@ -226,35 +224,36 @@ class TeamController extends AbstractController
             $csrfToken = $this->container->get('security.csrf.token_manager')->getToken('delete' . $member->getTeam()->getId())->getValue();
 
             $this->addFlash('error', '
-    <div class="flex justify-between items-center">
-        <div>Retirer le créateur de l\'équipe revient à supprimer l\'équipe. Êtes-vous sûr ?</div>
-        <div class="flex space-x-4">
-            <form method="POST" action="' . $this->generateUrl('app_delete_team', ['id' => $member->getTeam()->getId()]) . '" style="display: inline;">
-                <input type="hidden" name="_token" value="' . $csrfToken . '">
-                <button 
-                    type="submit"
-                    style="background-color: #991b1b; color: white; transition: background-color 0.3s ease;" 
-                    onmouseover="this.style.backgroundColor=\'#7f1d1d\'" 
-                    onmouseout="this.style.backgroundColor=\'#991b1b\'" 
-                    class="px-4 py-2 rounded-lg">
-                    Supprimer l\'équipe
-                </button>
-            </form>
-            <button 
-                style="background-color: #10b981; color: white; transition: background-color 0.3s ease;" 
-                onmouseover="this.style.backgroundColor=\'#059669\'" 
-                onmouseout="this.style.backgroundColor=\'#10b981\'" 
-                class="px-4 py-2 rounded-lg">
-                <a href="' . $this->generateUrl('app_team_edit', ['id' => $member->getTeam()->getId()]) . '">Annuler</a>
-            </button>
-        </div>
+<div class="flex flex-col md:flex-row lg:flex-row justify-between items-center gap-4 p-4 sm:p-6">
+    <div class="text-center md:text-left lg:text-left text-sm sm:text-base max-w-xl">
+        Retirer le créateur de l\'équipe revient à supprimer l\'équipe. Êtes-vous sûr ?
     </div>
+    <div class="flex flex-col sm:flex-row md:flex-row lg:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
+        <form method="POST" action="' . $this->generateUrl('app_delete_team', ['id' => $member->getTeam()->getId()]) . '" style="display: inline;" class="w-full sm:w-auto">
+            <input type="hidden" name="_token" value="' . $csrfToken . '">
+            <button 
+                type="submit"
+                style="background-color: #991b1b; color: white; transition: background-color 0.3s ease;" 
+                onmouseover="this.style.backgroundColor=\'#7f1d1d\'" 
+                onmouseout="this.style.backgroundColor=\'#991b1b\'" 
+                class="w-full sm:w-auto md:w-auto lg:w-auto min-w-[120px] px-4 py-2 rounded-lg text-sm sm:text-base">
+                Supprimer l\'équipe
+            </button>
+        </form>
+        <button 
+            style="background-color: #10b981; color: white; transition: background-color 0.3s ease;" 
+            onmouseover="this.style.backgroundColor=\'#059669\'" 
+            onmouseout="this.style.backgroundColor=\'#10b981\'" 
+            class="w-full sm:w-auto md:w-auto lg:w-auto min-w-[120px] px-4 py-2 rounded-lg text-sm sm:text-base">
+            <a href="' . $this->generateUrl('app_team_edit', ['id' => $member->getTeam()->getId()]) . '">Annuler</a>
+        </button>
+    </div>
+</div>
 ');
 
             return $this->redirectToRoute('app_team_edit', ['id' => $member->getTeam()->getId()]);
         }
 
-        $team_id = $member->getTeam()->getId();
         $member->getTeam()->removeMember($member);
         $entityManager->remove($member);
         $entityManager->flush();

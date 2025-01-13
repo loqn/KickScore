@@ -7,9 +7,9 @@
         <div class="h-full flex items-center justify-center bg-gradient-to-br from-slate-50 to-white rounded-xl p-8">
             <div class="w-full max-w-md">
                 <h1 class="text-4xl font-bold text-slate-800 text-center mb-8">
-                    Créez votre compte
+                    <span>{{ 'nav.createaccount'|trans }}</span>
                     <span class="block mt-2 text-blue-900 text-2xl font-medium">
-                        C'est rapide !
+                        <span>{{ 'nav.fast'|trans }}</span>
                     </span>
                 </h1>
 
@@ -26,25 +26,29 @@
 
                 {{ form_start(registrationForm, {'attr': {'class': 'space-y-6'}}) }}
                 <div class="space-y-1">
-                    {{ form_label(registrationForm.FirstName, null, {'label_attr': {'class': 'text-sm font-medium text-slate-700'}}) }}
-                    {{ form_widget(registrationForm.FirstName, {'attr': {'class': 'w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors'}}) }}
+                    {{ form_label(registrationForm.FirstName, 'formal.firstname'|trans, {'label_attr': {'class': 'text-sm font-medium text-slate-700'}}) }}
+                    {{ form_widget(registrationForm.FirstName, {'attr': {
+                        'placeholder': 'formal.insertfirstname'|trans,
+                        'class': 'w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors'}}) }}
                     {{ form_errors(registrationForm.FirstName, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
                 </div>
 
                 <div class="space-y-1">
-                    {{ form_label(registrationForm.Name, null, {'label_attr': {'class': 'text-sm font-medium text-slate-700'}}) }}
-                    {{ form_widget(registrationForm.Name, {'attr': {'class': 'w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors'}}) }}
+                    {{ form_label(registrationForm.Name, 'formal.lastname'|trans, {'label_attr': {'class': 'text-sm font-medium text-slate-700'}}) }}
+                    {{ form_widget(registrationForm.Name, {'attr': {
+                        'placeholder': 'formal.insertlastname'|trans,
+                        'class': 'w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors'}}) }}
                     {{ form_errors(registrationForm.Name, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
                 </div>
 
                 <div class="space-y-1">
-                    {{ form_label(registrationForm.Mail, null, {'label_attr': {'class': 'text-sm font-medium text-slate-700'}}) }}
+                    {{ form_label(registrationForm.Mail, 'formal.email'|trans, {'label_attr': {'class': 'text-sm font-medium text-slate-700'}}) }}
                     {{ form_widget(registrationForm.Mail, {'attr': {'class': 'w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors'}}) }}
                     {{ form_errors(registrationForm.Mail, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
                 </div>
 
                 <div class="space-y-1">
-                    {{ form_label(registrationForm.plainPassword, 'Mot de passe', {'label_attr': {'class': 'text-sm font-medium text-slate-700'}}) }}
+                    {{ form_label(registrationForm.plainPassword, 'formal.password'|trans, {'label_attr': {'class': 'text-sm font-medium text-slate-700'}}) }}
                     {{ form_widget(registrationForm.plainPassword, {'attr': {'class': 'w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors'}}) }}
                     {{ form_errors(registrationForm.plainPassword, {'attr': {'class': 'text-red-500 text-sm mt-1'}}) }}
                 </div>
@@ -55,12 +59,12 @@
 
                 <div class="pt-4">
                     <button type="submit" class="w-full px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
-                        Créer mon compte
+                        <span>{{ 'nav.createaccount'|trans }}</span>
                     </button>
 
                     <div class="text-center mt-4">
                         <a href="{{ path('app_login') }}" class="text-blue-900 hover:text-blue-800 font-medium">
-                            Déjà inscrit ? Connectez-vous
+                            <span>{{ 'nav.alreadylogin'|trans }}</span>
                         </a>
                     </div>
                 </div>

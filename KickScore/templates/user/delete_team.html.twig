@@ -8,16 +8,16 @@
             <div class="max-w-3xl mx-auto">
                 <div class="mb-8 flex items-center justify-between">
                     <h1 class="text-3xl font-bold text-slate-800">
-                        Impossible de supprimer l'utilisateur
+                        <span>{{'cannot_delete_user' | trans}}</span>
                         <span class="block mt-1 text-lg text-slate-600 font-normal">
-                            Cet utilisateur fait partie d'une équipe
+                            {{'user_in_team' | trans}}
                         </span>
                     </h1>
 
                     <div class="space-x-3">
                         <a href="{{ path('app_user_index') }}"
                            class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-medium">
-                            Retour à la liste
+                            <span>{{'return_to_list' | trans}}</span>
                         </a>
                     </div>
                 </div>
@@ -37,23 +37,22 @@
                                     </h3>
                                     <div class="mt-2 text-sm text-red-700">
                                         <p>
-                                            L'utilisateur {{ user.FirstName }} {{ user.name }} ne peut pas être supprimé car il est le créateur d'une équipe. <br>
-                                            Vous avez le choix de supprimer l'équipe et tous ses membres, ou de ne rien faire.
+                                            <span>{{'user_management.table.user' | trans}}</span> {{ user.FirstName }} {{ user.name }} <span>{{'user_delete_error' | trans}}</span>
                                         </p>
                                     </div>
                                 </div>
                             </div>
                         </div>
 
-                        <h2 class="text-xl font-semibold text-slate-800 mb-4">Détails de l'équipe</h2>
+                        <h2 class="text-xl font-semibold text-slate-800 mb-4">{{'team_details' | trans}}</span></h2>
                         <div class="space-y-6">
                             <div>
-                                <p class="text-sm font-medium text-slate-500">Nom de l'équipe</p>
-                                <p class="mt-1 text-slate-800">{{ user.member.team.name }}</p>
+                                <p class="text-sm font-medium text-slate-500"><span>{{'team_name' | trans}} </span></p>
+                                <p class="mt-1 text-slate-800">{{ user.team.name }}</p>
                             </div>
 
                             <div>
-                                <p class="text-sm font-medium text-slate-500 mb-2">Membres de l'équipe</p>
+                                <p class="text-sm font-medium text-slate-500 mb-2"><span>{{'team_members' | trans}} </span></p>
                                 <div class="bg-slate-50 rounded-lg divide-y divide-slate-200">
                                     {% for teammate in user.member.team.members %}
                                         <div class="p-4 flex items-center justify-between">
@@ -65,7 +64,7 @@
                                             </div>
                                             {% if teammate.id == user.id %}
                                                 <span class="px-3 py-1 text-xs font-medium rounded-full bg-amber-100 text-amber-800">
-                                                    Membre concerné
+                                                    <span>{{'concerned_member' | trans}} </span>
                                                 </span>
                                             {% endif %}
                                         </div>
@@ -79,11 +78,11 @@
                         <div class="flex items-center space-x-3">
                             <a href="{{ path('app_user_edit', {'id': user.id}) }}"
                                class="px-4 py-2 bg-red-800 text-white rounded-lg hover:bg-red-900 transition-colors font-medium shadow-sm">
-                                Supprimer l'équipe
+                                {{'deleteteam' | trans}}
                             </a>
                             <a href="{{ path('app_team_edit', {'id': user.member.team.id}) }}"
                                class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-medium">
-                                Annuler
+                                {{'cancel' | trans}}
                             </a>
                         </div>
                     </div>
