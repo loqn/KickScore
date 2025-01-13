@@ -126,7 +126,7 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this->member;
     }
 
-    public function setMember(Member $member): static
+    public function setMember(?Member $member): static
     {
         $this->member = $member;
 

@@ -36,6 +36,9 @@ class Versus
     #[ORM\JoinColumn(name: 'CHP_ID', referencedColumnName: 'CHP_ID')]
     private ?Championship $championship = null;
 
+    #[ORM\Column(name:'MAT_COMMENTARY', length: 512, nullable: true)]
+    private ?string $commentary = null;
+
     public function getChampionship(): ?Championship
     {
         return $this->championship;
@@ -58,7 +61,7 @@ class Versus
         return $this->blueTeam;
     }
 
-    public function setBlueTeam(Team $blueTeam): static
+    public function setBlueTeam(?Team $blueTeam): static
     {
         $this->blueTeam = $blueTeam;
 
@@ -70,11 +73,16 @@ class Versus
         return $this->greenTeam;
     }
 
-    public function setGreenTeam(Team $greenTeam): static
+    public function setGreenTeam(?Team $greenTeam): static
     {
         $this->greenTeam = $greenTeam;
 
         return $this;
+    }
+
+    public function getTeams(): array
+    {
+        return [$this->blueTeam, $this->greenTeam];
     }
 
     public function getGreenScore(): ?int
@@ -109,6 +117,18 @@ class Versus
     public function setDate(?\DateTimeInterface $date): static
     {
         $this->date = $date;
+
+        return $this;
+    }
+
+    public function getCommentary(): ?string
+    {
+        return $this->commentary;
+    }
+
+    public function setCommentary(?string $commentary): static
+    {
+        $this->commentary = $commentary;
 
         return $this;
     }

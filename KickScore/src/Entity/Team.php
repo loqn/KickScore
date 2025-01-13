@@ -62,6 +62,10 @@ class Team
     #[ORM\OneToMany(targetEntity: TeamResults::class, mappedBy: 'team')]
     private Collection $teamResults;
 
+    #[ORM\OneToOne(cascade: ['persist'], targetEntity: User::class)]
+    #[ORM\JoinColumn(name: 'CREATOR_ID', referencedColumnName: 'USR_ID', nullable: false)]
+    private ?User $creator = null;
+
     public function __construct()
     {
         $this->members = new ArrayCollection();
@@ -226,6 +230,18 @@ class Team
                 $teamResult->setTeam(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getCreator(): ?User
+    {
+        return $this->creator;
+    }
+
+    public function setCreator(User $creator): static
+    {
+        $this->creator = $creator;
 
         return $this;
     }

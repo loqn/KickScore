@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html>
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <title>{% block title %}Welcome!{% endblock %}</title>
@@ -34,10 +34,10 @@
         </div>
     </div>
 {% endif %}
-<div class="flex min-h-screen">
-    {% include '_nav.html.twig' %}
-    <main class="flex-1 w-full">
-            {% block body %}{% endblock %}
+{% include '_nav.html.twig' %}
+<div class="transition-all duration-300" id="main-container">
+    <main class="min-h-screen" style="background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 100%);">
+        {% block body %}{% endblock %}
     </main>
 </div>
 

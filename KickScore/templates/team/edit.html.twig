@@ -3,99 +3,251 @@
 {% block title %}{{ 'team.title'|trans }} - KickScore{% endblock %}
 
 {% block body %}
-<div class="bg-gray-100 flex items-center justify-center min-h-screen">
-    <div class="bg-white p-6 rounded-lg shadow-md w-full max-w-4xl">
-        <h2 class="text-2xl font-bold mb-6 text-gray-700">{{ 'team.team_name'|trans({'%name%': team.name}) }}</h2>
-        <div class="flex flex-col lg:flex-row gap-6">
-            <div class="flex-1">
-                <h3 class="text-xl font-bold mb-4 text-gray-700">{{ 'team.members'|trans }}</h3>
-                <ul class="space-y-3">
-                    {% for member in team.members %}
-                        <li class="flex items-center justify-between p-3 border rounded-lg hover:bg-gray-100 transition ease-in duration-200">
-                            <div class="flex flex-col">
-                                <span class="font-medium inline-flex items-center">
-                                    {{ member.fname }} {{ member.name }}
-                                    <svg title="{{ 'team.member_saved'|trans }}" xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill ml-2" viewBox="0 0 16 16">
+<div class="min-h-screen bg-gradient-to-br from-slate-50 to-white p-8">
+    <div class="max-w-6xl mx-auto">
+        {# header #}
+        <div class="bg-white rounded-xl shadow-sm border border-slate-200 p-6 mb-6">
+            <div class="flex items-center justify-between">
+                <div>
+                    <h1 class="text-4xl font-bold text-slate-800">{{ team.name }}</h1>
+                    <p class="text-xl text-blue-900 mt-2">Tableau de bord d'équipe</p>
+                </div>
+            </div>
+        </div>
+
+        {# notifications #}
+        {% for message in app.flashes('success') %}
+            <div class="bg-green-50 border border-green-200 text-green-800 rounded-lg p-4 mb-6">
+                <p class="text-sm font-medium">{{ message }}</p>
+            </div>
+        {% endfor %}
+        {% for message in app.flashes('error') %}
+            <div class="bg-red-50 border border-red-200 rounded-lg p-4 mb-6">
+                <div class="text-sm font-medium text-red-800">
+                    {{ message|raw }}
+                </div>
+            </div>
+        {% endfor %}
+
+        <div class="mb-6 bg-white rounded-xl shadow-sm border border-slate-200">
+            <nav class="border-b border-slate-200 px-4">
+                <div class="flex space-x-6">
+                    <button class="tab-button px-4 py-4 text-blue-900 border-b-2 border-blue-900 font-medium text-sm focus:outline-none" data-tab="members">
+                            <span class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 mr-2" viewBox="0 0 20 20" fill="currentColor">
+                                    <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
+                                </svg>
+                                Membres
+                            </span>
+                    </button>
+                    <button class="tab-button px-4 py-4 text-slate-600 hover:text-slate-900 font-medium text-sm focus:outline-none" data-tab="championships">
+                            <span class="flex items-center">
+                                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="mr-2 bi bi-trophy-fill" viewBox="0 0 16 16">
+                                    <path d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5q0 .807-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33 33 0 0 1 2.5.5m.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935m10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935"/>
+                                </svg>
+                                Championnats
+                            </span>
+                    </button>
+                </div>
+            </nav>
+
+            {# tabs content #}
+            <div class="p-6">
+                {# tab championship #}
+                <div id="championships" class="tab-content hidden">
+                    {% if team.championships|length > 0 %}
+                        <div class="space-y-6">
+                            {% for championship in team.championships %}
+                                <div class="bg-white rounded-lg border border-slate-200 p-6">
+                                    <div class="flex justify-between items-center mb-4">
+                                        <div>
+                                            <h2 class="text-xl font-bold text-slate-700">{{ championship.name }}</h2>
+                                            <p class="text-sm text-slate-500">
+                                                Organisé par {{ championship.organizer.firstName }} {{ championship.organizer.name }}
+                                                • {{ championship.teams|length }} équipes
+                                            </p>
+                                        </div>
+                                        <form method="post" action="{{ path('leave_championship', {'id': championship.id}) }}" class="inline">
+                                            <input type="hidden" name="_token" value="{{ csrf_token('leave' ~ championship.id) }}">
+                                            <button type="submit" class="text-red-600 hover:text-red-800 font-medium text-sm">
+                                                Quitter le championnat
+                                            </button>
+                                        </form>
+                                    </div>
+
+                                    <div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+                                        <div class="bg-green-50 rounded-lg p-4 text-center">
+                                            <span class="block text-4xl font-bold text-green-800">{{ teamResults[championship.id].wins ?? 0 }}</span>
+                                            <span class="text-sm text-slate-600">Victoires</span>
+                                        </div>
+                                        <div class="bg-yellow-50 rounded-lg p-4 text-center">
+                                            <span class="block text-4xl font-bold text-yellow-800">{{ teamResults[championship.id].draws ?? 0 }}</span>
+                                            <span class="text-sm text-slate-600">Nuls</span>
+                                        </div>
+                                        <div class="bg-red-50 rounded-lg p-4 text-center">
+                                            <span class="block text-4xl font-bold text-red-800">{{ teamResults[championship.id].losses ?? 0 }}</span>
+                                            <span class="text-sm text-slate-600">Défaites</span>
+                                        </div>
+                                        <div class="bg-blue-50 rounded-lg p-4 text-center">
+                                            <span class="block text-4xl font-bold text-blue-800">{{ teamResults[championship.id].points ?? 0 }}</span>
+                                            <span class="text-sm text-slate-600">Points</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            {% endfor %}
+                        </div>
+                    {% else %}
+                        <div class="bg-blue-50 rounded-lg p-6 border border-blue-100">
+                            <div class="text-center">
+                                <h2 class="text-xl font-bold text-blue-900 mb-2">Aucun championnat</h2>
+                                <p class="text-blue-700">Cette équipe n'est inscrite à aucun championnat pour le moment.</p>
+                                <a href="{{ path('app_match_list') }}" class="mt-4 inline-flex items-center px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium">
+                                    Voir les championnats
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    {% endif %}
+                </div>
+
+                {# tab members #}
+                <div id="members" class="tab-content">
+                    <div class="flex flex-col lg:flex-row gap-8">
+                        <div class="flex-1 space-y-6">
+                            <h2 class="text-xl font-bold text-slate-700">Membres</h2>
+                            <div class="space-y-3">
+                                {% for member in team.members %}
+                                    {% set creator = member.user %}
+                                    <div class="flex items-center justify-between p-4 {{ creator ? 'bg-purple-100 hover:bg-purple-200 hover:border-purple-400' : 'bg-white hover:bg-blue-100 hover:border-blue-200' }} border border-slate-200 rounded-lg transition-colors">
+                                        <div class="space-y-1">
+                                            {% if creator %}
+                                                <div class="flex items-center text-md font-medium text-purple-800">
+                                                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="mr-2 bi bi-star-fill" viewBox="0 0 16 16">
+                                                        <path d="M3.612 15.443c-.386.198-.824-.149-.746-.592l.83-4.73L.173 6.765c-.329-.314-.158-.888.283-.95l4.898-.696L7.538.792c.197-.39.73-.39.927 0l2.184 4.327 4.898.696c.441.062.612.636.282.95l-3.522 3.356.83 4.73c.078.443-.36.79-.746.592L8 13.187l-4.389 2.256z"/>
+                                                    </svg>Créateur</div>
+                                            {% endif %}
+                                            <div class="font-medium text-slate-800 flex items-center">
+                                                {{ member.fname }} {{ member.name }}
+                                                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 text-slate-400" viewBox="0 0 16 16" fill="currentColor">
+                                                    <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                                                </svg>
+                                            </div>
+                                            <div class="text-sm text-slate-500">{{ member.email }}</div>
+                                        </div>
+                                        {% if is_granted('ROLE_ORGANIZER') %}
+                                            <form action="{{ path('app_team_remove_member', {'id': member.id}) }}" method="post" class="inline">
+                                                <input type="hidden" name="_token" value="{{ csrf_token('remove' ~ member.id) }}">
+                                                <button class="px-4 py-2 {{ creator ? 'text-red-900 bg-red-50 hover:bg-red-100' : 'text-blue-900 bg-blue-50 hover:bg-blue-100' }} rounded-lg transition-colors font-medium">
+                                                    Supprimer
+                                                </button>
+                                            </form>
+                                        {% endif %}
+                                    </div>
+                                {% endfor %}
+                            </div>
+                        </div>
+
+                        {# form add members #}
+                        <div class="lg:w-96 bg-slate-50 p-6 rounded-xl h-fit">
+                            <form method="post" action="{{ path('app_team_add_member') }}" class="space-y-4">
+                                <h2 class="text-xl font-bold text-slate-700 mb-6">Ajouter un membre</h2>
+
+                                <div class="space-y-1">
+                                    <label for="fname" class="text-sm font-medium text-slate-700">Prénom</label>
+                                    <input type="text" id="fname" name="fname" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors" placeholder="Prénom du membre">
+                                </div>
+
+                                <div class="space-y-1">
+                                    <label for="name" class="text-sm font-medium text-slate-700">Nom</label>
+                                    <input type="text" id="name" name="name" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors" placeholder="Nom du membre">
+                                </div>
+
+                                <div class="space-y-1">
+                                    <label for="email" class="text-sm font-medium text-slate-700">Email</label>
+                                    <input type="email" id="email" name="email" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors" placeholder="Email du membre">
+                                </div>
+
+                                <div id="addBtn" class="w-full px-4 py-3 bg-blue-100 text-blue-900 rounded-lg hover:bg-blue-200 transition-colors font-medium text-center cursor-pointer">
+                                    Ajouter
+                                </div>
+
+                                <input type="hidden" name="to_add" value="">
+                                <input type="hidden" name="_token" value="{{ csrf_token('add_member') }}">
+                                <input type="hidden" name="team_id" value="{{ team.id }}">
+
+                                <button id="addMemberBtn" type="submit" disabled class="w-full px-4 py-3 bg-slate-200 text-slate-500 rounded-lg font-medium flex items-center justify-center cursor-not-allowed">
+                                    Aucun nouveau membre
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="currentColor" viewBox="0 0 16 16">
                                         <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
                                     </svg>
-                                </span>
-                                <span class="text-sm text-gray-600">{{ member.email }}</span>
-                            </div>
-                            {% if is_granted('ROLE_ORGANIZER')%}
-                            <form action="{{ path('app_team_remove_member', {'id': member.id}) }}" method="post">
-                                <input type="hidden" name="_token" value="{{ csrf_token('remove' ~ member.id) }}">
-                                <button class="bg-blue-500 transition ease-in duration-200 text-white py-2 px-4 rounded-lg hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500">
-                                    {{ 'team.remove'|trans }}
                                 </button>
                             </form>
-                            {% endif %}
-                        </li>
-                    {% endfor %}
-                </ul>
-            </div>
-
-            <div class="flex-1">
-                <form method="post" action="{{ path('app_team_add_member') }}" class="w-full">
-                    <h3 class="text-xl font-bold mb-4 text-gray-700">{{ 'team.add_member.title'|trans }}</h3>
-                    <div class="space-y-4">
-                        <div class="mb-4">
-                            <label for="fname" class="block font-medium text-gray-700">{{ 'team.add_member.firstname'|trans }}</label>
-                            <input type="text" id="player" name="fname" placeholder="{{ 'team.add_member.firstname_placeholder'|trans }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
                         </div>
-                        <div class="mb-4">
-                            <label for="name" class="block font-medium text-gray-700">{{ 'team.add_member.lastname'|trans }}</label>
-                            <input type="text" id="player" name="name" placeholder="{{ 'team.add_member.lastname_placeholder'|trans }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div class="mb-4">
-                            <label for="fname" class="block font-medium text-gray-700">{{ 'team.add_member.email'|trans }}</label>
-                            <input type="email" id="player" name="email" placeholder="{{ 'team.add_member.email_placeholder'|trans }}" class="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                        </div>
-                        <div id="addBtn" class="w-full bg-blue-100 text-center hover:cursor-pointer rounded-lg py-2 px-4 transition ease-in duration-200 hover:bg-blue-200 focus:ring focus:ring-blue-200">
-                            {{ 'team.add_member.add_button'|trans }}
-                        </div>
-                        <input type="hidden" name="to_add" value="">
-                        <button type="submit" disabled class="hover:cursor-not-allowed w-full bg-slate-600 transition ease-in duration-200 text-white py-2 px-4 rounded-lg hover:bg-slate-700 focus:outline-none focus:ring-2 focus:ring-blue-500 inline-flex items-center justify-center">
-                            {{ 'team.add_member.no_new_member'|trans }}
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-lock-fill ml-2" viewBox="0 0 16 16">
-                                <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
-                            </svg>
-                        </button>
                     </div>
-                </form>
+                </div>
             </div>
         </div>
     </div>
 </div>
 
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        //tabs
+        const tabs = document.querySelectorAll('.tab-button');
+        const contents = document.querySelectorAll('.tab-content');
 
-    <script>
+        function switchTab(tabId) {
+            tabs.forEach(tab => {
+                if (tab.dataset.tab === tabId) {
+                    tab.classList.add('text-blue-900', 'border-b-2', 'border-blue-900');
+                    tab.classList.remove('text-slate-600', 'border-transparent');
+                } else {
+                    tab.classList.remove('text-blue-900', 'border-b-2', 'border-blue-900');
+                    tab.classList.add('text-slate-600', 'border-transparent');
+                }
+            });
+
+            contents.forEach(content => {
+                if (content.id === tabId) {
+                    content.classList.remove('hidden');
+                } else {
+                    content.classList.add('hidden');
+                }
+            });
+        }
+
+        tabs.forEach(tab => {
+            tab.addEventListener('click', () => {
+                switchTab(tab.dataset.tab);
+            });
+        });
+
+        //members
         let membersToAdd = [];
-
         const addMemberToTab = (user) => {
             membersToAdd.push(user);
-
             const hiddenInput = document.querySelector('input[name="to_add"]');
             hiddenInput.value = JSON.stringify(membersToAdd);
-
             const container = document.querySelector('.space-y-3');
             const div = document.createElement('div');
             div.className = 'flex items-center justify-between p-4 bg-white border border-slate-200 rounded-lg hover:border-blue-900 transition-colors';
 
             const memberHTML = `
-                <div class="space-y-1">
-                    <div class="font-medium text-slate-800 flex items-center">
-                        ${user.fname} ${user.name}
-                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 text-slate-400" viewBox="0 0 16 16" fill="currentColor">
-                            <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
-                        </svg>
-                    </div>
-                    <div class="text-sm text-slate-500">${user.email}</div>
+            <div class="space-y-1">
+                <div class="font-medium text-slate-800 flex items-center">
+                    ${user.fname} ${user.name}
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2 text-slate-400" viewBox="0 0 16 16" fill="currentColor">
+                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                    </svg>
                 </div>
-                <button type="button" class="remove-member px-4 py-2 text-blue-900 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors font-medium" data-index="${membersToAdd.length - 1}">
-                    Retirer
-                </button>
-            `;
-
+                <div class="text-sm text-slate-500">${user.email}</div>
+            </div>
+            <button type="button" class="remove-member px-4 py-2 text-blue-900 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors font-medium" data-index="${membersToAdd.length - 1}">
+                Retirer
+            </button>
+        `;
             div.innerHTML = memberHTML;
             container.appendChild(div);
 
@@ -110,7 +262,6 @@
 
             updateSubmitButton();
         };
-
         const updateSubmitButton = () => {
             const submitBtn = document.getElementById('addMemberBtn');
 
@@ -118,45 +269,39 @@
                 submitBtn.disabled = false;
                 submitBtn.className = 'w-full px-4 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium flex items-center justify-center cursor-pointer';
                 submitBtn.innerHTML = `
-                    Valider les ajouts
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2"/>
-                    </svg>
-                `;
+                Valider les ajouts
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2"/>
+                </svg>
+            `;
             } else {
                 submitBtn.disabled = true;
                 submitBtn.className = 'w-full px-4 py-3 bg-slate-200 text-slate-500 rounded-lg font-medium flex items-center justify-center cursor-not-allowed';
                 submitBtn.innerHTML = `
-                    Aucun nouveau membre
-                    <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="currentColor" viewBox="0 0 16 16">
-                        <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
-                    </svg>
-                `;
+                Aucun nouveau membre
+                <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="currentColor" viewBox="0 0 16 16">
+                    <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
+                </svg>
+            `;
             }
         };
-
         const addBtn = document.getElementById('addBtn');
         const inputs = document.querySelectorAll('form input:not([type="hidden"])');
-
         addBtn.addEventListener('click', () => {
             const allFilled = Array.from(inputs).every(input => input.value.trim() !== '');
-
             if (allFilled) {
                 const newMember = {
                     fname: document.getElementById('fname').value.trim(),
                     name: document.getElementById('name').value.trim(),
                     email: document.getElementById('email').value.trim()
                 };
-
                 addMemberToTab(newMember);
-
-                // Réinitialiser les champs
                 inputs.forEach(input => {
                     input.value = '';
                 });
             }
         });
-
         updateSubmitButton();
-    </script>
+    });
+</script>
 {% endblock %}

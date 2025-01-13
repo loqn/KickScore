@@ -27,3 +27,12 @@ services:
     App\Security\Authenticator:
         class: App\Security\Authenticator
         public: true
+
+    app.security_listener:
+        class: App\EventListener\SecurityListener
+        arguments:
+            - '@router'
+            - '@security.token_storage'
+            - '@security.helper'
+        tags:
+            - { name: kernel.event_listener, event: kernel.exception, priority: 100 }
