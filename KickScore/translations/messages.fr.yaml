@@ -147,18 +147,6 @@ user:
             organizer_role: "Rôle Organisateur"
             save: "Enregistrer les modifications"
 
-form:
-    firstname:
-        not_blank: 'Veuillez insérer votre prénom.'
-        min_length: 'Votre prénom doit être de {{ limit }} caractères minimum.'
-        placeholder: 'Insérer votre prénom...'
-    lastname:
-        not_blank: 'Veuillez insérer votre nom de famille.'
-        min_length: 'Votre nom de famille doit être de {{ limit }} caractères minimum.'
-        placeholder: 'Insérer votre nom de famille...'
-    password:
-        not_blank: 'Veuillez insérer un mot de passe.'
-        min_length: 'Votre mot de passe doit être de {{ limit }} caractères minimum.'
 
 
 root:

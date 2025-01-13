@@ -150,23 +150,7 @@ user_list:
         edit: "Edit"
         impersonate: "Impersonate"
     no_users: "No users found."
-championship_list:
-    title: "Championships List"
-    subtitle: "Manage championships and their teams"
-    new_championship: "New Championship"
-    teams_count: "%count% teams"
-    team:
-        manage: "Manage Team"
-        members_count: "%count% members"
-        table:
-            name: "Name"
-            firstname: "First Name"
-            email: "Email"
-            role: "Role"
-            member: "Member"
-        no_members: "No members in this team."
-    no_teams: "No teams in this championship."
-    no_championships: "No championships found."
+
 user:
     profile:
         title: "User Profile"
