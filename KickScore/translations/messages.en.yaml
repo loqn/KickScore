@@ -17,11 +17,29 @@ deleteteam: "Delete the team"
 user_label: 'User'
 organizer_label: 'Organizer'
 modifychampionship: 'Modify the championship'
+export: 'Export'
+import: 'Import'
+ranking: 'Ranking'
 championship_list:
     title: "Championships List"
+    members : "members"
+    member: "member"
     subtitle: "Manage championships and their teams"
     new_championship: "New Championship"
-    
+    new_field: "New field"
+    teams_count: "%count% teams"
+    team:
+        manage: "Manage team"
+        members_count: "%count% members"
+        table:
+            name: "Last name"
+            firstname: "First name"
+            email: "Mail"
+            role: "Role"
+            member: "Member"
+        no_members: "No members in this team."
+    no_teams: "No teams in this championship."
+    no_championships: "No championships found."
 modifyaccount: "Modify the account information"
 modifyuser: "Modify the user"
 modifyinfo: 'Modification of the championship information'
@@ -64,6 +82,7 @@ addmember: 'Add a member'
 add: 'Add'
 nonewmem: 'No new member'
 actionimpossible: 'Action impossible'
+edit: 'Edit'
 nav:
     from: 'From'
     to: 'To'
@@ -85,6 +104,9 @@ nav:
     newmatchandchampionship: 'New match or championship'
     profile: 'Profile'
     admin: 'Administration'
+    manage_users: 'Manage users'
+    manage_championships: 'Manage championships'
+    manage_teams: 'Manage teams'
     managechampionship: 'Manage your championships'
     withsimplicity: 'with simplicity'
     explainkickscore: 'KickScore helps you organize your RoboCup tournaments with modern and intuitive tools.'
@@ -177,6 +199,7 @@ form:
         not_blank: 'Please enter a password.'
         min_length: 'Your password must be at least {{ limit }} characters long.'
 user_list:
+    search: "Search..."
     title: "Users List"
     subtitle: "Manage platform users"
     table:
@@ -191,7 +214,7 @@ user_list:
         edit: "Edit"
         impersonate: "Impersonate"
     no_users: "No users found."
-
+    manage_users: "Manage users"
 user:
     profile:
         title: "User Profile"
@@ -286,3 +309,12 @@ manage: "Manage"
 championships: "Championships"
 generatematch: "Generate a match"
 noteamfound: "No team found"
+
+page_title:
+    home: "Home"
+    login: "Log-in"
+    register: "Register"
+    match: "Competitions list"
+    control_panel: "Administration"
+    not_found: "Page not found"
+    edit_championship: "Edit Championship"

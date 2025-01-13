@@ -24,7 +24,7 @@ validemodify: 'Enregistrer les modifications'
 newchampion: "d'un nouveau championnat"
 classiccreation: 'Création classique'
 generatetournament: 'Générer un tournoi'
-generatematch: 'Générer un match'
+generatematch: 'Générer des matchs'
 tournamentname: 'Nom du tournoi'
 tournamentoptions: 'Options du tournoi'
 teamlist: 'Liste des équipes'
@@ -60,8 +60,7 @@ addmember: 'Ajouter un membre'
 add: 'Ajouter'
 nonewmem: 'Aucun nouveau membre'
 actionimpossible: 'Action impossible'
-
-
+edit: 'Modifier'
 nav:
     from: 'De'
     to: 'À'
@@ -85,6 +84,9 @@ nav:
     register: "S'inscrire"
     profile: 'Profil'
     admin: 'Administration'
+    manage_user: 'Gestion des utilisateurs'
+    manage_championship: 'Gestion des championnats'
+    manage_team: 'Gestion des équipes'
     managechampionship: 'Gérer vos championnats'
     withsimplicity: 'avec simplicité'
     explainkickscore: "KickScore vous accompagne dans l'organisation de vos tournois de RoboCup avec des outils modernes et intuitifs."
@@ -129,7 +131,7 @@ nav:
     startdate: "Date de début"
     enddate: "Date de fin"
 user_list:
-    search: "Rechercher un utilisateur"
+    search: "Rechercher..."
     title: "Liste des utilisateurs"
     subtitle: "Gérez les utilisateurs de la plateforme"
     table:
@@ -146,8 +148,11 @@ user_list:
     no_users: "Aucun utilisateur n'a été trouvé."
 championship_list:
     title: "Liste des championnats"
+    members: "membres"
+    member: "membre"
     subtitle: "Gérez les championnats et leurs équipes"
     new_championship: "Nouveau championnat"
+    new_field: "Nouveau terrain"
     teams_count: "%count% équipes"
     team:
         manage: "Gérer l'équipe"
@@ -300,3 +305,13 @@ manage: "Gérer"
 users: "Utilisateurs"
 championships: "Championnats"
 noteamfound: "Aucune équipe n'a été trouvée."
+
+page_title:
+    home: "Accueil"
+    login: "Connexion"
+    register: "Inscription"
+    profile: "Profil"
+    match: "Listes des compétitions"
+    control_panel: "Gestion"
+    not_found: "Page non trouvée"
+    edit_championship: "Modifier le championnat"
