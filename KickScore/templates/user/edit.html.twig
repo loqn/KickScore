@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ 'user.edit.title'|trans }} - KickScore{% endblock %}
+{% block title %}Modifier l'utilisateur - KickScore{% endblock %}
 
 {% block body %}
     <div class="min-h-screen md:h-[calc(100vh-2rem)]">
@@ -28,7 +28,7 @@
                 <div class="bg-white rounded-lg shadow-sm border border-slate-200">
                     <div class="p-4 md:p-6">
                         <div class="max-w-2xl mx-auto">
-                            <form action="{{ path('app_user_edit', {'id': user.id}) }}" method="post" class="space-y-4 md:space-y-6">
+                            <form id="edit-form" action="{{ path('app_user_edit', {'id': user.id}) }}" method="post" class="space-y-4 md:space-y-6">
                                 <input type="hidden" name="token" value="{{ csrf_token('edit-user') }}">
 
                                 <div class="grid grid-cols-1 gap-4 md:gap-6 sm:grid-cols-2">
@@ -110,21 +110,25 @@
                                         </label>
                                     </div>
                                 {% endif %}
-
-                                <div class="p-4 md:p-6 bg-slate-50 rounded-lg flex flex-col md:flex-row items-center justify-between gap-4">
-                                    <button type="submit"
-                                            class="w-full md:w-auto px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm inline-flex items-center justify-center">
-                                        <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
-                                        </svg>
-                                        Enregistrer les modifications
-                                    </button>
-
-                                    {% if is_granted('ROLE_ORGANIZER') %}
-                                        {{ include('user/_delete_form.html.twig') }}
-                                    {% endif %}
-                                </div>
                             </form>
+                        </div>
+                    </div>
+
+                    <div class="p-4 md:p-6 bg-slate-50 border-t border-slate-200">
+                        <div class="max-w-2xl mx-auto flex flex-col md:flex-row items-center justify-between gap-4">
+                            <button type="submit" form="edit-form"
+                                    class="w-full md:w-auto order-2 md:order-1 px-4 py-2 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm inline-flex items-center justify-center">
+                                <svg class="w-4 h-4 mr-2" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/>
+                                </svg>
+                                Enregistrer les modifications
+                            </button>
+
+                            {% if is_granted('ROLE_ORGANIZER') %}
+                                <div class="order-1 md:order-2">
+                                    {{ include('user/_delete_form.html.twig') }}
+                                </div>
+                            {% endif %}
                         </div>
                     </div>
                 </div>

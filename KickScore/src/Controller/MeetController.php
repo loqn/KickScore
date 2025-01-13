@@ -6,6 +6,7 @@ use App\Entity\Status;
 use App\Entity\TeamMatchStatus;
 use App\Entity\Championship;
 use App\Entity\Team;
+use App\Entity\TeamResults;
 use App\Entity\Timeslot;
 use App\Entity\Versus;
 use Doctrine\ORM\EntityManagerInterface;
@@ -302,10 +303,22 @@ class MeetController extends AbstractController
                 case 'DONE':
                     $greenScore = $request->request->get('greenScore');
                     $blueScore = $request->request->get('blueScore');
-                    if (!$greenScore || !$blueScore) {
+
+                    if ($currentDateTime < $match->getTimeslot()->getEnd()) {
+                        $this->addFlash('error', 'Impossible de terminer un match avant la fin du créneau horaire.');
+                        return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
+                    }
+
+                    if ((!$greenScore && $greenScore != 0) || (!$blueScore && $blueScore != 0)) {
                         $this->addFlash('error', 'Impossible de terminer un match sans score.');
                         return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
                     }
+
+                    if($greenScore < 0 || $blueScore < 0){
+                        $this->addFlash('error', 'Impossible de mettre un score négatif.');
+                        return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
+                    }
+
                     $match->setGreenScore($greenScore);
                     $match->setBlueScore($blueScore);
 
@@ -324,18 +337,6 @@ class MeetController extends AbstractController
         return $this->redirectToRoute('app_match_list');
     }
 
-    private function revertTeamForfeit(Versus $match, Team $team, EntityManagerInterface $entityManager): void
-    {
-        $teamResults = $team->getTeamResults()->last();
-
-        $teamResults->setLosses($teamResults->getLosses() - 1);
-        $teamResults->setPoints($teamResults->getPoints() + 1);
-
-        if ($match->getTimeslot()->getStart() > new \DateTime()) {
-            $teamResults->setGamesPlayed($teamResults->getGamesPlayed() - 1);
-        }
-    }
-
     private function handleTeamForfeit(Versus $match, Team $forfeitTeam, Team $otherTeam, EntityManagerInterface $entityManager): void
     {
         $teamMatchStatus = $entityManager->getRepository(TeamMatchStatus::class)->findOneBy([
@@ -343,17 +344,59 @@ class MeetController extends AbstractController
             'versus' => $match,
         ]);
 
+        $forfeitTeamResults = $entityManager->getRepository(TeamResults::class)->findOneBy([
+            'team' => $forfeitTeam,
+            'championship' => $match->getChampionship()
+        ]);
+
+        $otherTeamResults = $entityManager->getRepository(TeamResults::class)->findOneBy([
+            'team' => $otherTeam,
+            'championship' => $match->getChampionship()
+        ]);
+
+        $wasAlreadyForfeited = $teamMatchStatus && $teamMatchStatus->getStatus()->getName() === 'FORFEITED';
+
         if (!$teamMatchStatus) {
             $teamMatchStatus = new TeamMatchStatus();
             $teamMatchStatus->setTeam($forfeitTeam)
-                ->setVersus($match)
-                ->setStatus($entityManager->getRepository(Status::class)->findOneBy(['name' => 'FORFEITED']));
+                ->setVersus($match);
+        }
 
+        $teamMatchStatus->setStatus($entityManager->getRepository(Status::class)->findOneBy(['name' => 'FORFEITED']));
+
+        if (!$teamMatchStatus->getId()) {
             $entityManager->persist($teamMatchStatus);
+        }
 
-            $forfeitTeamResults = $forfeitTeam->getTeamResults()->last();
-            $otherTeamResults = $otherTeam->getTeamResults()->last();
+        if ($match->getGlobalStatus()->getName() === 'DONE') {
+            $greenScore = $match->getGreenScore();
+            $blueScore = $match->getBlueScore();
 
+            if ($match->getGreenTeam() === $forfeitTeam) {
+                if ($greenScore > $blueScore) {
+                    $forfeitTeamResults->setWins($forfeitTeamResults->getWins() - 1);
+                    $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 3);
+                } elseif ($blueScore > $greenScore) {
+                    $forfeitTeamResults->setLosses($forfeitTeamResults->getLosses() - 1);
+                } else {
+                    $forfeitTeamResults->setDraws($forfeitTeamResults->getDraws() - 1);
+                    $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 1);
+                }
+            }
+            else if ($match->getBlueTeam() === $forfeitTeam) {
+                if ($blueScore > $greenScore) {
+                    $forfeitTeamResults->setWins($forfeitTeamResults->getWins() - 1);
+                    $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 3);
+                } elseif ($greenScore > $blueScore) {
+                    $forfeitTeamResults->setLosses($forfeitTeamResults->getLosses() - 1);
+                } else {
+                    $forfeitTeamResults->setDraws($forfeitTeamResults->getDraws() - 1);
+                    $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 1);
+                }
+            }
+        }
+
+        if (!$wasAlreadyForfeited) {
             if ($match->getTimeslot()->getStart() > new \DateTime()) {
                 $forfeitTeamResults->setGamesPlayed($forfeitTeamResults->getGamesPlayed() + 1);
                 $otherTeamResults->setGamesPlayed($otherTeamResults->getGamesPlayed() + 1);
@@ -361,6 +404,27 @@ class MeetController extends AbstractController
 
             $forfeitTeamResults->setLosses($forfeitTeamResults->getLosses() + 1);
             $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 1);
+        }
+
+        $match->setGreenScore(null);
+        $match->setBlueScore(null);
+    }
+
+    private function revertTeamForfeit(Versus $match, Team $team, EntityManagerInterface $entityManager): void
+    {
+        $teamResults = $team->getTeamResults()->last();
+        $teamMatchStatus = $entityManager->getRepository(TeamMatchStatus::class)->findOneBy([
+            'team' => $team,
+            'versus' => $match,
+        ]);
+
+        if ($teamMatchStatus && $teamMatchStatus->getStatus()->getName() === 'FORFEITED') {
+            if ($match->getTimeslot()->getStart() > new \DateTime()) {
+                $teamResults->setGamesPlayed($teamResults->getGamesPlayed() - 1);
+            }
+
+            $teamResults->setLosses($teamResults->getLosses() - 1);
+            $teamResults->setPoints($teamResults->getPoints() + 1);
         }
     }
 
@@ -373,8 +437,19 @@ class MeetController extends AbstractController
         $greenScore = $match->getGreenScore();
         $blueScore = $match->getBlueScore();
 
-        $greenTeamResults = $greenTeam->getTeamResults()->last();
-        $blueTeamResults = $blueTeam->getTeamResults()->last();
+        $greenTeamResults = $entityManager->getRepository(TeamResults::class)->findOneBy([
+            'team' => $greenTeam,
+            'championship' => $match->getChampionship()
+        ]);
+
+        $blueTeamResults = $entityManager->getRepository(TeamResults::class)->findOneBy([
+            'team' => $blueTeam,
+            'championship' => $match->getChampionship()
+        ]);
+
+        if (!$greenTeamResults || !$blueTeamResults) {
+            throw new \RuntimeException('Impossible de trouver les résultats des équipes pour ce championnat.');
+        }
 
         $greenTeamResults->setGamesPlayed($greenTeamResults->getGamesPlayed() + 1);
         $blueTeamResults->setGamesPlayed($blueTeamResults->getGamesPlayed() + 1);

@@ -89,7 +89,24 @@
                  class="bg-white rounded-lg shadow-sm border border-slate-200 {% if not loop.first %}hidden{% endif %}">
                 <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 px-4 sm:px-6 py-3 sm:py-4 border-b border-slate-200">
                     <h2 class="text-lg sm:text-xl font-semibold text-slate-800">{{ championship.name }}</h2>
-
+                    <div class="flex flex-col sm:flex-row sm:items-center gap-4">
+                        <div class="flex gap-2">
+                            <a href="{{ path('export_orga', {'id': championship.id}) }}"
+                               class="inline-flex items-center px-3 py-1.5 bg-slate-600 text-white text-xs sm:text-sm rounded-lg hover:bg-slate-700 transition-colors font-medium shadow-sm">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 16v1a3 3 0 003 3h10a3 3 0 003-3v-1m-4-4l-4 4m0 0l-4-4m4 4V4"/>
+                                </svg>
+                                Exporter
+                            </a>
+                            <a href="{{ path('app_ranking', {'id': championship.id}) }}"
+                               class="inline-flex items-center px-3 py-1.5 bg-blue-900 text-white text-xs sm:text-sm rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/>
+                                </svg>
+                                Classement
+                            </a>
+                        </div>
+                    </div>
                     {% if app.user and app.user.member and app.user.member.team %}
                         {% if championship in app.user.member.team.championships %}
                             <form action="{{ path('leave_championship', {'id': championship.id}) }}" method="POST">

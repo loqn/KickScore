@@ -1,5 +1,5 @@
 <nav class="fixed top-0 left-0 w-72 bg-slate-50 shadow-lg h-screen transform -translate-x-full transition-transform duration-300 ease-in-out overflow-y-auto z-[70]">
-    <div class="p-4">
+    <div class="p-4 flex flex-col h-full">
         <div class="mb-8">
             <h1 class="text-2xl font-semibold text-slate-800">
                 <a href="{{ path('app_root') }}" class=" flex items-center transition-colors">
@@ -8,14 +8,8 @@
                 </a>
             </h1>
         </div>
-        <select id="languageSelect" 
-            onchange="changeLanguage(this.value)"
-            class="px-4 py-2 bg-slate-100 text-slate-600 rounded-md m-4">
-        <option value="fr" {% if app.request.locale == 'fr' %}selected{% endif %}>Français</option>
-        <option value="en" {% if app.request.locale == 'en' %}selected{% endif %}>English</option>
-    </select>
 
-        <div class="space-y-2">
+        <div class="space-y-2 flex-grow">
             {% if app.user %}
                 <div class="px-4 py-2 text-slate-600 border-b border-slate-200 mb-4 flex items-center gap-2">
                     <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
@@ -87,19 +81,6 @@
                     </a>
                 {% endif %}
 
-                <div class="pt-4 mt-4 border-t border-slate-200">
-                    <a href="{{ path('app_logout') }}"
-                       class="px-4 py-2 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-md transition-colors w-full text-left flex items-center gap-2">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
-                             class="bi bi-box-arrow-left flex-shrink-0" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd"
-                                  d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
-                            <path fill-rule="evenodd"
-                                  d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
-                        </svg>
-                        <span>{{ 'nav.logout'|trans }}</span>
-                    </a>
-                </div>
             {% else %}
                 <a href="{{ path('app_ranking') }}"
                    class="px-4 py-2 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-md transition-colors w-full text-left flex items-center gap-2">
@@ -142,8 +123,39 @@
                 </a>
             {% endif %}
         </div>
+        <div class="mt-auto pt-4 border-t border-slate-200">
+            {% if app.user %}
+                <a href="{{ path('app_logout') }}"
+                   class="px-4 py-2 bg-slate-100 text-slate-600 hover:bg-slate-200 rounded-md transition-colors w-full text-left flex items-center gap-2 mb-4">
+                    <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                         class="bi bi-box-arrow-left flex-shrink-0" viewBox="0 0 16 16">
+                        <path fill-rule="evenodd"
+                              d="M6 12.5a.5.5 0 0 0 .5.5h8a.5.5 0 0 0 .5-.5v-9a.5.5 0 0 0-.5-.5h-8a.5.5 0 0 0-.5.5v2a.5.5 0 0 1-1 0v-2A1.5 1.5 0 0 1 6.5 2h8A1.5 1.5 0 0 1 16 3.5v9a1.5 1.5 0 0 1-1.5 1.5h-8A1.5 1.5 0 0 1 5 12.5v-2a.5.5 0 0 1 1 0z"/>
+                        <path fill-rule="evenodd"
+                              d="M.146 8.354a.5.5 0 0 1 0-.708l3-3a.5.5 0 1 1 .708.708L1.707 7.5H10.5a.5.5 0 0 1 0 1H1.707l2.147 2.146a.5.5 0 0 1-.708.708z"/>
+                    </svg>
+                    <span>{{ 'nav.logout'|trans }}</span>
+                </a>
+            {% endif %}
+
+            <div class="flex items-center gap-2 px-4">
+                <button onclick="changeLanguage('fr')"
+                        class="flex items-center gap-2 px-3 py-2 rounded-md {{ app.request.locale == 'fr' ? 'bg-slate-200' : 'hover:bg-slate-100' }} transition-colors">
+                    <img src="https://flagcdn.com/20x15/fr.png" alt="FR" class="w-5">
+                    <span>FR</span>
+                </button>
+                <button onclick="changeLanguage('en')"
+                        class="flex items-center gap-2 px-3 py-2 rounded-md {{ app.request.locale == 'en' ? 'bg-slate-200' : 'hover:bg-slate-100' }} transition-colors">
+                    <img src="https://flagcdn.com/20x15/gb.png" alt="EN" class="w-5">
+                    <span>EN</span>
+                </button>
+            </div>
+        </div>
     </div>
 </nav>
+    </div>
+</nav>
+
 
 
 <div onclick="toggleMenu()" class="fixed inset-0 bg-black bg-opacity-50 z-20 hidden transition-opacity duration-300" id="overlay">
@@ -178,23 +190,21 @@
             body.classList.add('overflow-hidden');
             {{ is_granted('IS_IMPERSONATOR') ?
             'menuButton.classList.remove("mt-4");' :
-             '' }}
+            '' }}
             menuButton.style.left = '14rem';
             menuButton.classList.remove('shadow-lg');
         }
     }
-        function changeLanguage(lang) {
-        const currentPath = window.location.pathname;
-        let newPath = currentPath;
-        
-        // Remplacer fr/ ou en/ dans l'URL
+
+    function changeLanguage(lang) {
+        let newPath = window.location.pathname;
+
         newPath = newPath.replace(/^\/(?:fr|en)\//, '/' + lang + '/');
-        
-        // Si pas de langue dans l'URL, ajouter la langue au début
+
         if (!newPath.match(/^\/(?:fr|en)\//)) {
             newPath = '/' + lang + newPath;
         }
-        
+
         window.location.href = newPath;
     }
 </script>

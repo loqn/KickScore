@@ -230,6 +230,10 @@
                         </h2>
 
                         {% if is_granted('ROLE_ORGANIZER') %}
+                            <a href="{{ path('app_field') }}"
+                               class="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm text-center">
+                                Nouveau terrain
+                            </a>
                             <a href="{{ path('app_championship') }}"
                                class="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm text-center">
                                 Nouveau championnat
