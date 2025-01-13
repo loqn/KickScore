@@ -75,3 +75,11 @@ INSERT INTO T_TEAMRESULTS_TRS (TRS_ID, TRS_WIN, TRS_DRAW, TRS_LOSSES, TRS_POINTS
 -- résultats championnat Automne
 (11, 0, 0, 0, 0, 0, 1, 3),
 (12, 0, 0, 0, 0, 0, 3, 3);
+
+-- status des matchs
+INSERT INTO T_STATUS_STS (STS_NAME) VALUES
+('CANCELED'),
+('FORFEITED'),
+('DONE'),
+('COMING'),
+('IN_PROGRESS');
