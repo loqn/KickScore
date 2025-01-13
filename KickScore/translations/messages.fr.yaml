@@ -1,19 +1,33 @@
+on: 'sur'
+gp: 'MJ'
+generateteam: 'Générer une équipe'
+roleorganizer: 'Rôle Organisateur'
+newpasseword: 'Nouveau mot de passe'
+stayblank: "Laissez vide pour conserver le mot de passe actuel"
+confirmmdp: 'Confirmer le mot de passe'
+cancel: 'Annuler'
 modifychampionship: 'Modifier le championnat'
+modifyaccount: "Modifier les informations du compte"
+modifyuser: "Modifier l'utilisateur"
 modifyinfo: 'Modification des informations du championnat'
 deletefield: 'Terrain à supprimer'
+deleteteam: "Supprimer l'équipe"
 selectedfield: 'Terrain sélectionné'
 validemodify: 'Enregistrer les modifications'
 newchampion: "d'un nouveau championnat"
-classicreation: 'Création classique'
+classiccreation: 'Création classique'
 generatetournament: 'Générer un tournoi'
+generatematch: 'Générer un match'
 tournamentname: 'Nom du tournoi'
 tournamentoptions: 'Options du tournoi'
+teamlist: 'Liste des équipes'
 3match: 'Match pour la 3ème place'
 simplifymanage: "Gestion simplifiée"
 explain: "Créez et gérez vos tournois en quelques clics. Interface intuitive pour tous les organisateurs."
 followmatch: "Suivi des matchs"
 explainmatch: "Suivez les scores et les classements de vos équipes. Restez informé de l'avancement des matchs."
 manageteam: "Gestion des équipes"
+manageteamactive: "Gérez toutes les équipes inscrites"
 explainmanageteam: "Créez et gérez facilement vos équipes. Suivez les performances et statistiques de chaque équipe."
 organizedmatch: "Match organisés"
 tournament: 'Tournoi'
@@ -21,7 +35,24 @@ activeteams: 'Équipes actives'
 useractive: 'Utilisateur actif'
 matchprogress: "Matchs à venir aujourd'hui"
 nomatch: "Aucun match en cours ou à venir aujourd'hui"
+nomember: "Aucun membre dans cette équipe"
 seematch: "Voir les matchs"
+endmatch: "Fin des matchs aujourd'hui"
+end: "Terminé"
+teamboard: "Tableau de bord des équipes"
+member: "Membre"
+organizeby: "Organisé par"
+team_label: 'Équipes'
+leavechamp: 'Quitter le championnat'
+wins: 'Victoires'
+looses: 'Défaites'
+draws: 'Matchs nuls'
+goals: 'Buts'
+noinscription: "Cette équipe n'est inscrite à aucun championnat pour le moment."
+addmember: 'Ajouter un membre'
+add: 'Ajouter'
+nonewmem: 'Aucun nouveau membre'
+actionimpossible: 'Action impossible'
 
 nav:
     from: 'De'
@@ -90,6 +121,7 @@ nav:
     startdate: "Date de début"
     enddate: "Date de fin"
 user_list:
+    search: "Rechercher un utilisateur"
     title: "Liste des utilisateurs"
     subtitle: "Gérez les utilisateurs de la plateforme"
     table:
@@ -255,3 +287,8 @@ team_members: "Membres de l'équipe"
 concerned_member: "Membre concerné"
 edit_user: "Modifier l'utilisateur"
 manage_team: "Gérer l'équipe"
+manageuserchamp: "Gestion des utilisateurs et championnats"
+manage: "Gérer"
+users: "Utilisateurs"
+championships: "Championnats"
+noteamfound: "Aucune équipe n'a été trouvée."

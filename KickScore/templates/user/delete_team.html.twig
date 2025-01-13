@@ -78,11 +78,11 @@
                         <div class="flex items-center space-x-3">
                             <a href="{{ path('app_user_edit', {'id': user.id}) }}"
                                class="px-4 py-2 bg-red-800 text-white rounded-lg hover:bg-red-900 transition-colors font-medium shadow-sm">
-                                Supprimer l'équipe
+                                {{'deleteteam' | trans}}
                             </a>
                             <a href="{{ path('app_team_edit', {'id': user.member.team.id}) }}"
                                class="px-4 py-2 bg-slate-100 text-slate-700 rounded-lg hover:bg-slate-200 transition-colors font-medium">
-                                Annuler
+                                {{'cancel' | trans}}
                             </a>
                         </div>
                     </div>
