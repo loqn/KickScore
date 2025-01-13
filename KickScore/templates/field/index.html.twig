@@ -5,10 +5,10 @@
     <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
         <div class="text-center">
             <h2 class="mt-6 text-3xl font-bold text-gray-900">
-                Créer un nouveau terrain
+                {{'createnewfield' | trans}}
             </h2>
             <p class="mt-2 text-sm text-gray-600">
-                Ajoutez un nouveau terrain à un championnat
+                {{'addfieldchamp' | trans}}
             </p>
         </div>
         
@@ -17,7 +17,7 @@
                 <!-- name -->
                 <div>
                     <label for="name" class="block text-sm font-medium text-gray-700">
-                        Nom du terrain
+                        {{'namefield' | trans}}
                     </label>
                     <div class="mt-1">
                         <input 
@@ -28,7 +28,7 @@
                             class="appearance-none block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm placeholder-gray-400 
                                    focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500 sm:text-sm
                                    bg-green-50/30 transition-all duration-200"
-                            placeholder="Saisir le nom du terrain"
+                            placeholder={{'insertfieldname' | trans}}
                         >
                     </div>
                 </div>

@@ -1,5 +1,9 @@
 on: 'on'
 roleorganizer: 'Organizer Role'
+createfield: 'Create a new field'
+addfieldchamp: 'Add a field to the championship'
+namefield: 'Field name'
+isnertfieldname: 'Enter the name of the field'
 generateteam: 'Generate a team'
 gp: 'GP'
 nomember: "No member in this team"
@@ -67,7 +71,7 @@ nav:
     championshipinlive: 'Championship in progress'
     startnow: 'Start now'
     firstname: 'First name'
-    sourcechampionship: 'source championship'
+    sourcechampionship: 'Source championship'
     newchampion: "of a new championship"
     home: 'Home'
     ranking: 'Ranking'

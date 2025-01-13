@@ -1,5 +1,9 @@
 on: 'sur'
 gp: 'MJ'
+createfield: 'Créer un nouveau terrain'
+addfieldchamp: 'Ajouter un terrain au championnat'
+namefield: 'Nom du terrain'
+insertfieldname: 'Entrez le nom du terrain'
 manageteam_label: "Gérer l'équipe"
 generateteam: 'Générer une équipe'
 roleorganizer: 'Rôle Organisateur'
@@ -64,7 +68,7 @@ nav:
     matchinlive: 'Match en cours'
     championshipinlive: 'Championnat en cours'
     startnow: 'Commencez maintenant'
-    sourcechampionship: 'championnat source '
+    sourcechampionship: 'Championnat source '
     newchampion: "d'un nouveau championnat"
     firstname: 'Prénom'
     lastname: 'Nom'
