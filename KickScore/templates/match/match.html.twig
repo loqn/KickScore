@@ -98,6 +98,13 @@
                                 </svg>
                                 Exporter
                             </a>
+                            <a href="{{ path('app_calendar_export_single', {'id': championship.id}) }}"
+                               class="inline-flex items-center px-3 py-1.5 bg-slate-600 text-white text-xs sm:text-sm rounded-lg hover:bg-slate-700 transition-colors font-medium shadow-sm">
+                                <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/>
+                                </svg>
+                                Export iCal
+                            </a>
                             <a href="{{ path('app_ranking', {'id': championship.id}) }}"
                                class="inline-flex items-center px-3 py-1.5 bg-blue-900 text-white text-xs sm:text-sm rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm">
                                 <svg class="w-4 h-4 mr-1.5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
