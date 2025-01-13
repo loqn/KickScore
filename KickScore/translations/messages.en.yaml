@@ -3,13 +3,21 @@ roleorganizer: 'Organizer Role'
 generateteam: 'Generate a team'
 gp: 'GP'
 nomember: "No member in this team"
+manageteam_label: 'Manage team'
 newpasseword: 'New password'
 stayblank: "Leave blank to keep the current password"
 cancel: 'Cancel'
 teamlist: 'Team list'
 confirmmdp: 'Confirm password'
 deleteteam: "Delete the team"
+user_label: 'User'
+organizer_label: 'Organizer'
 modifychampionship: 'Modify the championship'
+championship_list:
+    title: "Championships List"
+    subtitle: "Manage championships and their teams"
+    new_championship: "New Championship"
+    
 modifyaccount: "Modify the account information"
 modifyuser: "Modify the user"
 modifyinfo: 'Modification of the championship information'

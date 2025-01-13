@@ -195,7 +195,7 @@
                             {# current #}
                             {% if currentMatches|length > 0 %}
                                 <div class="grid gap-4">
-                                    <h3 class="text-xl font-semibold text-center text-slate-800">Matchs en cours</h3>
+                                    <h3 class="text-xl font-semibold text-center text-slate-800">{{'nav.matchinlive' | trans}}</h3>
                                     <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
                                         {% for match in currentMatches %}
                                             <div class="bg-white/70 backdrop-blur-sm p-6 rounded-xl shadow-md hover:shadow-lg transition-all duration-300 border border-slate-100">
