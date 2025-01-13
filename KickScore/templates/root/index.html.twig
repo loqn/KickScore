@@ -168,7 +168,7 @@
                         </p>
                     </div>
 
-                    {# matches list #}
+                    {# Matches Display #}
                     {% if currentCompetition.matches|length > 0 %}
                         {# Define status configurations #}
                         {% set statusConfig = {
@@ -234,9 +234,14 @@
                             {% set scheduledMatches = currentCompetition.matches|filter(match => match.globalStatus.name == 'SCHEDULED') %}
                             {% set completedMatches = currentCompetition.matches|filter(match => match.globalStatus.name == 'COMPLETED') %}
 
-                            {% if currentMatches|length == 0 and upcomingMatches|length == 0 and pastMatches|length == 0 %}
+                            {# Display sections #}
+                            {{ _self.matchSection('Matchs en cours', inProgressMatches, statusConfig) }}
+                            {{ _self.matchSection('Matchs à venir', scheduledMatches, statusConfig) }}
+                            {{ _self.matchSection('Matchs terminés', completedMatches, statusConfig) }}
+
+                            {% if inProgressMatches|length == 0 and scheduledMatches|length == 0 and completedMatches|length == 0 %}
                                 <div class="text-center text-slate-600">
-                                    {{'nomatch' | trans}}
+                                    Aucun match aujourd'hui
                                 </div>
                             {% endif %}
                         </div>
