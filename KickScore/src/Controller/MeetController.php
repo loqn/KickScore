@@ -516,25 +516,31 @@ class MeetController extends AbstractController
 
         $event .= sprintf("UID:%s@yourorganization.com\r\n", $match->getId());
 
-        $startDate = $match->getDate()->format('Ymd\THis\Z');
-        //$endDate = $championship->getEndDate()->format('Ymd\THis\Z');
+        //get the start time with the day and with the time slot beginning
+        $startDate = $match->getTimeslot()->getStart()->format('Ymd\THis\Z');
+        
+        $endDate = $match->getTimeslot()->getEnd()->format('Ymd\THis\Z');
+        
 
         $event .= sprintf("DTSTAMP:%s\r\n", (new DateTime())->format('Ymd\THis\Z'));
+        //add the start date with the time beginning
         $event .= sprintf("DTSTART:%s\r\n", $startDate);
-        //$event .= sprintf("DTEND:%s\r\n", $endDate);
+
+
+        $event .= sprintf("DTEND:%s\r\n", $endDate);
         $event .= sprintf("SUMMARY:%s\r\n", $this->escapeString($match->getChampionship()->getName()));
 
         $teams = [];
         foreach ($match->getTeams() as $team) {
             $teams[] = $team->getName();
         }
-
-        if ($match->getChampionship()->getDescription()) {
-            $event .= sprint("DESCRIPTION:%s\r\n", $this->escapeString($match->getChampionship()->getDescription()));
+        if ($match->getChampionship()->getName()) {
+            //add description without returning to the line for better readability
+            
+            $event .= sprintf("DESCRIPTION:%s", $this->escapeString($match->getChampionship()->getName()));
             if (!empty($teams)) {
-                $event .= sprintf("Participating teams: %s\r\n",
-                    $this->escapeString(implode(', ', $teams))
-                );
+                // Add the participating teams to the description
+                $event .= sprintf(" Teams: %s\r\n", implode(' vs ', $teams));
             }
         }
         if ($match->getChampionship()->getOrganizer()) {
