@@ -9,6 +9,7 @@ use App\Entity\TeamResults;
 use App\Entity\User;
 use App\Entity\Versus;
 use App\Repository\TeamRepository;
+use Symfony\Contracts\Translation\TranslatorInterface;
 use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
@@ -21,12 +22,13 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class TeamController extends AbstractController
 {
     #[Route('/', name: 'app_team')]
-    public function index(EntityManagerInterface $entityManager, Request $request): Response
+    public function index(EntityManagerInterface $entityManager, Request $request, TranslatorInterface $translator): Response
     {
         $players = $entityManager->getRepository(User::class)->findAll();
 
         if (!$this->getUser()) {
-            $this->addFlash('error', 'Vous devez être connecté pour créer une équipe.');
+            $this->addFlash('error',
+            $translator->trans('flash.mustconnected'));
             return $this->redirectToRoute('app_login');
         }
 
@@ -36,7 +38,7 @@ class TeamController extends AbstractController
         }
 
         if ($this->isGranted('ROLE_ORGANIZER')) {
-            $this->addFlash('error', 'Les organisateurs ne peuvent pas créer d\'équipe.');
+            $this->addFlash('error', $translator->trans('flash.organizer_no_team'));
             return $this->redirectToRoute('app_error');
         }
 
@@ -47,30 +49,30 @@ class TeamController extends AbstractController
     }
 
     #[Route('/create', name: 'app_team_create', methods: ['POST', 'GET'])]
-    public function create(Request $request, EntityManagerInterface $entityManager): Response
+    public function create(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator): Response
     {
         if ($request->getMethod() !== 'POST') {
-            $this->addFlash('error', 'Erreur : Vous ne pouvez pas accéder à cette page.');
+            $this->addFlash('error', $translator->trans('flash.error.invalid_access'));
             return $this->redirectToRoute('app_error');
         }
 
         if (!$this->getUser()) {
-            $this->addFlash('error', 'Vous devez être connecté pour créer une équipe.');
+            $this->addFlash('error', $translator->trans('flash.error.must_login_team'));
             return $this->redirectToRoute('app_login');
         }
 
         if($this->getUser()->getMember()) {
-            $this->addFlash('error', 'Vous êtes déjà membre d\'une équipe.');
+            $this->addFlash('error', $translator->trans('flash.error.already_team_member'));
             return $this->redirectToRoute('app_team_edit', ['id' => $this->getUser()->getMember()->getTeam()->getId()]);
         }
 
         if ($this->isGranted('ROLE_ORGANIZER')) {
-            $this->addFlash('error', 'Les organisateurs ne peuvent pas créer d\'équipe.');
+            $this->addFlash('error', $translator->trans('flash.error.organizer_no_team'));
             return $this->redirectToRoute('app_error');
         }
 
         if ($entityManager->getRepository(Team::class)->findOneBy(['name' => $request->request->get('name')])) {
-            $this->addFlash('error', 'Erreur : une équipe possède déjà ce nom.');
+            $this->addFlash('error', $translator->trans('flash.error.team_name_exists'));
             return $this->redirectToRoute('app_team');
         }
         $name = $request->request->get('name');
@@ -78,7 +80,8 @@ class TeamController extends AbstractController
         $creator_id = $request->request->get('user_id');
         $creator = $entityManager->getRepository(User::class)->find($creator_id);
         if (empty($name)) {
-            $this->addFlash('error', 'Erreur : le nom de l\'équipe ne peut pas être vide.');
+            $this->addFlash('error', 
+            $translator->trans('flash.error.team_name_empty'));
             return $this->redirectToRoute('app_team');
         }
         $team = new Team();
@@ -99,35 +102,36 @@ class TeamController extends AbstractController
 
         $entityManager->persist($team);
         $entityManager->flush();
-        $this->addFlash('success', 'L\'équipe a été créée avec succès.');
+        $this->addFlash('success', 
+        $translator->trans('createteamsucess'));
         return $this->redirectToRoute('app_team_edit', ['id' => $team->getId()]);
     }
 
     #[Route('/edit/add_member', name: 'app_team_add_member', methods: ['POST'])]
-    public function addMember(EntityManagerInterface $entityManager, Request $request, LoggerInterface $logger): Response
+    public function addMember(EntityManagerInterface $entityManager, Request $request, LoggerInterface $logger, TranslatorInterface $translator): Response
     {
         if ($this->isGranted('ROLE_ORGANIZER')) {
             $teamId = $request->request->get('team_id');
             $team = $entityManager->getRepository(Team::class)->find($teamId);
 
             if (!$team) {
-                throw $this->createNotFoundException('L\'équipe renseignée n\'a pas été trouvée');
+                throw $this->createNotFoundException($translator->trans('error.team.not_found'));
             }
             $firstMember = $team->getMembers()->first();
             $teamCreator = $firstMember->getUser();
             if (!$teamCreator) {
-                throw $this->createNotFoundException('Le créateur de l\'équipe n\'a pas été trouvé');
+                throw $this->createNotFoundException($translator->trans('error.team.creator_not_found'));
             }
         } else {
             $user = $this->getUser();
             if (!$user) {
                 $logger->alert('User not logged in');
-                throw $this->createAccessDeniedException('Vous devez être connecté pour ajouter des membres.');
+                throw $this->createAccessDeniedException($translator->trans('error.team.must_login'));
             }
             $team = $user->getMember()->getTeam();
             if (!$team) {
                 $logger->alert('User has no team');
-                throw $this->createAccessDeniedException('Vous ne faites partie d\'aucune équipe.');
+                throw $this->createAccessDeniedException($translator->trans('error.team.no_team'));
             }
         }
 
@@ -165,9 +169,9 @@ class TeamController extends AbstractController
         $entityManager->flush();
 
         if ($addedCount > 0) {
-            $this->addFlash('success',$addedCount === 1 ? 'Le membre a été ajouté avec succès.': $addedCount . ' membres ajoutés avec succès.');
+            $this->addFlash('success',$addedCount === 1 ? $translator->trans('flash.success.member_added_single'): $translator->trans('flash.success.member_added_multiple', ['%count%' => $addedCount]));
         } else {
-            $this->addFlash('info', 'Aucun membre ajouté.');
+            $this->addFlash('info', $translator->trans('flash.info.no_member_added'));
         }
 
         return $this->redirectToRoute('app_team_edit', [
@@ -176,7 +180,7 @@ class TeamController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'app_team_edit')]
-    public function edit(Team $team, EntityManagerInterface $entityManager, Request $request): Response
+    public function edit(Team $team, EntityManagerInterface $entityManager, Request $request,TranslatorInterface $translator): Response
     {
         if (!$this->isGranted('ROLE_ORGANIZER')) {
             $userTeam = $this->getUser()->getMember()?->getTeam();
@@ -212,7 +216,7 @@ class TeamController extends AbstractController
         ]);
     }
 
-    #[Route('/edit/remove_member/{id}', name: 'app_team_remove_member', methods: ['POST'])]
+    #[Route('/edit/remove_member/{id}', name: 'app_team_remove_member', methods: ['POST'],)]
     public function removeMember(Member $member, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
     {
         if (!$this->isGranted('ROLE_ORGANIZER')) {

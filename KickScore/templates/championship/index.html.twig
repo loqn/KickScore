@@ -159,8 +159,8 @@
             panels[tabId].classList.remove('hidden');
 
             subtitle.textContent = tabId === 'creation'
-                ? "d'un nouveau championnat"
-                : "d'un nouveau tournoi";
+                ? "{{'newchampion'|trans}}"
+                : "{{'newtournament'|trans}}";
         }
 
         activateTab('creation');
