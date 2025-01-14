@@ -142,7 +142,7 @@
                                                                           d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
                                                                           clip-rule="evenodd"/>
                                                                 </svg>
-                                                                {{ user.isOrganizer ? 'Organisateur' : 'Utilisateur' }}
+                                                               {{ user.isOrganizer ? 'organizer_label'|trans : 'user_label'|trans }}
                                                             </span>
                                                         </div>
                                                     </div>
@@ -161,7 +161,7 @@
                                                               d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
                                                               clip-rule="evenodd"/>
                                                     </svg>
-                                                    {{ user.isOrganizer ? 'Organisateur' : 'Utilisateur' }}
+                                                    {{ user.isOrganizer ? 'organizer_label'|trans : 'user_label'|trans }}
                                                 </span>
                                             </td>
                                             <td class="px-3 lg:px-6 py-4 text-xs lg:text-sm whitespace-nowrap text-right">
@@ -764,7 +764,7 @@
                     const noResultsRow = document.createElement('tr');
                     noResultsRow.innerHTML = `
                 <td colspan="5" class="px-3 sm:px-6 py-6 text-center text-sm text-slate-600">
-                    Aucun utilisateur trouvé pour cette recherche.
+                    {{'no_user_found'| trans}}
                 </td>
             `;
                     tbody.appendChild(noResultsRow);

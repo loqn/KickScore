@@ -1,5 +1,5 @@
 on: 'on'
-roleorganizer: 'Organizer Role'
+roleorganizer: 'Organizer role'
 createfield: 'Create a new field'
 addfieldchamp: 'Add a field to the championship'
 namefield: 'Field name'
@@ -15,7 +15,9 @@ teamlist: 'Team list'
 confirmmdp: 'Confirm password'
 deleteteam: "Delete the team"
 user_label: 'User'
+creator: 'Creator'
 organizer_label: 'Organizer'
+no_user_found: "No user found."
 modifychampionship: 'Modify the championship'
 export: 'Export'
 import: 'Import'
@@ -95,6 +97,7 @@ nav:
     home: 'Home'
     ranking: 'Ranking'
     matches: 'Match List'
+    importfile: 'Import a file'
     login: 'Login'
     teams: 'Team'
     start: 'Start'
@@ -149,6 +152,7 @@ nav:
 formal:
     insertfirstname: 'Enter your first name'
     insertlastname: 'Enter your last name'
+    insertemail: 'Enter your email'
     firstname: 'First name'
     lastname: 'Last name'
     email: 'Email address'
@@ -217,12 +221,12 @@ user_list:
     manage_users: "Manage users"
 user:
     profile:
-        title: "User Profile"
-        account_details: "Account Details"
+        title: "User profile"
+        account_details: "Account details"
         back_to_list: "Back to list"
-        personal_info: "Personal Information"
-        firstname: "First Name"
-        lastname: "Last Name"
+        personal_info: "Personal information"
+        firstname: "First name"
+        lastname: "Last name"
         email: "Email"
         role: "Role"
         role_types:
@@ -238,7 +242,7 @@ user:
             firstname: "First Name"
             lastname: "Last Name"
             email: "Email"
-            organizer_role: "Organizer Role"
+            organizer_role: "Organizer role"
             save: "Save changes"
 root:
     error: 'Error'
@@ -315,6 +319,7 @@ page_title:
     login: "Log-in"
     register: "Register"
     match: "Competitions list"
+    create: "Creation"
     control_panel: "Administration"
     not_found: "Page not found"
     edit_championship: "Edit Championship"
