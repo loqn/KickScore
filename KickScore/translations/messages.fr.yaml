@@ -1,5 +1,8 @@
 on: 'sur'
 gp: 'MJ'
+export: 'Exporter'
+import: 'Importer'
+ranking: 'Classement'
 createfield: 'Créer un nouveau terrain'
 addfieldchamp: 'Ajouter un terrain au championnat'
 namefield: 'Nom du terrain'
@@ -16,6 +19,8 @@ modifyaccount: "Modifier les informations du compte"
 modifyuser: "Modifier l'utilisateur"
 user_label: 'Utilisateur'
 organizer_label: 'Organisateur'
+no_user_found: "Aucun utilisateur n'a été trouvé."
+creator: 'Créateur'
 modifyinfo: 'Modification des informations du championnat'
 deletefield: 'Terrain à supprimer'
 deleteteam: "Supprimer l'équipe"
@@ -94,9 +99,9 @@ nav:
     register: "S'inscrire"
     profile: 'Profil'
     admin: 'Administration'
-    manage_user: 'Gestion des utilisateurs'
-    manage_championship: 'Gestion des championnats'
-    manage_team: 'Gestion des équipes'
+    manage_users: 'Gestion des utilisateurs'
+    manage_championships: 'Gestion des championnats'
+    manage_teams: 'Gestion des équipes'
     managechampionship: 'Gérer vos championnats'
     withsimplicity: 'avec simplicité'
     explainkickscore: "KickScore vous accompagne dans l'organisation de vos tournois de RoboCup avec des outils modernes et intuitifs."
@@ -212,6 +217,7 @@ root:
 formal:
     insertfirstname: 'Entrez votre prénom'
     insertlastname: 'Entrez votre nom'
+    insertemail: 'Entrez votre adresse email'
     firstname: 'Prénom'
     lastname: 'Nom'
     email: 'Adresse email'
@@ -325,5 +331,6 @@ page_title:
     profile: "Profil"
     match: "Listes des compétitions"
     control_panel: "Gestion"
+    create: "Création"
     not_found: "Page non trouvée"
     edit_championship: "Modifier le championnat"
