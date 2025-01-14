@@ -8,7 +8,7 @@
             <h1 class="text-3xl sm:text-4xl font-bold text-slate-800 text-center mb-8">
                 Administration
                 <span class="block mt-2 text-lg sm:text-2xl text-blue-900 font-medium" id="subtitle">
-                    {{'manageuserchamp' | trans}}
+                    {{ 'manageuserchamp' | trans }}
                 </span>
             </h1>
 
@@ -35,16 +35,17 @@
                                  fill="currentColor">
                                 <path d="M9 6a3 3 0 11-6 0 3 3 0 016 0zM17 6a3 3 0 11-6 0 3 3 0 016 0zM12.93 17c.046-.327.07-.66.07-1a6.97 6.97 0 00-1.5-4.33A5 5 0 0119 16v1h-6.07zM6 11a5 5 0 015 5v1H1v-1a5 5 0 015-5z"/>
                             </svg>
-                            {{'users' | trans}}
+                            {{ 'users' | trans }}
                         </span>
                         </button>
                         <button id="tab_championships"
                                 class="px-4 sm:px-6 py-2 sm:py-3 text-sm font-medium border-b-2 border-transparent hover:border-slate-300 hover:text-slate-600 transition-colors relative sm:-mb-[2px] rounded-t-lg sm:rounded-none">
                         <span class="flex items-center justify-center gap-2">
-                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trophy-fill" viewBox="0 0 16 16">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor"
+                                 class="bi bi-trophy-fill" viewBox="0 0 16 16">
                                 <path d="M2.5.5A.5.5 0 0 1 3 0h10a.5.5 0 0 1 .5.5q0 .807-.034 1.536a3 3 0 1 1-1.133 5.89c-.79 1.865-1.878 2.777-2.833 3.011v2.173l1.425.356c.194.048.377.135.537.255L13.3 15.1a.5.5 0 0 1-.3.9H3a.5.5 0 0 1-.3-.9l1.838-1.379c.16-.12.343-.207.537-.255L6.5 13.11v-2.173c-.955-.234-2.043-1.146-2.833-3.012a3 3 0 1 1-1.132-5.89A33 33 0 0 1 2.5.5m.099 2.54a2 2 0 0 0 .72 3.935c-.333-1.05-.588-2.346-.72-3.935m10.083 3.935a2 2 0 0 0 .72-3.935c-.133 1.59-.388 2.885-.72 3.935"/>
                             </svg>
-                            {{'championships' | trans}}
+                            {{ 'championships' | trans }}
                         </span>
                         </button>
                         <button id="tab_teams"
@@ -54,7 +55,7 @@
                                  fill="currentColor">
                                 <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
                             </svg>
-                            {{'team_label' | trans}}
+                            {{ 'team_label' | trans }}
                         </span>
                         </button>
                     </div>
@@ -67,27 +68,29 @@
                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-6 border-b border-slate-200">
                         <div class="flex-1">
                             <h2 class="text-xl font-bold text-slate-800">
-                                {{'user_list.title' | trans}}
+                                {{ 'user_list.title' | trans }}
                                 <span class="block mt-1 text-sm text-slate-600 font-normal">
-                                    {{'user_list.subtitle' | trans}}
+                                    {{ 'user_list.subtitle' | trans }}
                                     
                                 </span>
                             </h2>
                         </div>
 
                         <div class="flex flex-col sm:flex-row gap-4 items-stretch sm:items-center">
-                            <!-- Barre de recherche -->
+                            <!-- search bar -->
                             <div class="relative w-full sm:w-64">
                                 <div class="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
                                     <svg class="w-4 h-4 text-slate-500" viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd"/>
+                                        <path fill-rule="evenodd"
+                                              d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                              clip-rule="evenodd"/>
                                     </svg>
                                 </div>
                                 <input
                                         type="text"
                                         id="userSearch"
                                         class="w-full pl-10 pr-4 py-2 border border-slate-200 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-transparent"
-                                        placeholder={{'user_list.search' | trans}}
+                                        placeholder={{ 'user_list.search' | trans }}
                                 >
                             </div>
                         </div>
@@ -99,99 +102,162 @@
                                 <table class="min-w-full divide-y divide-slate-200">
                                     <thead class="bg-slate-50">
                                     <tr>
-                                        <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                                            {{'formal.lastname' | trans}}
+                                        <th scope="col"
+                                            class="px-3 lg:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                            {{ 'formal.lastname' | trans }}
                                         </th>
-                                        <th scope="col" class="hidden sm:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                                            {{'formal.firstname' | trans}}
+                                        <th scope="col"
+                                            class="hidden lg:table-cell px-3 lg:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                            {{ 'formal.firstname' | trans }}
                                         </th>
-                                        <th scope="col" class="hidden sm:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                                            {{'formal.email' | trans}}
+                                        <th scope="col"
+                                            class="hidden lg:table-cell px-3 lg:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                            {{ 'formal.email' | trans }}
                                         </th>
-                                        <th scope="col" class="hidden sm:table-cell px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                                            {{'user_list.table.role' | trans}}
+                                        <th scope="col"
+                                            class="hidden lg:table-cell px-3 lg:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                            {{ 'user_list.table.role' | trans }}
                                         </th>
-                                        <th scope="col" class="px-3 sm:px-6 py-3 text-right text-xs font-medium text-slate-700 uppercase tracking-wider">
-                                            {{'user_list.table.actions' | trans}}
+                                        <th scope="col"
+                                            class="px-3 lg:px-6 py-3 text-right text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                            {{ 'user_list.table.actions' | trans }}
                                         </th>
                                     </tr>
                                     </thead>
                                     <tbody class="bg-white divide-y divide-slate-200">
                                     {% for user in users %}
                                         <tr class="hover:bg-slate-50 transition-colors">
-                                            <td class="px-3 sm:px-6 py-4 whitespace-nowrap">
-                                                <div class="flex flex-col sm:flex-row gap-1">
+                                            <td class="px-3 lg:px-6 py-4 whitespace-nowrap">
+                                                <div class="flex flex-col lg:flex-row gap-1">
                                                     <span class="font-medium text-slate-900">{{ user.name }}</span>
-                                                    <!-- Version mobile uniquement -->
-                                                    <div class="sm:hidden text-xs text-slate-500">
+                                                    <!-- mobile -->
+                                                    <div class="lg:hidden text-xs text-slate-500">
                                                         <div>{{ user.FirstName }}</div>
                                                         <div>{{ user.mail }}</div>
                                                         <div class="mt-1">
-                                                <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full
-                                                    {% if user.isOrganizer %}
-                                                        bg-purple-100 text-purple-800
-                                                    {% else %}
-                                                        bg-blue-100 text-blue-800
-                                                    {% endif %}">
-                                                    <svg class="w-3 h-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                                        <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-                                                    </svg>
-                                                    {{ user.isOrganizer ? 'Organisateur' : 'Utilisateur' }}
-                                                </span>
+                                                            <span class="inline-flex items-center px-2 py-1 text-xs font-medium rounded-full {% if user.isOrganizer %}bg-purple-100 text-purple-800{% else %}bg-blue-100 text-blue-800{% endif %}">
+                                                                <svg class="w-3 h-3 mr-1" viewBox="0 0 20 20"
+                                                                     fill="currentColor">
+                                                                    <path fill-rule="evenodd"
+                                                                          d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                                                          clip-rule="evenodd"/>
+                                                                </svg>
+                                                               {{ user.isOrganizer ? 'organizer_label'|trans : 'user_label'|trans }}
+                                                            </span>
                                                         </div>
                                                     </div>
                                                 </div>
                                             </td>
-                                            <td class="hidden sm:table-cell px-3 sm:px-6 py-4 text-sm text-slate-600 whitespace-nowrap">
+                                            <td class="hidden lg:table-cell px-3 lg:px-6 py-4 text-sm text-slate-600 whitespace-nowrap">
                                                 {{ user.FirstName }}
                                             </td>
-                                            <td class="hidden sm:table-cell px-3 sm:px-6 py-4 text-sm text-slate-600">
+                                            <td class="hidden lg:table-cell px-3 lg:px-6 py-4 text-sm text-slate-600">
                                                 {{ user.mail }}
                                             </td>
-                                            <td class="hidden sm:table-cell px-3 sm:px-6 py-4">
-                                    <span class="inline-flex items-center px-2 sm:px-3 py-1 text-xs font-medium rounded-full
-                                        {% if user.isOrganizer %}
-                                            bg-purple-100 text-purple-800
-                                        {% else %}
-                                            bg-blue-100 text-blue-800
-                                        {% endif %}">
-                                        <svg class="w-3 h-3 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd" d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z" clip-rule="evenodd"/>
-                                        </svg>
-                                        {{ user.isOrganizer ? 'Organisateur' : 'Utilisateur' }}
-                                    </span>
+                                            <td class="hidden lg:table-cell px-3 lg:px-6 py-4">
+                                                <span class="inline-flex items-center px-2 lg:px-3 py-1 text-xs font-medium rounded-full {% if user.isOrganizer %}bg-purple-100 text-purple-800{% else %}bg-blue-100 text-blue-800{% endif %}">
+                                                    <svg class="w-3 h-3 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                                                        <path fill-rule="evenodd"
+                                                              d="M10 9a3 3 0 100-6 3 3 0 000 6zm-7 9a7 7 0 1114 0H3z"
+                                                              clip-rule="evenodd"/>
+                                                    </svg>
+                                                    {{ user.isOrganizer ? 'organizer_label'|trans : 'user_label'|trans }}
+                                                </span>
                                             </td>
-                                            <td class="px-3 sm:px-6 py-4 text-xs sm:text-sm whitespace-nowrap text-right">
-                                                <div class="flex justify-end items-center space-x-2 sm:space-x-3">
+                                            <td class="px-3 lg:px-6 py-4 text-xs lg:text-sm whitespace-nowrap text-right">
+                                                <!-- mobile -->
+                                                <div class="lg:hidden relative inline-block text-left">
+                                                    <button type="button"
+                                                            onclick="toggleDropdown('dropdown-{{ user.id }}')"
+                                                            class="p-2 rounded-lg hover:bg-slate-100">
+                                                        <svg xmlns="http://www.w3.org/2000/svg"
+                                                             class="h-5 w-5 text-slate-600" viewBox="0 0 20 20"
+                                                             fill="currentColor">
+                                                            <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z"/>
+                                                        </svg>
+                                                    </button>
+
+                                                    <div id="dropdown-{{ user.id }}"
+                                                         class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                                                        <div class="py-1">
+                                                            <a href="{{ path('app_user_show', {'id': user.id}) }}"
+                                                               class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">
+                                                                <div class="flex items-center">
+                                                                    <svg class="w-4 h-4 mr-3" viewBox="0 0 20 20"
+                                                                         fill="currentColor">
+                                                                        <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
+                                                                        <path fill-rule="evenodd"
+                                                                              d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                                                              clip-rule="evenodd"/>
+                                                                    </svg>
+                                                                    {{ 'user_list.table.view'|trans }}
+                                                                </div>
+                                                            </a>
+                                                            <a href="{{ path('app_user_edit', {'id': user.id}) }}"
+                                                               class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">
+                                                                <div class="flex items-center">
+                                                                    <svg class="w-4 h-4 mr-3" viewBox="0 0 20 20"
+                                                                         fill="currentColor">
+                                                                        <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
+                                                                    </svg>
+                                                                    {{ 'user_list.table.edit'|trans }}
+                                                                </div>
+                                                            </a>
+                                                            <a href="{{ path('app_impersonate', {'id': user.id}) }}"
+                                                               class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">
+                                                                <div class="flex items-center">
+                                                                    <svg class="w-4 h-4 mr-3" viewBox="0 0 20 20"
+                                                                         fill="currentColor">
+                                                                        <path fill-rule="evenodd"
+                                                                              d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z"
+                                                                              clip-rule="evenodd"/>
+                                                                    </svg>
+                                                                    {{ 'user_list.table.impersonate'|trans }}
+                                                                </div>
+                                                            </a>
+                                                        </div>
+                                                    </div>
+                                                </div>
+
+                                                <!-- desktop -->
+                                                <div class="hidden lg:flex justify-end items-center space-x-3">
                                                     <a href="{{ path('app_user_show', {'id': user.id}) }}"
                                                        class="inline-flex items-center text-blue-600 hover:text-blue-800 font-medium">
-                                                        <svg class="w-3 h-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                                        <svg class="w-4 h-4 mr-2" viewBox="0 0 20 20"
+                                                             fill="currentColor">
                                                             <path d="M10 12a2 2 0 100-4 2 2 0 000 4z"/>
-                                                            <path fill-rule="evenodd" d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z" clip-rule="evenodd"/>
+                                                            <path fill-rule="evenodd"
+                                                                  d="M.458 10C1.732 5.943 5.522 3 10 3s8.268 2.943 9.542 7c-1.274 4.057-5.064 7-9.542 7S1.732 14.057.458 10zM14 10a4 4 0 11-8 0 4 4 0 018 0z"
+                                                                  clip-rule="evenodd"/>
                                                         </svg>
-                                                        <span class="hidden sm:inline">{{'user_list.table.view' | trans}}</span>
+                                                        {{ 'user_list.table.view'|trans }}
                                                     </a>
                                                     <a href="{{ path('app_user_edit', {'id': user.id}) }}"
                                                        class="inline-flex items-center text-slate-600 hover:text-slate-800 font-medium">
-                                                        <svg class="w-3 h-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
+                                                        <svg class="w-4 h-4 mr-2" viewBox="0 0 20 20"
+                                                             fill="currentColor">
                                                             <path d="M13.586 3.586a2 2 0 112.828 2.828l-.793.793-2.828-2.828.793-.793zM11.379 5.793L3 14.172V17h2.828l8.38-8.379-2.83-2.828z"/>
                                                         </svg>
-                                                        <span class="hidden sm:inline">{{'user_list.table.edit' | trans}}</span>
+                                                        {{ 'user_list.table.edit'|trans }}
                                                     </a>
                                                     <a href="{{ path('app_impersonate', {'id': user.id}) }}"
                                                        class="inline-flex items-center text-indigo-600 hover:text-indigo-800 font-medium">
-                                                        <svg class="w-3 h-3 mr-1" viewBox="0 0 20 20" fill="currentColor">
-                                                            <path fill-rule="evenodd" d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z" clip-rule="evenodd"/>
+                                                        <svg class="w-4 h-4 mr-2" viewBox="0 0 20 20"
+                                                             fill="currentColor">
+                                                            <path fill-rule="evenodd"
+                                                                  d="M18 8a6 6 0 01-7.743 5.743L10 14l-1 1-1 1H6v2H2v-4l4.257-4.257A6 6 0 1118 8zm-6-4a1 1 0 100 2 2 2 0 012 2 1 1 0 102 0 4 4 0 00-4-4z"
+                                                                  clip-rule="evenodd"/>
                                                         </svg>
-                                                        <span class="hidden sm:inline">{{'user_list.table.impersonate' | trans}}</span>
+                                                        {{ 'user_list.table.impersonate'|trans }}
                                                     </a>
                                                 </div>
                                             </td>
                                         </tr>
                                     {% else %}
                                         <tr>
-                                            <td colspan="5" class="px-3 sm:px-6 py-6 text-center text-sm text-slate-600">
-                                                {{'user_list.no_users' | trans}}
+                                            <td colspan="5"
+                                                class="px-3 lg:px-6 py-6 text-center text-sm text-slate-600">
+                                                {{ 'user_list.no_users'|trans }}
                                             </td>
                                         </tr>
                                     {% endfor %}
@@ -202,16 +268,20 @@
                     </div>
                     <div class="px-6 py-4 flex items-center justify-between border-t border-slate-200">
                         <div class="flex items-center gap-2">
-                            <button id="prevPage" class="px-3 py-1 border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <button id="prevPage"
+                                    class="px-3 py-1 border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M15 19l-7-7 7-7"/>
                                 </svg>
                             </button>
                             <div id="pagination" class="flex items-center gap-1">
                             </div>
-                            <button id="nextPage" class="px-3 py-1 border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">
+                            <button id="nextPage"
+                                    class="px-3 py-1 border border-slate-200 rounded-lg hover:bg-slate-50 disabled:opacity-50 disabled:cursor-not-allowed">
                                 <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                          d="M9 5l7 7-7 7"/>
                                 </svg>
                             </button>
                         </div>
@@ -222,23 +292,25 @@
             <!-- championships -->
             <div id="panel_championships" class="hidden">
                 <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-x-auto">
-                    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-6 border-b border-slate-200">
+                    <div class="flex flex-col md:flex-row md:justify-between md:items-center gap-4 p-6 border-b border-slate-200">
                         <h2 class="text-xl font-bold text-slate-800">
-                            {{'championship_list.title' | trans}}
+                            {{ 'championship_list.title' | trans }}
                             <span class="block mt-1 text-sm text-slate-600 font-normal">
-                                {{'championship_list.subtitle' | trans}}
+                                {{ 'championship_list.subtitle' | trans }}
                             </span>
                         </h2>
 
                         {% if is_granted('ROLE_ORGANIZER') %}
-                            <a href="{{ path('app_field') }}"
-                               class="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm text-center">
-                                Nouveau terrain
-                            </a>
-                            <a href="{{ path('app_championship') }}"
-                               class="w-full sm:w-auto px-4 sm:px-6 py-2 sm:py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm text-center">
-                                {{'championship_list.new_championship' | trans}}
-                            </a>
+                            <div class="flex flex-col md:flex-row gap-2 md:gap-4">
+                                <a href="{{ path('app_championship') }}"
+                                   class="px-4 md:px-6 py-2 md:py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm text-center">
+                                    {{ 'championship_list.new_championship' | trans }}
+                                </a>
+                                <a href="{{ path('app_field') }}"
+                                   class="px-4 md:px-6 py-2 md:py-3 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors font-medium shadow-sm text-center">
+                                    {{ 'championship_list.new_field' | trans }}
+                                </a>
+                            </div>
                         {% endif %}
                     </div>
 
@@ -246,13 +318,13 @@
                         <thead class="bg-slate-50 border-b border-slate-200">
                         <tr>
                             <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                                {{'nav.nameofchampionship' | trans}}
+                                {{ 'nav.nameofchampionship' | trans }}
                             </th>
                             <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                                {{'team_label' | trans}}
+                                {{ 'team_label' | trans }}
                             </th>
                             <th scope="col" class="px-3 sm:px-6 py-3 text-right text-xs font-medium text-slate-700 uppercase tracking-wider">
-                                {{'user_list.table.actions' | trans}}
+                                {{ 'user_list.table.actions' | trans }}
                             </th>
                         </tr>
                         </thead>
@@ -260,13 +332,11 @@
                         {% for championship in championships %}
                             <tr class="hover:bg-slate-50 transition-colors">
                                 <td class="px-4 sm:px-6 py-3 sm:py-4">
-                                    <div class="flex items-center cursor-pointer"
-                                         onclick="toggleChampionship('championship-{{ championship.id }}')">
+                                    <div class="flex items-center cursor-pointer" onclick="toggleChampionship('championship-{{ championship.id }}')">
                                         <span class="text-xs sm:text-sm text-slate-600">{{ championship.name }}</span>
                                         <svg class="w-4 h-4 text-slate-500 transform transition-transform duration-200 ml-2"
                                              id="championship-icon-{{ championship.id }}"
-                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
-                                             fill="currentColor">
+                                             xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
                                             <path fill-rule="evenodd"
                                                   d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
                                                   clip-rule="evenodd"/>
@@ -274,23 +344,52 @@
                                     </div>
                                 </td>
                                 <td class="px-4 sm:px-6 py-3 sm:py-4">
-                            <span class="inline-flex items-center px-2 sm:px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
-                                <svg class="w-3 h-3 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
-                                    <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
-                                </svg>
-                                {{ championship.teams|length }}
-                            </span>
+                        <span class="inline-flex items-center px-2 sm:px-3 py-1 text-xs font-medium rounded-full bg-green-100 text-green-800">
+                            <svg class="w-3 h-3 mr-1.5" viewBox="0 0 20 20" fill="currentColor">
+                                <path d="M13 6a3 3 0 11-6 0 3 3 0 016 0zM18 8a2 2 0 11-4 0 2 2 0 014 0zM14 15a4 4 0 00-8 0v3h8v-3zM6 8a2 2 0 11-4 0 2 2 0 014 0zM16 18v-3a5.972 5.972 0 00-.75-2.906A3.005 3.005 0 0119 15v3h-3zM4.75 12.094A5.973 5.973 0 004 15v3H1v-3a3 3 0 013.75-2.906z"/>
+                            </svg>
+                            {{ championship.teams|length }}
+                        </span>
                                 </td>
                                 <td class="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm whitespace-nowrap">
-                                    <div class="flex items-center space-x-4">
-                                        <form action="{{ path('app_generate_match', {'id': championship.id}) }}"
-                                              method="post" class="inline">
+                                    <div class="hidden md:flex items-center justify-end space-x-2">
+                                        <a href="{{ path('app_champ_edit', {'id': championship.id}) }}"
+                                           class="px-3 py-1.5 text-xs font-medium bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors">
+                                            {{ 'edit' | trans }}
+                                        </a>
+                                        <form action="{{ path('app_generate_match', {'id': championship.id}) }}" method="post" class="inline">
                                             <input type="hidden" name="chp_id" value="{{ championship.id }}">
                                             <button type="submit"
-                                                    class="px-3 py-1.5 text-xs font-medium bg-white text-slate-800 rounded-lg hover:bg-blue-800 hover:text-white border border-blue-800 transition-colors">
-                                                {{'generatematch' | trans}}
+                                                    class="px-3 py-1.5 text-xs font-medium bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors">
+                                                {{ 'generatematch' | trans }}
                                             </button>
                                         </form>
+                                    </div>
+
+                                    <div class="md:hidden relative">
+                                        <button onclick="toggleActionMenu('action-menu-{{ championship.id }}')"
+                                                class="p-2 rounded-lg hover:bg-slate-100 focus:outline-none">
+                                            <svg class="w-5 h-5 text-slate-500" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor">
+                                                <path d="M10 6a2 2 0 110-4 2 2 0 010 4zM10 12a2 2 0 110-4 2 2 0 010 4zM10 18a2 2 0 110-4 2 2 0 010 4z" />
+                                            </svg>
+                                        </button>
+
+                                        <div id="action-menu-{{ championship.id }}"
+                                             class="hidden absolute right-0 mt-2 w-48 rounded-md shadow-lg bg-white ring-1 ring-black ring-opacity-5 z-50">
+                                            <div class="py-1">
+                                                <a href="{{ path('app_champ_edit', {'id': championship.id}) }}"
+                                                   class="block px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">
+                                                    {{ 'edit' | trans }}
+                                                </a>
+                                                <form action="{{ path('app_generate_match', {'id': championship.id}) }}" method="post">
+                                                    <input type="hidden" name="chp_id" value="{{ championship.id }}">
+                                                    <button type="submit"
+                                                            class="block w-full text-left px-4 py-2 text-sm text-slate-700 hover:bg-slate-100">
+                                                        {{ 'generatematch' | trans }}
+                                                    </button>
+                                                </form>
+                                            </div>
+                                        </div>
                                     </div>
                                 </td>
                             </tr>
@@ -305,8 +404,8 @@
                                                              onclick="toggleTeam('team-{{ team.id }}')">
                                                             <span class="text-sm font-medium text-slate-700">{{ team.name }}</span>
                                                             <span class="ml-3 px-2 py-1 text-xs font-medium rounded-full bg-blue-100 text-blue-800">
-                                                        {{ team.members|length > 1 ? team.members|length ~ ' membres' : team.members|length ~ ' membre' }}
-                                                    </span>
+                                                    {{ team.members|length > 1 ? team.members|length ~ ' ' ~ 'championship_list.members' | trans : team.members|length ~ ' ' ~ 'championship_list.member' | trans }}
+                                                </span>
                                                             <svg class="w-4 h-4 text-slate-500 transform transition-transform duration-200 ml-2"
                                                                  id="team-icon-{{ team.id }}"
                                                                  xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
@@ -318,7 +417,7 @@
                                                         </div>
                                                         <a href="{{ path('app_team_edit', {'id': team.id}) }}"
                                                            class="ml-4 px-3 py-1.5 text-xs font-medium bg-blue-900 text-white hover:bg-blue-800 rounded-md transition-colors">
-                                                            {{'manageteam_label' | trans}}
+                                                            {{ 'manageteam_label' | trans }}
                                                         </a>
                                                     </div>
                                                     <div class="hidden" id="team-{{ team.id }}">
@@ -327,16 +426,16 @@
                                                                 <thead>
                                                                 <tr>
                                                                     <th class="px-3 py-2 text-left text-xs font-medium text-slate-700">
-                                                                        {{'formal.lastname' | trans}}
+                                                                        {{ 'formal.lastname' | trans }}
                                                                     </th>
                                                                     <th class="px-3 py-2 text-left text-xs font-medium text-slate-700">
-                                                                        {{'formal.firstname' | trans}}
+                                                                        {{ 'formal.firstname' | trans }}
                                                                     </th>
                                                                     <th class="px-3 py-2 text-left text-xs font-medium text-slate-700">
-                                                                        {{'formal.email' | trans}}
+                                                                        {{ 'formal.email' | trans }}
                                                                     </th>
                                                                     <th class="px-3 py-2 text-left text-xs font-medium text-slate-700">
-                                                                        {{'user_list.table.role' | trans}}
+                                                                        {{ 'user_list.table.role' | trans }}
                                                                     </th>
                                                                 </tr>
                                                                 </thead>
@@ -347,16 +446,15 @@
                                                                         <td class="px-3 py-2 text-xs text-slate-600">{{ member.fname }}</td>
                                                                         <td class="px-3 py-2 text-xs text-slate-600">{{ member.email }}</td>
                                                                         <td class="px-3 py-2">
-                                                                        <span class="px-2 py-1 text-xs font-medium rounded-full bg-slate-100 text-slate-800">
-                                                                            {{'member' | trans}}
-                                                                        </span>
+                                                                            <span class="px-2 py-1 text-xs font-medium rounded-full bg-slate-100 text-slate-800">
+                                                                                {{ 'member' | trans }}
+                                                                            </span>
                                                                         </td>
                                                                     </tr>
                                                                 {% else %}
                                                                     <tr>
-                                                                        <td colspan="4"
-                                                                            class="px-3 py-4 text-center text-xs text-slate-600">
-                                                                            {{'nomember' | trans}}
+                                                                        <td colspan="4" class="px-3 py-4 text-center text-xs text-slate-600">
+                                                                            {{ 'nomember' | trans }}
                                                                         </td>
                                                                     </tr>
                                                                 {% endfor %}
@@ -367,7 +465,7 @@
                                                 </div>
                                             {% else %}
                                                 <div class="px-4 py-4 text-center text-sm text-slate-600">
-                                                    {{'noteamnochamp' | trans}}
+                                                    {{ 'noteamnochamp' | trans }}
                                                 </div>
                                             {% endfor %}
                                         </div>
@@ -377,7 +475,7 @@
                         {% else %}
                             <tr>
                                 <td colspan="3" class="px-4 sm:px-6 py-6 sm:py-8 text-center text-sm text-slate-600">
-                                    {{'nochampionship' | trans}}
+                                    {{ 'nochampionship' | trans }}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -386,14 +484,14 @@
                 </div>
             </div>
 
-            <!-- teams Panel -->
+            <!-- teams -->
             <div id="panel_teams" class="hidden">
                 <div class="bg-white rounded-lg shadow-sm border border-slate-200 overflow-x-auto">
                     <div class="flex flex-col sm:flex-row sm:justify-between sm:items-center gap-4 p-6 border-b border-slate-200">
                         <h2 class="text-xl font-bold text-slate-800">
-                            {{'teamlist' | trans}}
+                            {{ 'teamlist' | trans }}
                             <span class="block mt-1 text-sm text-slate-600 font-normal">
-                    {{'manageteamactive' | trans}}
+                    {{ 'manageteamactive' | trans }}
                 </span>
                         </h2>
                     </div>
@@ -401,17 +499,21 @@
                     <table class="w-full">
                         <thead class="bg-slate-50 border-b border-slate-200">
                         <tr>
-                            <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                                {{'team_creation.name.placeholder' | trans}}
+                            <th scope="col"
+                                class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                {{ 'team_creation.name.placeholder' | trans }}
                             </th>
-                            <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                                {{'member' | trans}}
+                            <th scope="col"
+                                class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                {{ 'member' | trans }}
                             </th>
-                            <th scope="col" class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
-                                {{'nav.championship' | trans}}
+                            <th scope="col"
+                                class="px-3 sm:px-6 py-3 text-left text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                {{ 'nav.championship' | trans }}
                             </th>
-                            <th scope="col" class="px-3 sm:px-6 py-3 text-right text-xs font-medium text-slate-700 uppercase tracking-wider">
-                                {{'user_list.table.actions' | trans}}
+                            <th scope="col"
+                                class="px-3 sm:px-6 py-3 text-right text-xs font-medium text-slate-700 uppercase tracking-wider">
+                                {{ 'user_list.table.actions' | trans }}
                             </th>
                         </tr>
                         </thead>
@@ -449,21 +551,21 @@
                                         </span>
                                             {% endfor %}
                                         {% else %}
-                                            <span class="text-xs text-slate-500">{{'nochampionship' | trans}}</span>
+                                            <span class="text-xs text-slate-500">{{ 'nochampionship' | trans }}</span>
                                         {% endif %}
                                     </div>
                                 </td>
                                 <td class="px-4 sm:px-6 py-3 sm:py-4 text-xs sm:text-sm whitespace-nowrap">
                                     <a href="{{ path('app_team_edit', {'id': team.id}) }}"
                                        class="text-blue-600 hover:text-blue-800 font-medium">
-                                        {{'manage' | trans}}
+                                        {{ 'manage' | trans }}
                                     </a>
                                 </td>
                             </tr>
                         {% else %}
                             <tr>
                                 <td colspan="4" class="px-4 sm:px-6 py-6 sm:py-8 text-center text-sm text-slate-600">
-                                    {{'noteamfound'}}
+                                    {{ 'noteamfound' }}
                                 </td>
                             </tr>
                         {% endfor %}
@@ -474,10 +576,61 @@
 
         </div>
     </div>
-        </div>
-    </div>
 
     <script>
+        function toggleActionMenu(menuId) {
+            const menu = document.getElementById(menuId);
+            const allMenus = document.querySelectorAll('[id^="action-menu-"]');
+
+            allMenus.forEach(otherMenu => {
+                if (otherMenu.id !== menuId) {
+                    otherMenu.classList.add('hidden');
+                }
+            });
+
+            menu.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('.relative')) {
+                const allDropdowns = document.querySelectorAll('[id^="dropdown-"]');
+                const actionMenus = document.querySelectorAll('[id^="action-menu-"]');
+
+                allDropdowns.forEach(dropdown => {
+                    dropdown.classList.add('hidden');
+                });
+
+                actionMenus.forEach(menu => {
+                    const button = menu.previousElementSibling;
+                    if (!menu.contains(event.target) && !button.contains(event.target)) {
+                        menu.classList.add('hidden');
+                    }
+                });
+            }
+        });
+
+        function toggleDropdown(dropdownId) {
+            const dropdown = document.getElementById(dropdownId);
+            const allDropdowns = document.querySelectorAll('[id^="dropdown-"]');
+
+            allDropdowns.forEach(d => {
+                if (d.id !== dropdownId) {
+                    d.classList.add('hidden');
+                }
+            });
+
+            dropdown.classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', (event) => {
+            if (!event.target.closest('.relative')) {
+                const allDropdowns = document.querySelectorAll('[id^="dropdown-"]');
+                allDropdowns.forEach(dropdown => {
+                    dropdown.classList.add('hidden');
+                });
+            }
+        });
+
         const tabs = {
             users: document.getElementById('tab_users'),
             championships: document.getElementById('tab_championships'),
@@ -504,9 +657,9 @@
             panels[tabId].classList.remove('hidden');
 
             const subtitles = {
-                users: "Gestion des utilisateurs",
-                championships: "Gestion des championnats",
-                teams: "Gestion des équipes"
+                users: "{{ 'nav.manage_users' | trans }}",
+                championships: "{{ 'nav.manage_championships' | trans }}",
+                teams: "{{ 'nav.manage_teams' | trans }}"
             };
             subtitle.textContent = subtitles[tabId];
 
@@ -534,8 +687,8 @@
             icon.classList.toggle('rotate-180');
         }
 
-        // Search bar
-        document.addEventListener('DOMContentLoaded', function() {
+        // search bar
+        document.addEventListener('DOMContentLoaded', function () {
             const searchInput = document.querySelector('#userSearch');
             const tbody = document.querySelector('tbody');
             const paginationContainer = document.querySelector('#pagination');
@@ -611,7 +764,7 @@
                     const noResultsRow = document.createElement('tr');
                     noResultsRow.innerHTML = `
                 <td colspan="5" class="px-3 sm:px-6 py-6 text-center text-sm text-slate-600">
-                    Aucun utilisateur trouvé pour cette recherche.
+                    {{'no_user_found'| trans}}
                 </td>
             `;
                     tbody.appendChild(noResultsRow);
@@ -620,20 +773,20 @@
                 updatePagination();
             }
 
-            searchInput.addEventListener('input', function(e) {
+            searchInput.addEventListener('input', function (e) {
                 currentPage = 1;
                 filterRows(e.target.value);
                 displayRows();
             });
 
-            prevButton.addEventListener('click', function() {
+            prevButton.addEventListener('click', function () {
                 if (currentPage > 1) {
                     currentPage--;
                     displayRows();
                 }
             });
 
-            nextButton.addEventListener('click', function() {
+            nextButton.addEventListener('click', function () {
                 const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
                 if (currentPage < totalPages) {
                     currentPage++;
