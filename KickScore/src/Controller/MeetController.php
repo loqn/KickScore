@@ -374,43 +374,85 @@ class MeetController extends AbstractController
             $entityManager->persist($teamMatchStatus);
         }
 
-        if ($match->getGlobalStatus()->getName() === 'DONE') {
-            $greenScore = $match->getGreenScore();
-            $blueScore = $match->getBlueScore();
-
-            if ($match->getGreenTeam() === $forfeitTeam) {
-                if ($greenScore > $blueScore) {
-                    $forfeitTeamResults->setWins($forfeitTeamResults->getWins() - 1);
-                    $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 3);
-                } elseif ($blueScore > $greenScore) {
-                    $forfeitTeamResults->setLosses($forfeitTeamResults->getLosses() - 1);
-                } else {
-                    $forfeitTeamResults->setDraws($forfeitTeamResults->getDraws() - 1);
-                    $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 1);
+        if(true){
+            if ($match->getGlobalStatus()->getName() === 'DONE') {
+                $greenScore = $match->getGreenScore();
+                $blueScore = $match->getBlueScore();
+    
+                if ($match->getGreenTeam() === $forfeitTeam) {
+                    if ($greenScore > $blueScore) {
+                        $forfeitTeamResults->setWins($forfeitTeamResults->getWins() - 1);
+                        $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 3);
+                    } elseif ($blueScore > $greenScore) {
+                        $forfeitTeamResults->setLosses($forfeitTeamResults->getLosses() - 1);
+                    } else {
+                        $forfeitTeamResults->setDraws($forfeitTeamResults->getDraws() - 1);
+                        $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 1);
+                    }
+                }
+                else if ($match->getBlueTeam() === $forfeitTeam) {
+                    if ($blueScore > $greenScore) {
+                        $forfeitTeamResults->setWins($forfeitTeamResults->getWins() - 1);
+                        $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 3);
+                    } elseif ($greenScore > $blueScore) {
+                        $forfeitTeamResults->setLosses($forfeitTeamResults->getLosses() - 1);
+                    } else {
+                        $forfeitTeamResults->setDraws($forfeitTeamResults->getDraws() - 1);
+                        $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 1);
+                    }
                 }
             }
-            else if ($match->getBlueTeam() === $forfeitTeam) {
-                if ($blueScore > $greenScore) {
-                    $forfeitTeamResults->setWins($forfeitTeamResults->getWins() - 1);
-                    $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 3);
-                } elseif ($greenScore > $blueScore) {
-                    $forfeitTeamResults->setLosses($forfeitTeamResults->getLosses() - 1);
-                } else {
-                    $forfeitTeamResults->setDraws($forfeitTeamResults->getDraws() - 1);
+    
+            if (!$wasAlreadyForfeited) {
+                if ($match->getTimeslot()->getStart() > new \DateTime()) {
+                    $forfeitTeamResults->setGamesPlayed($forfeitTeamResults->getGamesPlayed() + 1);
+                    $otherTeamResults->setGamesPlayed($otherTeamResults->getGamesPlayed() + 1);
+                }
+    
+                $forfeitTeamResults->setLosses($forfeitTeamResults->getLosses() + 1);
+                $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 1);
+            }
+            if(false){
+                if ($match->getGlobalStatus()->getName() === 'DONE') {
+                    $greenScore = $match->getGreenScore();
+                    $blueScore = $match->getBlueScore();
+        
+                    if ($match->getGreenTeam() === $forfeitTeam) {
+                        if ($greenScore > $blueScore) {
+                            $forfeitTeamResults->setWins($forfeitTeamResults->getWins() - 1);
+                            $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 3);
+                        } elseif ($blueScore > $greenScore) {
+                            $forfeitTeamResults->setLosses($forfeitTeamResults->getLosses() - 1);
+                        } else {
+                            $forfeitTeamResults->setDraws($forfeitTeamResults->getDraws() - 1);
+                            $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 1);
+                        }
+                    }
+                    else if ($match->getBlueTeam() === $forfeitTeam) {
+                        if ($blueScore > $greenScore) {
+                            $forfeitTeamResults->setWins($forfeitTeamResults->getWins() - 1);
+                            $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 3);
+                        } elseif ($greenScore > $blueScore) {
+                            $forfeitTeamResults->setLosses($forfeitTeamResults->getLosses() - 1);
+                        } else {
+                            $forfeitTeamResults->setDraws($forfeitTeamResults->getDraws() - 1);
+                            $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 1);
+                        }
+                    }
+                }
+        
+                if (!$wasAlreadyForfeited) {
+                    if ($match->getTimeslot()->getStart() > new \DateTime()) {
+                        $forfeitTeamResults->setGamesPlayed($forfeitTeamResults->getGamesPlayed() + 1);
+                        $otherTeamResults->setGamesPlayed($otherTeamResults->getGamesPlayed() + 1);
+                    }
+        
+                    $forfeitTeamResults->setLosses($forfeitTeamResults->getLosses() + 1);
                     $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 1);
                 }
             }
         }
-
-        if (!$wasAlreadyForfeited) {
-            if ($match->getTimeslot()->getStart() > new \DateTime()) {
-                $forfeitTeamResults->setGamesPlayed($forfeitTeamResults->getGamesPlayed() + 1);
-                $otherTeamResults->setGamesPlayed($otherTeamResults->getGamesPlayed() + 1);
-            }
-
-            $forfeitTeamResults->setLosses($forfeitTeamResults->getLosses() + 1);
-            $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 1);
-        }
+        
 
         $match->setGreenScore(null);
         $match->setBlueScore(null);
@@ -460,19 +502,39 @@ class MeetController extends AbstractController
         $greenTeamResults->setGamesPlayed($greenTeamResults->getGamesPlayed() + 1);
         $blueTeamResults->setGamesPlayed($blueTeamResults->getGamesPlayed() + 1);
 
-        if ($greenScore > $blueScore) {
-            $greenTeamResults->setWins($greenTeamResults->getWins() + 1);
-            $greenTeamResults->setPoints($greenTeamResults->getPoints() + 3);
-            $blueTeamResults->setLosses($blueTeamResults->getLosses() + 1);
-        } elseif ($blueScore > $greenScore) {
-            $blueTeamResults->setWins($blueTeamResults->getWins() + 1);
-            $blueTeamResults->setPoints($blueTeamResults->getPoints() + 3);
-            $greenTeamResults->setLosses($greenTeamResults->getLosses() + 1);
-        } else {
-            $greenTeamResults->setDraws($greenTeamResults->getDraws() + 1);
-            $greenTeamResults->setPoints($greenTeamResults->getPoints() + 1);
-            $blueTeamResults->setDraws($blueTeamResults->getDraws() + 1);
-            $blueTeamResults->setPoints($blueTeamResults->getPoints() + 1);
+        if(true){
+            if ($greenScore > $blueScore) {
+                $greenTeamResults->setWins($greenTeamResults->getWins() + 1);
+                $greenTeamResults->setPoints($greenTeamResults->getPoints() + 3);
+                $blueTeamResults->setLosses($blueTeamResults->getLosses() + 1);
+            } elseif ($blueScore > $greenScore) {
+                $blueTeamResults->setWins($blueTeamResults->getWins() + 1);
+                $blueTeamResults->setPoints($blueTeamResults->getPoints() + 3);
+                $greenTeamResults->setLosses($greenTeamResults->getLosses() + 1);
+            } else {
+                $greenTeamResults->setDraws($greenTeamResults->getDraws() + 1);
+                $greenTeamResults->setPoints($greenTeamResults->getPoints() + 1);
+                $blueTeamResults->setDraws($blueTeamResults->getDraws() + 1);
+                $blueTeamResults->setPoints($blueTeamResults->getPoints() + 1);
+            }
+        }
+        if(false){
+            if ($greenScore > $blueScore) {
+                $greenTeamResults->setWins($greenTeamResults->getWins() + 1);
+                $greenTeamResults->setPoints($greenTeamResults->getPoints() + 50 * (1 - (1 / 1 + (10 ** (($blueTeamResults->getPoints() - $greenTeamResults->getPoints()) / 400)))));
+                $blueTeamResults->setLosses($blueTeamResults->getLosses() + 1);
+                $blueTeamResults->setPoints($blueTeamResults->getPoints() + 50 * (0 - (1 / 1 + (10 ** (($greenTeamResults->getPoints() - $blueTeamResults->getPoints()) / 400)))));
+            } elseif ($blueScore > $greenScore) {
+                $blueTeamResults->setWins($blueTeamResults->getWins() + 1);
+                $blueTeamResults->setPoints($blueTeamResults->getPoints() + 50 * (1 - (1 / 1 + (10 ** (($greenTeamResults->getPoints() - $blueTeamResults->getPoints()) / 400)))));
+                $greenTeamResults->setLosses($greenTeamResults->getLosses() + 1);
+                $greenTeamResults->setPoints($greenTeamResults->getPoints() + 50 * (0 - (1 / 1 + (10 ** (($blueTeamResults->getPoints() - $greenTeamResults->getPoints()) / 400)))));
+            } else {
+                $greenTeamResults->setDraws($greenTeamResults->getDraws() + 1);
+                $greenTeamResults->setPoints($greenTeamResults->getPoints() + 50 * (1 - (1 / 1 + (10 ** (($blueTeamResults->getPoints() - $greenTeamResults->getPoints()) / 400)))));
+                $blueTeamResults->setDraws($blueTeamResults->getDraws() + 1);
+                $blueTeamResults->setPoints($blueTeamResults->getPoints() + 50 * (0.5 - (1 / 1 + (10 ** (($greenTeamResults->getPoints() - $blueTeamResults->getPoints()) / 400)))));
+            }
         }
     }
 
