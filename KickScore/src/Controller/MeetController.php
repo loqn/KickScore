@@ -523,21 +523,25 @@ class MeetController extends AbstractController
         $event .= sprintf("DTSTART:%s\r\n", $startDate);
         //$event .= sprintf("DTEND:%s\r\n", $endDate);
         $event .= sprintf("SUMMARY:%s\r\n", $this->escapeString($match->getChampionship()->getName()));
-        if ($match->getChampionship()->getDescription()) {
-            $event .= sprintf("DESCRIPTION:%s\r\n", $this->escapeString($match->getChampionship()->getDescription()));
-        }
-        if ($match->getChampionship()->getOrganizer()) {
-            $event .= sprintf("ORGANIZER:CN=%s\r\n", $this->escapeString($match->getChampionship()->getOrganizer()->getName()));
-        }
+
         $teams = [];
         foreach ($match->getTeams() as $team) {
             $teams[] = $team->getName();
         }
-        if (!empty($teams)) {
-            $event .= sprintf("DESCRIPTION:Participating teams: %s\r\n",
-                $this->escapeString(implode(', ', $teams))
-            );
+
+        if ($match->getChampionship()->getDescription()) {
+            $event .= sprint("DESCRIPTION:%s\r\n", $this->escapeString($match->getChampionship()->getDescription()));
+            if (!empty($teams)) {
+                $event .= sprintf("Participating teams: %s\r\n",
+                    $this->escapeString(implode(', ', $teams))
+                );
+            }
         }
+        if ($match->getChampionship()->getOrganizer()) {
+            $event .= sprintf("ORGANIZER:CN=%s\r\n", $this->escapeString($match->getChampionship()->getOrganizer()->getName()));
+        }
+        
+        
         $event .= "END:VEVENT\r\n";
         return $event;
     }
