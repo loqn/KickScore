@@ -65,7 +65,7 @@ organizedmatch: "Organized matches"
 tournament: 'Tournament'
 activeteams: 'Active teams'
 useractive: 'Active user'
-matchprogress: "Matches coming today"
+
 nomatch: "No match in progress or coming today"
 seematch: "See the matches"
 endmatch: "Match over for today"
@@ -85,6 +85,17 @@ add: 'Add'
 nonewmem: 'No new member'
 actionimpossible: 'Action impossible'
 edit: 'Edit'
+next: 'Next'
+selectendchamp: '-- Select a ended championship --'
+fileimport: 'File to import'
+previous: 'Previous'
+nomatchscheduled: 'No match scheduled'
+nextmatch: 'Next match'
+matchcalendar: 'Match calendar'
+matchprogress: 'Current and upcoming matches'
+matchinlive: 'Match in progress'
+nocurrentmatch: 'No current match'
+progress: 'Progress'
 nav:
     from: 'From'
     to: 'To'
@@ -313,6 +324,9 @@ manage: "Manage"
 championships: "Championships"
 generatematch: "Generate a match"
 noteamfound: "No team found"
+championship: "Championship"
+choosechamp: "Choose a championship"
+champfield: "Choose the field of the championship"
 
 page_title:
     home: "Home"

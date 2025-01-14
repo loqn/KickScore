@@ -45,7 +45,6 @@ organizedmatch: "Match organisés"
 tournament: 'Tournoi'
 activeteams: 'Équipes actives'
 useractive: 'Utilisateur actif'
-matchprogress: "Matchs à venir aujourd'hui"
 nomatch: "Aucun match en cours ou à venir aujourd'hui"
 nomember: "Aucun membre dans cette équipe"
 seematch: "Voir les matchs"
@@ -66,6 +65,17 @@ add: 'Ajouter'
 nonewmem: 'Aucun nouveau membre'
 actionimpossible: 'Action impossible'
 edit: 'Modifier'
+selectendchamp: "-- Sélectionner un championnat terminé --"
+fileimport: 'Fichier à importer'
+next: 'Suivant'
+previous: 'Précédent'
+nomatchscheduled: 'Aucun match programmé'
+nextmatch: 'Prochain match'
+nocurrentmatch: "Aucun match en cours"
+matchcalendar: 'Calendrier des matchs'
+matchprogress: 'Matches en cours et à venir'
+matchinlive: 'Match en cours'
+progress: 'En cours'
 nav:
     from: 'De'
     to: 'À'
@@ -311,6 +321,8 @@ manage: "Gérer"
 users: "Utilisateurs"
 championships: "Championnats"
 noteamfound: "Aucune équipe n'a été trouvée."
+championship: "Championnat"
+choosechamp: "Choisissez un championnat"
 
 page_title:
     home: "Accueil"
