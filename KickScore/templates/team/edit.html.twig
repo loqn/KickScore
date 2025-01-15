@@ -102,7 +102,7 @@
                                 <h2 class="text-xl font-bold text-blue-900 mb-2">{{'nochampionship' | trans}}</h2>
                                 <p class="text-blue-700">{{'noinsciption' | trans}}</p>
                                 <a href="{{ path('app_match_list') }}" class="mt-4 inline-flex items-center px-6 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium">
-                                    Voir les championnats
+                                    {{'seechampionships' | trans}}
                                     <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                         <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/>
                                     </svg>
@@ -116,7 +116,7 @@
                 <div id="members" class="tab-content">
                     <div class="flex flex-col lg:flex-row gap-8">
                         <div class="flex-1 space-y-6">
-                            <h2 class="text-xl font-bold text-slate-700">Membres</h2>
+                            <h2 class="text-xl font-bold text-slate-700">{{'members' | trans    }}</h2>
                             <div class="space-y-3">
                                 {% for member in team.members %}
                                     {% set creator = member.user %}
@@ -156,18 +156,18 @@
                                 <h2 class="text-xl font-bold text-slate-700 mb-6">{{'addmember' | trans}}</h2>
 
                                 <div class="space-y-1">
-                                    <label for="fname" class="text-sm font-medium text-slate-700">{{'formal.firstName' | trans}}</label>
-                                    <input type="text" id="fname" name="fname" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors" placeholder="{{'insertfirstname'|trans}}">
+                                    <label for="fname" class="text-sm font-medium text-slate-700">{{'formal.firstname' | trans}}</label>
+                                    <input type="text" id="fname" name="fname" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors" placeholder="{{'formal.insertfirstname' | trans}}">
                                 </div>
 
                                 <div class="space-y-1">
-                                    <label for="name" class="text-sm font-medium text-slate-700">{{'formal.lastName' | trans}}</label>
-                                    <input type="text" id="name" name="name" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors" placeholder={{ "insertlastname"|trans }}>
+                                    <label for="name" class="text-sm font-medium text-slate-700">{{'formal.lastname' | trans}}</label>
+                                    <input type="text" id="name" name="name" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors" placeholder="{{ 'formal.insertlastname' | trans }}">
                                 </div>
 
                                 <div class="space-y-1">
                                     <label for="email" class="text-sm font-medium text-slate-700">{{'formal.email' | trans}}</label>
-                                    <input type="email" id="email" name="email" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors" placeholder={{ "insertemail"|trans }}>
+                                    <input type="email" id="email" name="email" class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors" placeholder="{{ "formal.insertemail" | trans }}">
                                 </div>
 
                                 <div id="addBtn" class="w-full px-4 py-3 bg-blue-100 text-blue-900 rounded-lg hover:bg-blue-200 transition-colors font-medium text-center cursor-pointer">
@@ -246,7 +246,7 @@
                 <div class="text-sm text-slate-500">${user.email}</div>
             </div>
             <button type="button" class="remove-member px-4 py-2 text-blue-900 bg-blue-50 rounded-lg hover:bg-blue-100 transition-colors font-medium" data-index="${membersToAdd.length - 1}">
-                Retirer
+                {{ 'remove'|trans }}
             </button>
         `;
             div.innerHTML = memberHTML;
@@ -270,7 +270,7 @@
                 submitBtn.disabled = false;
                 submitBtn.className = 'w-full px-4 py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium flex items-center justify-center cursor-pointer';
                 submitBtn.innerHTML = `
-                Valider les ajouts
+                {{'validateupdate' | trans}}
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M11 1a2 2 0 0 0-2 2v4a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V9a2 2 0 0 1 2-2h5V3a3 3 0 0 1 6 0v4a.5.5 0 0 1-1 0V3a2 2 0 0 0-2-2"/>
                 </svg>
@@ -279,7 +279,7 @@
                 submitBtn.disabled = true;
                 submitBtn.className = 'w-full px-4 py-3 bg-slate-200 text-slate-500 rounded-lg font-medium flex items-center justify-center cursor-not-allowed';
                 submitBtn.innerHTML = `
-                Aucun nouveau membre
+                {{'nonewmem' | trans}}
                 <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4 ml-2" fill="currentColor" viewBox="0 0 16 16">
                     <path d="M8 1a2 2 0 0 1 2 2v4H6V3a2 2 0 0 1 2-2m3 6V3a3 3 0 0 0-6 0v4a2 2 0 0 0-2 2v5a2 2 0 0 0 2 2h6a2 2 0 0 0 2-2V9a2 2 0 0 0-2-2"/>
                 </svg>

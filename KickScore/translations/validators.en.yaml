@@ -1,0 +1,6 @@
+form:
+  firstname:
+    label: 'First Name'
+    placeholder: 'Enter your first name...'
+    not_blank: 'Please enter your first name.'
+    min_length: 'Your first name must be at least {{ limit }} characters longaaaaa.'

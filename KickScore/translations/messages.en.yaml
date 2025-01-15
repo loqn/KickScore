@@ -1,4 +1,9 @@
 on: 'on'
+form:
+    firstname:
+        placeholder: 'Enter your first name...'
+        not_blank: 'Please enter your first name.'
+        min_length: 'Your first name must be at least {{ limit }} characters longaaaaa.'
 roleorganizer: 'Organizer role'
 createfield: 'Create a new field'
 addfieldchamp: 'Add a field to the championship'
@@ -9,6 +14,7 @@ gp: 'GP'
 nomember: "No member in this team"
 manageteam_label: 'Manage team'
 newpasseword: 'New password'
+newtournament: 'of a new tournament'
 stayblank: "Leave blank to keep the current password"
 cancel: 'Cancel'
 teamlist: 'Team list'
@@ -168,6 +174,7 @@ formal:
     lastname: 'Last name'
     email: 'Email address'
     password: 'Password'
+teamname: 'Team name'
 
 access_denied:
     title: 'Access Denied'
@@ -201,11 +208,6 @@ team:
         email_placeholder: "Member's email"
         add_button: 'Add'
         no_new_member: 'No new member'
-form:
-    firstname:
-        not_blank: 'Please enter your first name.'
-        min_length: 'Your first name must be at least {{ limit }} characters long.'
-        placeholder: 'Enter your first name...'
     lastname:
         not_blank: 'Please enter your last name.'
         min_length: 'Your last name must be at least {{ limit }} characters long.'
@@ -231,6 +233,7 @@ user_list:
     no_users: "No users found."
     manage_users: "Manage users"
 user:
+    delete: "This user is part of a team. Are you sure you want to delete it?"
     profile:
         title: "User profile"
         account_details: "Account details"
@@ -327,7 +330,14 @@ noteamfound: "No team found"
 championship: "Championship"
 choosechamp: "Choose a championship"
 champfield: "Choose the field of the championship"
-
+allfield: "All fields"
+listview: "List view"
+planningview: "Planning view"
+quit: "Quit"
+join: "Join"
+optionnal: "optionnal"
+teamname_label: "Name"
+timeslot: "Time slot"
 page_title:
     home: "Home"
     login: "Log-in"
@@ -337,3 +347,40 @@ page_title:
     control_panel: "Administration"
     not_found: "Page not found"
     edit_championship: "Edit Championship"
+field: 'Field'
+status: 'Status'
+forfeit: 'Forfeit'
+future: 'Future'
+nomatchfound: 'No match found'
+allstatus: 'All status'
+nomatchtoday: 'No match today'
+seechampionships: 'See championships'
+members: 'Members'
+teamdashboard: 'Team dashboard'
+remove: 'Remove'
+validateupdate: 'Validate the update'
+createteamsucess: 'Team created successfully'
+flash:
+    success:
+        member_added_single: "Member has been successfully added."
+        member_added_multiple: "%count% members successfully added."
+    info:
+        no_member_added: "No member added."
+    mustconnected: 'You must be connected to create a team.'
+    already_member: "You are already a member of a team."
+    organizer_no_team: "Organizers cannot create teams."
+    error:
+        invalid_access: "Error: You cannot access this page."
+        must_login_team: "You must be logged in to create a team."
+        already_team_member: "You are already a member of a team."
+        organizer_no_team: "Organizers cannot create teams."
+        team_name_exists: "Error: a team already has this name."
+        team_name_empty: "Error: team name cannot be empty."
+        team:
+            not_found: "The specified team was not found"
+            creator_not_found: "The team creator was not found"
+            must_login: "You must be logged in to add members."
+            no_team: "You are not part of any team."
+
+        
+exemple: "ex: Company, University, etc."

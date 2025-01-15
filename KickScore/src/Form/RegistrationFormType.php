@@ -20,19 +20,19 @@ class RegistrationFormType extends AbstractType
         $builder
             ->add('Mail')
             ->add('FirstName', null, [
-                'label' => 'Prénom',
-                'attr' => ['placeholder' => 'Insérer votre prénom...'],
-                'required' => true,
+                'label' => 'form.firstname.label',
+                'attr' => ['placeholder' => 'form.firstname.placeholder'],
                 'constraints' => [
                     new NotBlank([
-                        'message' => 'Veuillez insérer votre prénom.',
+                        'message' => 'form.firstname.not_blank',
                     ]),
                     new Length([
                         'min' => 2,
-                        'minMessage' => 'Votre prénom doit être de {{ limit }} caractères minimum.',
+                        'minMessage' => 'form.firstname.min_length',
                         'max' => 32,
                     ]),
                 ],
+                'translation_domain' => 'validators',
             ])
             ->add('Name', null, [
                 'label' => 'Nom de famille',

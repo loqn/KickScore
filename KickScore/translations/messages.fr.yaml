@@ -13,8 +13,9 @@ roleorganizer: 'Rôle Organisateur'
 newpasseword: 'Nouveau mot de passe'
 stayblank: "Laissez vide pour conserver le mot de passe actuel"
 confirmmdp: 'Confirmer le mot de passe'
-cancel: 'Annuler'
+cancel: 'Annulé'
 modifychampionship: 'Modifier le championnat'
+newtournament: "d'un nouveau tournoi"
 modifyaccount: "Modifier les informations du compte"
 modifyuser: "Modifier l'utilisateur"
 user_label: 'Utilisateur'
@@ -50,6 +51,7 @@ nomember: "Aucun membre dans cette équipe"
 seematch: "Voir les matchs"
 endmatch: "Fin des matchs aujourd'hui"
 end: "Terminé"
+seechampionships: "Voir les championnats"
 teamboard: "Tableau de bord des équipes"
 member: "Membre"
 organizeby: "Organisé par"
@@ -71,11 +73,18 @@ next: 'Suivant'
 previous: 'Précédent'
 nomatchscheduled: 'Aucun match programmé'
 nextmatch: 'Prochain match'
+nomatchtoday: "Aucun match aujourd'hui"
 nocurrentmatch: "Aucun match en cours"
 matchcalendar: 'Calendrier des matchs'
 matchprogress: 'Matches en cours et à venir'
 matchinlive: 'Match en cours'
 progress: 'En cours'
+form:
+    firstname:
+        placeholder: 'Insérer votre prénom...'
+        not_blank: 'Veuillez insérer votre prénom.'
+        min_length: 'Votre prénom doit être de {{ limit }} caractères minimum.'
+
 nav:
     from: 'De'
     to: 'À'
@@ -182,6 +191,7 @@ championship_list:
     no_teams: "Aucune équipe dans ce championnat."
     no_championships: "Aucun championnat n'a été trouvé."
 user:
+    delete: "L'utilisateur est membre d'une équipe. Voulez vous vraiment le supprimer ?"
     profile:
         title: "Profil utilisateur"
         account_details: "Détails du compte"
@@ -238,7 +248,6 @@ login:
     remember_me: 'Se souvenir de moi'
     submit: 'Se connecter'
     no_account: 'Pas encore de compte ? Inscrivez-vous'
-
 team:
     title: 'Mon équipe'
     team_name: 'Équipe %name%'
@@ -323,7 +332,12 @@ championships: "Championnats"
 noteamfound: "Aucune équipe n'a été trouvée."
 championship: "Championnat"
 choosechamp: "Choisissez un championnat"
-
+allfields: "Tous les terrains"
+listview: "Vue liste"
+planningview: "Vue planning"
+quit: "Quitter"
+join: "Rejoindre"
+timslot: "Créneau"
 page_title:
     home: "Accueil"
     login: "Connexion"
@@ -334,3 +348,41 @@ page_title:
     create: "Création"
     not_found: "Page non trouvée"
     edit_championship: "Modifier le championnat"
+field: 'Terrain'
+status: 'Statut'
+forfeit: 'Forfait'
+teamname_label: 'Nom'
+future: 'À venir'
+nomatchfound: "Aucun match trouvé"
+allstatus: "Tous les statuts"
+members: "Membres"
+teamdashboard: "Tableau de bord de l'équipe"
+remove: "Supprimer"
+validateupdate: "Valider les ajouts"
+createteamsucess: "L'équipe a été créée avec succès"
+flash:
+    mustconnected: "Vous devez être connecté pour créer une équipe."
+    already_member: "Vous êtes déjà membre d'une équipe."
+    organizer_no_team: "Les organisateurs ne peuvent pas créer d'équipe."
+    success:
+        member_added_single: "Le membre a été ajouté avec succès."
+        member_added_multiple: "%count% membres ajoutés avec succès."
+    info:
+        no_member_added: "Aucun membre ajouté."
+
+    error:
+        invalid_access: "Erreur : Vous ne pouvez pas accéder à cette page."
+        must_login_team: "Vous devez être connecté pour créer une équipe."
+        already_team_member: "Vous êtes déjà membre d'une équipe."
+        organizer_no_team: "Les organisateurs ne peuvent pas créer d'équipe."
+        team_name_exists: "Erreur : une équipe possède déjà ce nom."
+        team_name_empty: "Erreur : le nom de l'équipe ne peut pas être vide."
+        team:
+            not_found: "L'équipe renseignée n'a pas été trouvée"
+            creator_not_found: "Le créateur de l'équipe n'a pas été trouvé"
+            must_login: "Vous devez être connecté pour ajouter des membres."
+            no_team: "Vous ne faites partie d'aucune équipe."
+    
+teamname: "Nom de l'équipe"
+optionnal: "optionnel"
+exemple: "ex: Entreprise, Association, etc."
