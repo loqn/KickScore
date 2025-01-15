@@ -4,7 +4,7 @@
 
 {% block body %}
 <!DOCTYPE html>
-<html lang="en">
+<html lang="fr">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -15,14 +15,50 @@
     {{ form_start(form) }}
         {{ form_row(form.tournament) }}
     {{ form_end(form) }}
-    {% if matches is not null %}
-        <div class="matches">
-            {{ matches.blueTeam.name }} vs {{ matches.greenTeam.name }}
-            Score: {{ matches.blueScore }} - {{ matches.greenScore }}
+    {% if matches is not null and matches|length > 0 %}
+        <div class="listMatches">
+            {% for row in matches %}
+                <div class="rowMatches">
+                    {% for match in row %}
+                        <div class="matches">
+                                {% if match.blueTeam and match.greenTeam %}
+                                    {{ match.blueTeam.name }} vs {{ match.greenTeam.name }}
+                                {% else %}
+                                    <p>Match à venir</p>
+                                {% endif %}
+                            Score: {{ match.blueTeamScore }} - {{ match.greenTeamScore }}
+                        </div>
+                    {% endfor %}
+                </div>
+                
+            {% endfor %}
         </div>
     {% endif %}
+
+    <form method="post" action="{{ path('app_tournament_refresh') }}">
+        <input type="hidden" name="tournament_id" value="{{ tournament.id }}">
+        <button type="submit" class="btn btn-primary">
+            Rafraîchir le Tournoi
+        </button>
+    </form>
+
+
 </body>
 </html>
 
+<style>
+    form, h1{
+        margin-left: 5em;
+    }
+
+    .listMatches{
+        display: flex;
+        flex-direction: row;
+    }
+
+    .matches{
+        border: 1px solid black;
+    }
+</style>
 
 {% endblock %}

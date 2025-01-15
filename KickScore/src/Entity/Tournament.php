@@ -6,12 +6,13 @@ use App\Repository\TournamentRepository;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
+#[ORM\Table(name: 'T_TOURNAMENT_TRM')]
 #[ORM\Entity(repositoryClass: TournamentRepository::class)]
 class Tournament
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column]
+    #[ORM\Column(name: 'TRM_ID')]
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
@@ -27,8 +28,12 @@ class Tournament
     #[ORM\JoinColumn(name: 'CHP_ID', referencedColumnName: 'CHP_ID', nullable: false)]
     private ?Championship $championship = null;
 
-    private BinaryVersus $final;
+    //private ?BinaryVersus $final = null;
     private Versus $smallFinal;
+
+    #[ORM\OneToOne(inversedBy: 'tournament', cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'PLA_ID', referencedColumnName: 'PLA_ID', nullable: true)]
+    private ?PlayoffMatch $final = null;
 
     public function getId(): ?int
     {
@@ -82,16 +87,8 @@ class Tournament
     
         return $this;
     }
-
-    public function getFinal(){
-        return $this->final;
-    }
-
-    public function setFinal(BinaryVersus $myFinal){
-        $this->final = $myFinal;
-    }
-    /*
-    public function setInitMatches(int $depth, BinaryVersus $match, array $matches)
+/*
+    public function setInitMatches(int $depth, PlayoffMatch $match, array $matches)
     {
 
         if ($depth > 1)
@@ -112,7 +109,7 @@ class Tournament
         
         return $matches[] = $match;
     }
-    */
+*/
 
 /*
     public function __construct(int $depth, array $teams, array $versus)
@@ -123,5 +120,17 @@ class Tournament
         $this->refreshTournament($final);
     }
 */
+
+public function getFinal(): ?PlayoffMatch
+{
+    return $this->final;
+}
+
+public function setFinal(?PlayoffMatch $final): static
+{
+    $this->final = $final;
+
+    return $this;
+}
 
 }

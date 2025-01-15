@@ -7,6 +7,8 @@ use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
+use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Form\Extension\Core\Type\HiddenType;
 
 class TournamentType extends AbstractType
 {
@@ -19,10 +21,17 @@ class TournamentType extends AbstractType
 
     public function buildForm(FormBuilderInterface $builder, array $options)
     {
-        $builder->add('tournament', ChoiceType::class, [
-            'choices' => $this->getTournamentsChoices(),
-            'placeholder' => 'Choisir un tournoi',
-        ]);
+        $builder
+            ->add('tournament', ChoiceType::class, [
+                'choices' => $this->getTournamentsChoices(),
+                'placeholder' => 'Choisir un tournoi',
+            ])
+            ->add('submit', SubmitType::class, [
+                'label' => 'Valider'
+            ])
+            ->add('action_type', HiddenType::class, [
+                'mapped' => false, // Ce champ n'est pas lié à l'entité
+            ]);
     }
 
     private function getTournamentsChoices()
@@ -40,8 +49,10 @@ class TournamentType extends AbstractType
     }
 
     public function configureOptions(OptionsResolver $resolver)
-    {
-        $resolver->setDefaults([]);
+    {   
+        $resolver->setDefaults([
+            'data_class' => null,
+            'csrf_protection' => true,
+        ]);
     }
-
 }

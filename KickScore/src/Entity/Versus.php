@@ -56,11 +56,6 @@ class Versus
         return $this->id;
     }
 
-    public function getBlueTeam(): ?Team
-    {
-        return $this->blueTeam;
-    }
-
     public function setBlueTeam(?Team $blueTeam): static
     {
         $this->blueTeam = $blueTeam;
@@ -68,10 +63,16 @@ class Versus
         return $this;
     }
 
-    public function getGreenTeam(): ?Team
+    public function getGreenTeam(): Team
     {
-        return $this->greenTeam;
+        return $this->greenTeam ?? new Team('Équipe par défaut');
     }
+    
+    public function getBlueTeam(): Team
+    {
+        return $this->blueTeam ?? new Team('Équipe par défaut');
+    }
+    
 
     public function setGreenTeam(?Team $greenTeam): static
     {
