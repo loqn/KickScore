@@ -25,10 +25,13 @@ class ExportOrgaController extends AbstractController
         $selectedChampionshipId = $request->request->get('championship');
 
 
-        return $this->render('org/select_champ.html.twig', [
+        return $this->render(
+            'org/select_champ.html.twig',
+            [
             'championships' => $championships,
             'select' => $selectedChampionshipId,
-        ]);
+            ]
+        );
     }
 
     #[Route('/download_orga', name: 'download_orga', methods: ['POST'])]
@@ -55,9 +58,12 @@ class ExportOrgaController extends AbstractController
             mat.CHP_ID = :id;
     ";
 
-        $teamCounts = $connection->fetchAssociative($checkTeamsSql, [
+        $teamCounts = $connection->fetchAssociative(
+            $checkTeamsSql,
+            [
             'id' => $selectedChampionshipId,
-        ]);
+            ]
+        );
 
         // Initialisez la requête SQL
         $sql = "
@@ -151,9 +157,12 @@ class ExportOrgaController extends AbstractController
     ";
 
         // Exécution de la requête avec les paramètres
-        $matches = $connection->fetchAllAssociative($sql, [
+        $matches = $connection->fetchAllAssociative(
+            $sql,
+            [
             'id' => $selectedChampionshipId
-        ]);
+            ]
+        );
 
         $jsonContent = json_encode($matches, JSON_PRETTY_PRINT);
 

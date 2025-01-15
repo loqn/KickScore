@@ -24,16 +24,22 @@ class ChampionshipController extends AbstractController
         }
         $championships = $entityManager->getRepository(Championship::class)->findAll();
 
-        $finishedChampionships = array_filter($championships, function (Championship $championship) {
-            return $championship->getEndDate() < new \DateTime();
-        });
+        $finishedChampionships = array_filter(
+            $championships,
+            function (Championship $championship) {
+                return $championship->getEndDate() < new \DateTime();
+            }
+        );
         $teams = $entityManager->getRepository(Team::class)->findAll();
-        return $this->render('championship/index.html.twig', [
+        return $this->render(
+            'championship/index.html.twig',
+            [
             'controller_name' => 'MeetController',
             'championships' => $championships,
             'finishedChampionships' => $finishedChampionships,
             'teams' => $teams,
-        ]);
+            ]
+        );
     }
 
     #[Route('/import', name: 'app_championship_import', methods: ['POST'])]
@@ -182,12 +188,15 @@ class ChampionshipController extends AbstractController
 
         $selectedChampionshipId = $request->query->get('select');
 
-        return $this->render('championship/edit.html.twig', [
+        return $this->render(
+            'championship/edit.html.twig',
+            [
             'championship' => $championship,
             'fields' => $fields,
             'select' => $selectedChampionshipId,
 
-        ]);
+            ]
+        );
     }
 
     #[Route('/{id}/apply-changes', name: 'app_championship_edit', methods: ['POST'])]
@@ -215,9 +224,12 @@ class ChampionshipController extends AbstractController
         $entityManager->remove($fieldToRemove);
         $entityManager->persist($championship);
         $entityManager->flush();
-        return $this->redirectToRoute('app_champ_edit', [
+        return $this->redirectToRoute(
+            'app_champ_edit',
+            [
             'id' => $championship->getId()
-        ]);
+            ]
+        );
     }
 
     #[Route('/{id}/leave', name: 'leave_championship', methods: ['POST'])]

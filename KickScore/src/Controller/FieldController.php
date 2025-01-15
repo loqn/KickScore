@@ -21,11 +21,14 @@ class FieldController extends AbstractController
 
         $selectedChampionshipId = $request->query->get('select');
 
-        return $this->render('field/index.html.twig', [
+        return $this->render(
+            'field/index.html.twig',
+            [
             'championships' => $championships,
             'select' => $selectedChampionshipId,
 
-        ]);
+            ]
+        );
     }
 
     #[Route('/field/create', name: 'app_field_create', methods: ['POST'])]

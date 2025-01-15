@@ -42,9 +42,12 @@ class ExportUserController extends AbstractController
                     mat.MAT_DATE;
             ";
         // Executing the request with parameters
-        $data = $connection->fetchAllAssociative($sql, [
+        $data = $connection->fetchAllAssociative(
+            $sql,
+            [
             'team' => '%' . $name . '%'
-        ]);
+            ]
+        );
 
 
         // Encoding data in JSON

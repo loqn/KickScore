@@ -27,8 +27,7 @@ class TeamRepository extends ServiceEntityRepository
             ->orderBy('t.id', 'ASC')
             ->setMaxResults(10)
             ->getQuery()
-            ->getResult()
-        ;
+            ->getResult();
     }
 
     public function findOneBySomeField($value): ?Team
@@ -37,8 +36,7 @@ class TeamRepository extends ServiceEntityRepository
             ->andWhere('t.exampleField = :val')
             ->setParameter('val', $value)
             ->getQuery()
-            ->getOneOrNullResult()
-        ;
+            ->getOneOrNullResult();
     }
     public function findAllTeamsByPoints()
     {

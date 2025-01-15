@@ -22,11 +22,14 @@ final class UserController extends AbstractController
     {
         //all the teams participating in all the championships organized by the current organizer
         $teams = $championshipRepository->findTeamsByOrganizer($this->getUser());
-        return $this->render('user/index.html.twig', [
+        return $this->render(
+            'user/index.html.twig',
+            [
             'users' => $userRepository->findAll(),
             'championships' => $championshipRepository->findAll(),
             'teams' => $teams
-        ]);
+            ]
+        );
     }
 
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
@@ -43,18 +46,24 @@ final class UserController extends AbstractController
             return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
         }
 
-        return $this->render('user/new.html.twig', [
+        return $this->render(
+            'user/new.html.twig',
+            [
             'user' => $user,
             'form' => $form,
-        ]);
+            ]
+        );
     }
 
     #[Route('/{id}', name: 'app_user_show', methods: ['GET'])]
     public function show(User $user): Response
     {
-        return $this->render('user/show.html.twig', [
+        return $this->render(
+            'user/show.html.twig',
+            [
             'user' => $user,
-        ]);
+            ]
+        );
     }
 
     #[Route('/{id}/edit', name: 'app_user_edit', methods: ['GET', 'POST'])]
@@ -101,9 +110,12 @@ final class UserController extends AbstractController
             }
         }
 
-        return $this->render('user/edit.html.twig', [
+        return $this->render(
+            'user/edit.html.twig',
+            [
             'user' => $user
-        ]);
+            ]
+        );
     }
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
@@ -131,8 +143,11 @@ final class UserController extends AbstractController
     #[Route('/delete-team-warn/{id}', name: 'app_delete_user_team_warn', methods: ['GET'])]
     public function deleteTeam(User $user, EntityManagerInterface $entityManager): Response
     {
-        return $this->render('user/delete_team.html.twig', [
+        return $this->render(
+            'user/delete_team.html.twig',
+            [
             'user' => $user,
-        ]);
+            ]
+        );
     }
 }

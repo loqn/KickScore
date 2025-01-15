@@ -30,10 +30,13 @@ class RankingController extends AbstractController
             $teams = $teamRepository->findTeamsByChampionship((int)$selectedChampionshipId);
         }
 
-        return $this->render('ranking/index.html.twig', [
+        return $this->render(
+            'ranking/index.html.twig',
+            [
             'championships' => $championships,
             'teams' => $teams,
             'selectedChampionshipId' => $selectedChampionshipId
-        ]);
+            ]
+        );
     }
 }

@@ -24,16 +24,21 @@ class SecurityController extends AbstractController
             $this->addFlash('error', 'L\'adresse mail ou le mot de passe saisi est incorrect.');
         }
 
-        return $this->render('security/login.html.twig', [
+        return $this->render(
+            'security/login.html.twig',
+            [
             'last_username' => $lastUsername,
-        ]);
+            ]
+        );
     }
 
     #[Route(path: '/logout', name: 'app_logout')]
     public function logout(): void
     {
-        throw new \LogicException('This method can be blank - it will be intercepted by the logout key on 
-            your firewall.');
+        throw new \LogicException(
+            'This method can be blank - it will be intercepted by the logout key on 
+            your firewall.'
+        );
     }
 
     #[Route('/access-denied', name: 'app_access_denied', requirements: ['_locale' => 'en|fr'])]

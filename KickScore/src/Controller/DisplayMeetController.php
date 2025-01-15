@@ -37,8 +37,11 @@ class DisplayMeetController extends AbstractController
             }
         }
 
-        return $this->render('display_meet/index.html.twig', [
+        return $this->render(
+            'display_meet/index.html.twig',
+            [
             'controller_name' => 'DisplayMeetController',
-        ]);
+            ]
+        );
     }
 }

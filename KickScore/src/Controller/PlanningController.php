@@ -20,10 +20,13 @@ class PlanningController extends AbstractController
     {
         $championships = $entityManager->getRepository(Championship::class)->findAll();
         $teams = $entityManager->getRepository(Team::class)->findAll();
-        return $this->render('planning/index.html.twig', [
+        return $this->render(
+            'planning/index.html.twig',
+            [
             'controller_name' => 'PlanningController',
             'championships' => $championships,
             'teams' => $teams,
-        ]);
+            ]
+        );
     }
 }
