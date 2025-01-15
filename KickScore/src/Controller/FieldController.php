@@ -19,13 +19,10 @@ class FieldController extends AbstractController
     {
         // Get all the championships available
         $championships = $entityManager->getRepository(Championship::class)->findAll();
-
         //get all the fields
         $fields = $entityManager->getRepository(Field::class)->findAll();
-
         //get the selected championship id
         $selectedChampionshipId = $request->query->get('select');
-
         return $this->render('field/index.html.twig', [
             'championships' => $championships,
             'select' => $selectedChampionshipId,
@@ -37,8 +34,12 @@ class FieldController extends AbstractController
     #[Route('/field/delete/{id}', name: 'app_delete_field', methods: ['POST'])]
     public function delete(Request $request, Field $field, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
     {
-        try {
+        try{
             $championship = $field->getChampionship();
+            foreach ($field->getVersuses() as $versus) {
+                $this->addFlash('error', 'Erreur : le terrain est utilisé dans un match. veuillez retirer le match avant de supprimer le terrain.');
+                return $this->redirectToRoute('app_champ_edit', ['id' => $championship->getId()]);
+            }
             $championship->removeField($field);
             $entityManager->remove($field);
             $entityManager->flush();
@@ -46,7 +47,6 @@ class FieldController extends AbstractController
         } catch (\Exception $e) {
             $logger->error('Error during deletion: ' . $e->getMessage());
         }
-
         return $this->redirectToRoute('app_champ_edit', ['id' => $championship->getId()]);
     }
 
