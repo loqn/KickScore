@@ -16,11 +16,11 @@ class ExportUserController extends AbstractController
     {
             // Stocking the request
             $team = $this->getUser()->getMember()->getTeam();
-            if ($team == null) {
-                $msg ="Vous n'avez pas d'équipe.";
-                echo '<script type="text/javascript">window.alert("'.$msg.'");</script>';
-                return $this->render('root/index.html.twig');
-            }
+        if ($team == null) {
+            $msg = "Vous n'avez pas d'équipe.";
+            echo '<script type="text/javascript">window.alert("' . $msg . '");</script>';
+            return $this->render('root/index.html.twig');
+        }
             $name = $this->getUser()->getMember()->getTeam()->getName();
             $sql = "
                 SELECT 
@@ -42,9 +42,12 @@ class ExportUserController extends AbstractController
                     mat.MAT_DATE;
             ";
         // Executing the request with parameters
-        $data = $connection->fetchAllAssociative($sql, [
+        $data = $connection->fetchAllAssociative(
+            $sql,
+            [
             'team' => '%' . $name . '%'
-        ]);
+            ]
+        );
 
 
         // Encoding data in JSON

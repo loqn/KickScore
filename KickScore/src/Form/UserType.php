@@ -20,21 +20,30 @@ class UserType extends AbstractType
             ->add('mail')
             ->add('isOrganizer')
             ->add('password')
-            ->add('team', EntityType::class, [
+            ->add(
+                'team',
+                EntityType::class,
+                [
                 'class' => Team::class,
                 'choice_label' => 'id',
-            ])
-            ->add('member', EntityType::class, [
+                ]
+            )
+            ->add(
+                'member',
+                EntityType::class,
+                [
                 'class' => Member::class,
                 'choice_label' => 'id',
-            ])
-        ;
+                ]
+            );
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
-        $resolver->setDefaults([
+        $resolver->setDefaults(
+            [
             'data_class' => User::class,
-        ]);
+            ]
+        );
     }
 }

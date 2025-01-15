@@ -1,4 +1,10 @@
 on: 'sur'
+deletefieldsuccess: 'Le terrain a été supprimé avec succès'
+commentary: 'Commentaire'
+fieldname: 'Nom du terrain'
+addcomment: 'Ajouter un commentaire'
+registration: 'Inscription'
+matchstatus: 'Statut du match'
 gp: 'MJ'
 export: 'Exporter'
 import: 'Importer'
@@ -13,8 +19,9 @@ roleorganizer: 'Rôle Organisateur'
 newpasseword: 'Nouveau mot de passe'
 stayblank: "Laissez vide pour conserver le mot de passe actuel"
 confirmmdp: 'Confirmer le mot de passe'
-cancel: 'Annuler'
+cancel: 'Annulé'
 modifychampionship: 'Modifier le championnat'
+newtournament: "du nouveau tournoi"
 modifyaccount: "Modifier les informations du compte"
 modifyuser: "Modifier l'utilisateur"
 user_label: 'Utilisateur'
@@ -26,12 +33,12 @@ deletefield: 'Terrain à supprimer'
 deleteteam: "Supprimer l'équipe"
 selectedfield: 'Terrain sélectionné'
 validemodify: 'Enregistrer les modifications'
-newchampion: "d'un nouveau championnat"
+newchampion: "du nouveau championnat"
 classiccreation: 'Création classique'
 generatetournament: 'Générer un tournoi'
 generatematch: 'Générer des matchs'
 tournamentname: 'Nom du tournoi'
-tournamentoptions: 'Options du tournoi'
+tournamentoption: 'Option du tournoi'
 teamlist: 'Liste des équipes'
 3match: 'Match pour la 3ème place'
 simplifymanage: "Gestion simplifiée"
@@ -45,12 +52,12 @@ organizedmatch: "Match organisés"
 tournament: 'Tournoi'
 activeteams: 'Équipes actives'
 useractive: 'Utilisateur actif'
-matchprogress: "Matchs à venir aujourd'hui"
 nomatch: "Aucun match en cours ou à venir aujourd'hui"
 nomember: "Aucun membre dans cette équipe"
 seematch: "Voir les matchs"
 endmatch: "Fin des matchs aujourd'hui"
 end: "Terminé"
+seechampionships: "Voir les championnats"
 teamboard: "Tableau de bord des équipes"
 member: "Membre"
 organizeby: "Organisé par"
@@ -66,6 +73,24 @@ add: 'Ajouter'
 nonewmem: 'Aucun nouveau membre'
 actionimpossible: 'Action impossible'
 edit: 'Modifier'
+selectendchamp: "-- Sélectionner un championnat terminé --"
+fileimport: 'Fichier à importer'
+next: 'Suivant'
+previous: 'Précédent'
+nomatchscheduled: 'Aucun match programmé'
+nextmatch: 'Prochain match'
+nomatchtoday: "Aucun match aujourd'hui"
+nocurrentmatch: "Aucun match en cours"
+matchcalendar: 'Calendrier des matchs'
+matchprogress: 'Matches en cours et à venir'
+matchinlive: 'Match en cours'
+progress: 'En cours'
+form:
+    firstname:
+        placeholder: 'Insérer votre prénom...'
+        not_blank: 'Veuillez insérer votre prénom.'
+        min_length: 'Votre prénom doit être de {{ limit }} caractères minimum.'
+
 nav:
     from: 'De'
     to: 'À'
@@ -172,6 +197,7 @@ championship_list:
     no_teams: "Aucune équipe dans ce championnat."
     no_championships: "Aucun championnat n'a été trouvé."
 user:
+    delete: "L'utilisateur est membre d'une équipe. Voulez vous vraiment le supprimer ?"
     profile:
         title: "Profil utilisateur"
         account_details: "Détails du compte"
@@ -228,7 +254,6 @@ login:
     remember_me: 'Se souvenir de moi'
     submit: 'Se connecter'
     no_account: 'Pas encore de compte ? Inscrivez-vous'
-
 team:
     title: 'Mon équipe'
     team_name: 'Équipe %name%'
@@ -311,14 +336,101 @@ manage: "Gérer"
 users: "Utilisateurs"
 championships: "Championnats"
 noteamfound: "Aucune équipe n'a été trouvée."
-
+championship: "Championnat"
+choosechamp: "Choisissez un championnat"
+allfields: "Tous les terrains"
+listview: "Vue liste"
+planningview: "Vue planning"
+quit: "Quitter"
+join: "Rejoindre"
+timslot: "Créneau"
 page_title:
     home: "Accueil"
     login: "Connexion"
     register: "Inscription"
     profile: "Profil"
-    match: "Listes des compétitions"
+    match: "Listes des matchs"
     control_panel: "Gestion"
     create: "Création"
+    ranking: "Classement des équipes"
+    edit_user: "Modifier le championnat"
     not_found: "Page non trouvée"
     edit_championship: "Modifier le championnat"
+    createfield: "Création d'un terrain"
+teamexitchampionshipsuccess: "L'équipe a quitté le championnat avec succès"
+field: 'Terrain'
+status: 'Statut'
+forfeit: 'Forfait'
+teamname_label: 'Nom'
+future: 'À venir'
+nomatchfound: "Aucun match trouvé"
+allstatus: "Tous les statuts"
+members: "Membres"
+teamdashboard: "Tableau de bord de l'équipe"
+remove: "Supprimer"
+validateupdate: "Valider les ajouts"
+createteamsucess: "L'équipe a été créée avec succès"
+error:
+    field:
+        organizer_only: "Seuls les organisateurs peuvent créer des terrains."
+    championship:
+        organizer_only: "Seuls les organisateurs peuvent créer des championnats."
+    invalid_csrf_token: "Token CSRF invalide"
+    must_be_team_member: "Vous devez faire partie d'une équipe"
+    championship_not_found: "Championnat non trouvé"
+flash:
+    mustconnected: "Vous devez être connecté pour créer une équipe."
+    already_member: "Vous êtes déjà membre d'une équipe."
+    organizer_no_team: "Les organisateurs ne peuvent pas créer d'équipe."
+    success:
+        member_added_single: "Le membre a été ajouté avec succès."
+        member_added_multiple: "%count% membres ajoutés avec succès."
+        team_joined_championship: "Votre équipe a rejoint le championnat avec succès"
+        championship_created: "Championnat créé avec succès."
+        field_created: "Le terrain a été créé avec succès."
+        field_deleted: "Le terrain a été supprimé avec succès."
+        matches_generated: "Matchs générés avec succès."
+        match_updated: "Match mis à jour avec succès."
+
+    info:
+        no_member_added: "Aucun membre ajouté."
+
+    error:
+        cannot_delete_field: "Erreur : le terrain est utilisé dans un match. Veuillez retirer le match avant de supprimer le terrain."
+        invalid_access: "Erreur : Vous ne pouvez pas accéder à cette page."
+        must_login_team: "Vous devez être connecté pour créer une équipe."
+        already_team_member: "Vous êtes déjà membre d'une équipe."
+        organizer_no_team: "Les organisateurs ne peuvent pas créer d'équipe."
+        team_name_exists: "Erreur : une équipe possède déjà ce nom."
+        team_name_empty: "Erreur : le nom de l'équipe ne peut pas être vide."
+        championship_name_required: "Le nom du championnat est obligatoire."
+        championship_date_conflict: "Un championnat est déjà en cours sur ces dates."
+        championship_invalid_dates: "Les dates ne sont pas cohérentes."
+        championship_not_found: "Erreur : le championnat spécifié est introuvable."
+        field_name_empty: "Erreur : le nom du terrain ne peut pas être vide."
+        no_participating_teams: "Il n'y a aucune équipe participante !"
+        championship_already_ended: "Impossible de générer des matchs pour un championnat déjà terminé."
+        championship_already_started: "Impossible de générer des matchs pour un championnat déjà commencé."
+        no_available_fields: "Il n'y a aucun terrain disponible pour programmer des matchs dans ce championnat."
+        cannot_generate_timeslots: "Impossible de générer des créneaux horaires."
+        not_enough_timeslots: "Pas assez de créneaux disponibles pour tous les matchs."
+        cannot_schedule_all_matches: "Impossible de programmer tous les matchs dans les créneaux disponibles."
+        team_cannot_play_itself: "Impossible de faire jouer une équipe contre elle-même."
+        match_cannot_start_before_timeslot: "Impossible de mettre un match en cours avant le début du créneau horaire."
+        match_cannot_start_after_timeslot: "Impossible de mettre un match en cours après la fin du créneau horaire."
+        match_cannot_end_before_timeslot: "Impossible de terminer un match avant la fin du créneau horaire."
+        match_requires_score: "Impossible de terminer un match sans score."
+        negative_score_not_allowed: "Impossible de mettre un score négatif."    
+        team:
+            not_found: "L'équipe renseignée n'a pas été trouvée"
+            creator_not_found: "Le créateur de l'équipe n'a pas été trouvé"
+            must_login: "Vous devez être connecté pour ajouter des membres."
+            no_team: "Vous ne faites partie d'aucune équipe."
+        
+            
+    
+teamname: "Nom de l'équipe"
+optionnal: "optionnel"
+exemple: "ex: Entreprise, Association, etc."
+modifymatch: 'Modification des informations du match'
+matchmodify: 'Modifier le match'

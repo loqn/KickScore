@@ -9,6 +9,7 @@ use App\Entity\Team;
 use App\Entity\TeamResults;
 use App\Entity\Timeslot;
 use App\Entity\Versus;
+use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
@@ -18,32 +19,33 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 //import date
 use DateTime;
-
-
-
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class MeetController extends AbstractController
 {
     #[Route('/gen_match/{id}', name: 'app_generate_match', methods: ['POST'])]
-    public function generateMatchsForChampionship(Request $request, EntityManagerInterface $entityManager): Response
-    {
+    public function generateMatchsForChampionship(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
+    ): Response {
         $chp = $entityManager->getRepository(Championship::class)->find($request->request->get('chp_id'));
 
         //if start > now, start = tomorrow
         $realStart = $chp->getStartDate();
 
         if ($chp->getTeams()->isEmpty()) {
-            $this->addFlash('error', 'Il n\'y a aucune équipe participante !');
+            $this->addFlash('error', $translator->trans('flash.error.no_participating_teams'));
             return $this->redirectToRoute('app_user_index');
         }
         if ($chp->getEndDate() < new \DateTime()) {
-            $this->addFlash('error', 'Impossible de générer des matchs pour un championnat déjà terminé.');
+            $this->addFlash('error', $translator->trans('flash.error.championship_already_ended'));
             return $this->redirectToRoute('app_user_index');
         }
         if ($chp->getStartDate() < new \DateTime() && !$chp->getMatches()->isEmpty()) {
-            $this->addFlash('error', 'Impossible de générer des matchs pour un championnat déjà commencé.');
+            $this->addFlash('error', $translator->trans('flash.error.championship_already_started'));
             return $this->redirectToRoute('app_user_index');
-        } else if ($chp->getStartDate() < new \DateTime() && $chp->getMatches()->isEmpty()) {
+        } elseif ($chp->getStartDate() < new \DateTime() && $chp->getMatches()->isEmpty()) {
             $realStart = (new \DateTime())->modify('+1 day');
         }
 
@@ -51,7 +53,7 @@ class MeetController extends AbstractController
         $teamsArray = $teams->toArray();
 
         if ($chp->getFields()->isEmpty()) {
-            $this->addFlash('error', 'Il n\'y a aucun terrain disponible pour programmer des matchs dans ce championnat.');
+            $this->addFlash('error', $translator->trans('flash.error.no_available_fields'));
             return $this->redirectToRoute('app_user_index');
         }
 
@@ -59,17 +61,17 @@ class MeetController extends AbstractController
         //set a random to set a random field for each match
         $fieldsArray = $fields->toArray();
         shuffle($fieldsArray);
-        $fields = new \Doctrine\Common\Collections\ArrayCollection($fieldsArray);
+        $fields = new ArrayCollection($fieldsArray);
 
         $timeSlots = $this->generateTimeSlots($realStart, $chp->getEndDate(), 30);
         if (empty($timeSlots)) {
-            $this->addFlash('error', 'Impossible de générer des créneaux horaires.');
+            $this->addFlash('error', $translator->trans('flash.error.cannot_generate_timeslots'));
             return $this->redirectToRoute('app_user_index');
         }
 
         $totalMatches = (count($teamsArray) * (count($teamsArray) - 1)) / 2;
         if (count($timeSlots) * count($fields) < $totalMatches) {
-            $this->addFlash('error', 'Pas assez de créneaux disponibles pour tous les matchs.');
+            $this->addFlash('error', $translator->trans('flash.error.not_enough_timeslots'));
             return $this->redirectToRoute('app_match_list');
         }
 
@@ -79,10 +81,12 @@ class MeetController extends AbstractController
                 $teamA = $teamsArray[$i];
                 $teamB = $teamsArray[$j];
 
-                $existingMatch = $chp->getMatches()->filter(function ($match) use ($teamA, $teamB) {
-                    return ($match->getBlueTeam() === $teamA && $match->getGreenTeam() === $teamB)
-                        || ($match->getBlueTeam() === $teamB && $match->getGreenTeam() === $teamA);
-                })->first();
+                $existingMatch = $chp->getMatches()->filter(
+                    function ($match) use ($teamA, $teamB) {
+                        return ($match->getBlueTeam() === $teamA && $match->getGreenTeam() === $teamB)
+                            || ($match->getBlueTeam() === $teamB && $match->getGreenTeam() === $teamA);
+                    }
+                )->first();
 
                 if (!$existingMatch) {
                     $matchQueue[] = ['teamA' => $teamA, 'teamB' => $teamB];
@@ -96,7 +100,9 @@ class MeetController extends AbstractController
             $entityManager->persist($timeSlot);
 
             foreach ($fields as $field) {
-                if (empty($matchQueue)) break 2;
+                if (empty($matchQueue)) {
+                    break 2;
+                }
 
                 foreach ($matchQueue as $queueIndex => $matchPair) {
                     $teamA = $matchPair['teamA'];
@@ -145,12 +151,12 @@ class MeetController extends AbstractController
         }
 
         if (!empty($matchQueue)) {
-            $this->addFlash('error', 'Impossible de programmer tous les matchs dans les créneaux disponibles.');
+            $this->addFlash('error', $translator->trans('flash.error.cannot_schedule_all_matches'));
             return $this->redirectToRoute('app_match_list', ['championship' => $chp->getId()]);
         }
 
         $entityManager->flush();
-        $this->addFlash('success', 'Matchs générés avec succès.');
+        $this->addFlash('success', $translator->trans('flash.success.matches_generated'));
         return $this->redirectToRoute('app_match_list', ['championship' => $chp->getId()]);
     }
 
@@ -225,18 +231,26 @@ class MeetController extends AbstractController
 
 //        $timeslots = $entityManager->getRepository(Timeslot::class)->findAll();
 //        $timeslots = array_filter($timeslots, function ($timeslot) use ($match) {
-//            return $timeslot->getStart() > new \DateTime() && $this->teamsCanPlayInTimeSlot($match->getGreenTeam(), $match->getBlueTeam(), [], $timeslot);
-//        });
-        return $this->render('versus/edit.html.twig', [
-            'match' => $match,
-            'teams' => $match->getTeams(),
-//            'timeslots' => $timeslots,
-        ]);
+//            return $timeslot->getStart() > new \DateTime() && $this->teamsCanPlayInTimeSlot($match->getGreenTeam(),
+//                    $match->getBlueTeam(), [], $timeslot);
+//        }
+        return $this->render(
+            'versus/edit.html.twig',
+            [
+                'match' => $match,
+                'teams' => $match->getTeams(),
+                //            'timeslots' => $timeslots,
+            ]
+        );
     }
 
     #[Route('/versus/update/{id}', name: 'update_match', methods: ['POST'])]
-    public function update(Request $request, Versus $match, EntityManagerInterface $entityManager): Response
-    {
+    public function update(
+        Request $request,
+        Versus $match,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
+    ): Response {
         if (!$this->isGranted('ROLE_ORGANIZER')) {
             throw $this->createAccessDeniedException('Only organizers can update meets.');
         }
@@ -246,7 +260,7 @@ class MeetController extends AbstractController
 
         //no same team
         if ($greenTeam === $blueTeam) {
-            $this->addFlash('error', 'Impossible de faire jouer une équipe contre elle-même.');
+            $this->addFlash('error', $translator->trans('flash.error.team_cannot_play_itself'));
             return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
         }
         $currentDateTime = (new \DateTime())->modify('+1 hour');
@@ -260,14 +274,18 @@ class MeetController extends AbstractController
         $greenTeamForfeit = $request->request->get('greenTeamForfeit');
         $blueTeamForfeit = $request->request->get('blueTeamForfeit');
 
-        $greenTeamMatchStatus = $entityManager->getRepository(TeamMatchStatus::class)->findOneBy([
-            'team' => $greenTeam,
-            'versus' => $match,
-        ]);
-        $blueTeamMatchStatus = $entityManager->getRepository(TeamMatchStatus::class)->findOneBy([
-            'team' => $blueTeam,
-            'versus' => $match,
-        ]);
+        $greenTeamMatchStatus = $entityManager->getRepository(TeamMatchStatus::class)->findOneBy(
+            [
+                'team' => $greenTeam,
+                'versus' => $match,
+            ]
+        );
+        $blueTeamMatchStatus = $entityManager->getRepository(TeamMatchStatus::class)->findOneBy(
+            [
+                'team' => $blueTeam,
+                'versus' => $match,
+            ]
+        );
 
         //if one of the team forfeit
         if ($greenTeamForfeit || $blueTeamForfeit) {
@@ -275,14 +293,14 @@ class MeetController extends AbstractController
 
             if ($greenTeamForfeit) {
                 $this->handleTeamForfeit($match, $greenTeam, $blueTeam, $entityManager);
-            } else if ($greenTeamMatchStatus) {
+            } elseif ($greenTeamMatchStatus) {
                 $this->revertTeamForfeit($match, $greenTeam, $entityManager);
                 $entityManager->remove($greenTeamMatchStatus);
             }
 
             if ($blueTeamForfeit) {
                 $this->handleTeamForfeit($match, $blueTeam, $greenTeam, $entityManager);
-            } else if ($blueTeamMatchStatus) {
+            } elseif ($blueTeamMatchStatus) {
                 $this->revertTeamForfeit($match, $blueTeam, $entityManager);
                 $entityManager->remove($blueTeamMatchStatus);
             }
@@ -307,11 +325,11 @@ class MeetController extends AbstractController
                     break;
                 case 'IN_PROGRESS':
                     if ($currentDateTime < $match->getTimeslot()->getStart()) {
-                        $this->addFlash('error', 'Impossible de mettre un match en cours avant le début du créneau horaire.');
+                        $this->addFlash('error', $translator->trans('flash.error.match_cannot_start_before_timeslot'));
                         return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
                     }
                     if ($currentDateTime >= $match->getTimeslot()->getEnd()) {
-                        $this->addFlash('error', 'Impossible de mettre un match en cours après la fin du créneau horaire.');
+                        $this->addFlash('error', $translator->trans('flash.error.match_cannot_start_after_timeslot'));
                         return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
                     }
                     $match->setBlueScore(0);
@@ -322,17 +340,17 @@ class MeetController extends AbstractController
                     $blueScore = $request->request->get('blueScore');
 
                     if ($currentDateTime < $match->getTimeslot()->getEnd()) {
-                        $this->addFlash('error', 'Impossible de terminer un match avant la fin du créneau horaire.');
+                        $this->addFlash('error', $translator->trans('flash.error.match_cannot_end_before_timeslot'));
                         return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
                     }
 
                     if ((!$greenScore && $greenScore != 0) || (!$blueScore && $blueScore != 0)) {
-                        $this->addFlash('error', 'Impossible de terminer un match sans score.');
+                        $this->addFlash('error', $translator->trans('flash.error.match_requires_score'));
                         return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
                     }
 
-                    if($greenScore < 0 || $blueScore < 0){
-                        $this->addFlash('error', 'Impossible de mettre un score négatif.');
+                    if ($greenScore < 0 || $blueScore < 0) {
+                        $this->addFlash('error', $translator->trans('flash.error.negative_score_not_allowed'));
                         return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
                     }
 
@@ -350,26 +368,36 @@ class MeetController extends AbstractController
             $match->setCommentary($request->request->get('commentary'));
         }
         $entityManager->flush();
-        $this->addFlash('success', 'Match mis à jour avec succès.');
+        $this->addFlash('success', $translator->trans('flash.success.match_updated'));
         return $this->redirectToRoute('app_match_list');
     }
 
-    private function handleTeamForfeit(Versus $match, Team $forfeitTeam, Team $otherTeam, EntityManagerInterface $entityManager): void
-    {
-        $teamMatchStatus = $entityManager->getRepository(TeamMatchStatus::class)->findOneBy([
-            'team' => $forfeitTeam,
-            'versus' => $match,
-        ]);
+    private function handleTeamForfeit(
+        Versus $match,
+        Team $forfeitTeam,
+        Team $otherTeam,
+        EntityManagerInterface $entityManager
+    ): void {
+        $teamMatchStatus = $entityManager->getRepository(TeamMatchStatus::class)->findOneBy(
+            [
+                'team' => $forfeitTeam,
+                'versus' => $match,
+            ]
+        );
 
-        $forfeitTeamResults = $entityManager->getRepository(TeamResults::class)->findOneBy([
-            'team' => $forfeitTeam,
-            'championship' => $match->getChampionship()
-        ]);
+        $forfeitTeamResults = $entityManager->getRepository(TeamResults::class)->findOneBy(
+            [
+                'team' => $forfeitTeam,
+                'championship' => $match->getChampionship()
+            ]
+        );
 
-        $otherTeamResults = $entityManager->getRepository(TeamResults::class)->findOneBy([
-            'team' => $otherTeam,
-            'championship' => $match->getChampionship()
-        ]);
+        $otherTeamResults = $entityManager->getRepository(TeamResults::class)->findOneBy(
+            [
+                'team' => $otherTeam,
+                'championship' => $match->getChampionship()
+            ]
+        );
 
         $wasAlreadyForfeited = $teamMatchStatus && $teamMatchStatus->getStatus()->getName() === 'FORFEITED';
 
@@ -399,8 +427,7 @@ class MeetController extends AbstractController
                     $forfeitTeamResults->setDraws($forfeitTeamResults->getDraws() - 1);
                     $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 1);
                 }
-            }
-            else if ($match->getBlueTeam() === $forfeitTeam) {
+            } elseif ($match->getBlueTeam() === $forfeitTeam) {
                 if ($blueScore > $greenScore) {
                     $forfeitTeamResults->setWins($forfeitTeamResults->getWins() - 1);
                     $forfeitTeamResults->setPoints($forfeitTeamResults->getPoints() - 3);
@@ -430,10 +457,12 @@ class MeetController extends AbstractController
     private function revertTeamForfeit(Versus $match, Team $team, EntityManagerInterface $entityManager): void
     {
         $teamResults = $team->getTeamResults()->last();
-        $teamMatchStatus = $entityManager->getRepository(TeamMatchStatus::class)->findOneBy([
-            'team' => $team,
-            'versus' => $match,
-        ]);
+        $teamMatchStatus = $entityManager->getRepository(TeamMatchStatus::class)->findOneBy(
+            [
+                'team' => $team,
+                'versus' => $match,
+            ]
+        );
 
         if ($teamMatchStatus && $teamMatchStatus->getStatus()->getName() === 'FORFEITED') {
             if ($match->getTimeslot()->getStart() > new \DateTime()) {
@@ -454,15 +483,19 @@ class MeetController extends AbstractController
         $greenScore = $match->getGreenScore();
         $blueScore = $match->getBlueScore();
 
-        $greenTeamResults = $entityManager->getRepository(TeamResults::class)->findOneBy([
-            'team' => $greenTeam,
-            'championship' => $match->getChampionship()
-        ]);
+        $greenTeamResults = $entityManager->getRepository(TeamResults::class)->findOneBy(
+            [
+                'team' => $greenTeam,
+                'championship' => $match->getChampionship()
+            ]
+        );
 
-        $blueTeamResults = $entityManager->getRepository(TeamResults::class)->findOneBy([
-            'team' => $blueTeam,
-            'championship' => $match->getChampionship()
-        ]);
+        $blueTeamResults = $entityManager->getRepository(TeamResults::class)->findOneBy(
+            [
+                'team' => $blueTeam,
+                'championship' => $match->getChampionship()
+            ]
+        );
 
         if (!$greenTeamResults || !$blueTeamResults) {
             throw new \RuntimeException('Impossible de trouver les résultats des équipes pour ce championnat.');
@@ -488,7 +521,8 @@ class MeetController extends AbstractController
     }
 
     #[Route('/meet/exportIcal/{id}', name: 'app_calendar_export_single', methods: ['GET'])]
-    public function downloadSingleChampionship(int $id, EntityManagerInterface $entityManager): Response {
+    public function downloadSingleChampionship(int $id, EntityManagerInterface $entityManager): Response
+    {
         $championships = $entityManager->getRepository(Championship::class)->find($id);
 
         if (!$championships) {
@@ -499,7 +533,13 @@ class MeetController extends AbstractController
 
         $response = new Response($calendarContent);
         $response->headers->set('Content-Type', 'text/calendar; charset=utf-8');
-        $response->headers->set('Content-Disposition', sprintf('attachment; filename="championship.ical"', $championships->getId()));
+        $response->headers->set(
+            'Content-Disposition',
+            sprintf(
+                'attachment; filename="championship.ical"',
+                $championships->getId()
+            )
+        );
 
         return $response;
     }
@@ -529,14 +569,13 @@ class MeetController extends AbstractController
 
         //get the start time with the day and with the time slot beginning
         $startDate = $match->getTimeslot()->getStart()->format('Ymd\THis\Z');
-        
+
         $endDate = $match->getTimeslot()->getEnd()->format('Ymd\THis\Z');
-        
+
 
         $event .= sprintf("DTSTAMP:%s\r\n", (new DateTime())->format('Ymd\THis\Z'));
         //add the start date with the time beginning
         $event .= sprintf("DTSTART:%s\r\n", $startDate);
-
 
         $event .= sprintf("DTEND:%s\r\n", $endDate);
         $event .= sprintf("SUMMARY:%s\r\n", $this->escapeString($match->getChampionship()->getName()));
@@ -547,18 +586,24 @@ class MeetController extends AbstractController
         }
         if ($match->getChampionship()->getName()) {
             //add description without returning to the line for better readability
-            
+
             $event .= sprintf("DESCRIPTION:%s", $this->escapeString($match->getChampionship()->getName()));
             if (!empty($teams)) {
                 // Add the participating teams to the description
-                $event .= sprintf(" Teams: %s\r\n", implode(' vs ', $teams));
+                $event .= sprintf(
+                    " Teams: %s\r\n",
+                    implode(' vs ', $teams)
+                );
             }
         }
         if ($match->getChampionship()->getOrganizer()) {
-            $event .= sprintf("ORGANIZER:CN=%s\r\n", $this->escapeString($match->getChampionship()->getOrganizer()->getName()));
+            $event .= sprintf(
+                "ORGANIZER:CN=%s\r\n",
+                $this->escapeString($match->getChampionship()->getOrganizer()->getName())
+            );
         }
-        
-        
+
+
         $event .= "END:VEVENT\r\n";
         return $event;
     }

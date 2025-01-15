@@ -15,10 +15,13 @@ class RootController extends AbstractController
     public function index(EntityManagerInterface $entityManager): Response
     {
         $currentCompetition = $entityManager->getRepository(Championship::class)->findOneByCurrentDate();
-        return $this->render('root/index.html.twig', [
+        return $this->render(
+            'root/index.html.twig',
+            [
             'controller_name' => 'RootController',
             'currentCompetition' => $currentCompetition,
-        ]);
+            ]
+        );
     }
 
     #[Route('/error', name: 'app_error')]
@@ -31,10 +34,13 @@ class RootController extends AbstractController
     public function matchList(EntityManagerInterface $entityManager): Response
     {
         $championships = $entityManager->getRepository(Championship::class)->findAll();
-        
-        return $this->render('match/match.html.twig', [
+
+        return $this->render(
+            'match/match.html.twig',
+            [
             'controller_name' => 'RootController',
             'championships' => $championships
-        ]);
+            ]
+        );
     }
 }

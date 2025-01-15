@@ -14,17 +14,23 @@ class TournamentController extends AbstractController
     #[Route('/tournament/{id}', name: 'tournament', methods: ['GET'])]
     public function show(Tournament $tournament): Response
     {
-        return $this->render('tournament/show.html.twig', [
+        return $this->render(
+            'tournament/show.html.twig',
+            [
             'tournament' => $tournament,
-        ]);
+            ]
+        );
     }
 
     #[Route('/tournament/{id}/edit', name: 'tournament_edit', methods: ['GET'])]
     public function edit(Tournament $tournament): Response
     {
-        return $this->render('tournament/edit.html.twig', [
+        return $this->render(
+            'tournament/edit.html.twig',
+            [
             'tournament' => $tournament,
-        ]);
+            ]
+        );
     }
 
     #[Route('/tournament/generate/{id}', name: 'app_generate_tournament', methods: ['POST'])]

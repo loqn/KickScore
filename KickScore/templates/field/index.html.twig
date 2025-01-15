@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% block title %}Create New Field{% endblock %}
+{% block title %}{{'page_title.createfield' | trans}}{% endblock %}
 {% block body %}
 <meta name="csrf-token" content="{{ csrf_token('delete') }}">
 <div class="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
@@ -82,7 +82,7 @@
             <!-- name-->
                 <div>
                     <label for="championship" class="block text-sm font-medium text-gray-700">
-                        Championnat
+                        {{'nav.championship' | trans}}
                     </label>
                     <div class="mt-1 relative">
                         <select
@@ -93,7 +93,7 @@
                                    focus:outline-none focus:ring-2 focus:ring-green-500 focus:border-green-500
                                    bg-white shadow-sm sm:text-sm appearance-none cursor-pointer"
                         >
-                            <option value="" disabled selected>Choisir un championnat</option>
+                            <option value="" disabled selected>{{'choosechamp'  | trans}}</option>
                             {% for championship in championships %}
                                 <option value="{{ championship.id }}" {% if championship.id == select %}selected{% endif %}>
                                     {{ championship.name }}
@@ -107,7 +107,7 @@
                         </div>
                     </div>
                     <p class="mt-2 text-sm text-gray-500">
-                        Choisissez le championnat auquel le terrain appartiendra
+                        {{'addfieldchamp' | trans}}
                     </p>
                 </div>
             </div>
@@ -120,7 +120,7 @@
                            text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-offset-2 
                            focus:ring-green-500 transition-colors duration-200"
                 >
-                    Créer le terrain
+                    {{'createfield' | trans}}
                 </button>
             </div>
         </form>

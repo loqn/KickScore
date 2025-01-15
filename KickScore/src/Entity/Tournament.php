@@ -20,10 +20,10 @@ class Tournament
     #[ORM\Column(name:'TRM_NAME', length: 255, nullable: true)]
     private ?string $name = null;
 
-    #[ORM\Column(name:'TRM_START',type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(name:'TRM_START', type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $startDate = null;
 
-    #[ORM\Column(name:'TRM_END',type: Types::DATETIME_MUTABLE)]
+    #[ORM\Column(name:'TRM_END', type: Types::DATETIME_MUTABLE)]
     private ?\DateTimeInterface $endDate = null;
 
     #[ORM\OneToOne(inversedBy: 'tournament', cascade: ['persist', 'remove'])]

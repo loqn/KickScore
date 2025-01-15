@@ -9,16 +9,16 @@
             {# Header Section #}
             <div class="mb-8">
                 <h1 class="text-3xl font-bold text-slate-800">
-                    Calendrier des Matches
+                    {{'matchacalendar'|trans}}
                     <span class="block mt-1 text-lg text-slate-600 font-normal">
-                        Matches en cours et à venir
+                        {{'matchprogress'|trans}}
                     </span>
                 </h1>
             </div>
 
             {# Current Match Section #}
             <div class="mb-8">
-                <h2 class="text-xl font-semibold text-slate-800 mb-4">Match en cours</h2>
+                <h2 class="text-xl font-semibold text-slate-800 mb-4">{{'matchinlive' | trans}}</h2>
                 {% if currentMatch %}
                     <div class="bg-white rounded-lg shadow-sm border border-slate-200 p-6">
                         <div class="flex items-center justify-between">
@@ -31,20 +31,20 @@
                             </div>
                             <div class="text-right">
                                 <div class="text-sm text-slate-600">{{ currentMatch.field.name }}</div>
-                                <div class="text-sm font-medium text-green-600">En cours</div>
+                                <div class="text-sm font-medium text-green-600">{{'progress' | trans}}</div>
                             </div>
                         </div>
                     </div>
                 {% else %}
                     <div class="bg-slate-50 rounded-lg p-6 text-center text-slate-600">
-                        Aucun match en cours
+                        {{'nocurrentmatch' | trans}}
                     </div>
                 {% endif %}
             </div>
 
             {# Upcoming Matches Section #}
             <div>
-                <h2 class="text-xl font-semibold text-slate-800 mb-4">Prochains matches</h2>
+                <h2 class="text-xl font-semibold text-slate-800 mb-4">{{'nextmatch' | trans}}</h2>
                 {% if upcomingMatches|length > 0 %}
                     <div class="space-y-4">
                         {% for match in upcomingMatches %}
@@ -67,7 +67,7 @@
                     </div>
                 {% else %}
                     <div class="bg-slate-50 rounded-lg p-6 text-center text-slate-600">
-                        Aucun match programmé
+                        {{'nomatchscheduled' | trans}}
                     </div>
                 {% endif %}
             </div>
@@ -79,13 +79,13 @@
                         {% if currentPage > 1 %}
                             <a href="{{ path('app_matches', {page: currentPage - 1}) }}"
                                class="px-3 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200">
-                                Précédent
+                                {{'previous' | trans}}
                             </a>
                         {% endif %}
                         {% if hasNextPage %}
                             <a href="{{ path('app_matches', {page: currentPage + 1}) }}"
                                class="px-3 py-1 rounded-md bg-slate-100 text-slate-700 hover:bg-slate-200">
-                                Suivant
+                                {{'next' | trans}}
                             </a>
                         {% endif %}
                     </nav>

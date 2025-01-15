@@ -1,0 +1,6 @@
+form:
+  firstname:
+    label: 'Prénom'
+    placeholder: 'Entrez votre prénom...'
+    not_blank: 'Veuillez entrer votre prénom.'
+    min_length: 'Votre prénom doit contenir au moins {{ limit }} caractères.'

@@ -15,7 +15,7 @@ class TeamResults
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'teamResults')]
-    #[ORM\JoinColumn(name:"TEA_ID", referencedColumnName: "TEA_ID",nullable: false)]
+    #[ORM\JoinColumn(name:"TEA_ID", referencedColumnName: "TEA_ID", nullable: false)]
     private ?Team $team = null;
 
     #[ORM\ManyToOne(inversedBy: 'teamResults')]

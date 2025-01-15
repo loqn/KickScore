@@ -10,7 +10,7 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 class FieldController extends AbstractController
 {
@@ -23,27 +23,35 @@ class FieldController extends AbstractController
         $fields = $entityManager->getRepository(Field::class)->findAll();
         //get the selected championship id
         $selectedChampionshipId = $request->query->get('select');
-        return $this->render('field/index.html.twig', [
+
+        return $this->render(
+            'field/index.html.twig',
+            [
             'championships' => $championships,
             'select' => $selectedChampionshipId,
             'fields' => $fields
-        ]);
+            ]
+        );
     }
 
 
     #[Route('/field/delete/{id}', name: 'app_delete_field', methods: ['POST'])]
-    public function delete(Request $request, Field $field, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
-    {
-        try{
+    public function delete(
+        Field $field,
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger,
+        TranslatorInterface $translator
+    ): Response {
+        try {
             $championship = $field->getChampionship();
             foreach ($field->getVersuses() as $versus) {
-                $this->addFlash('error', 'Erreur : le terrain est utilisé dans un match. veuillez retirer le match avant de supprimer le terrain.');
+                $this->addFlash('error', $translator->trans('flash.error.cannot_delete_field'));
                 return $this->redirectToRoute('app_champ_edit', ['id' => $championship->getId()]);
             }
             $championship->removeField($field);
             $entityManager->remove($field);
             $entityManager->flush();
-            $this->addFlash('success', 'Le terrain a été supprimé avec succès');
+            $this->addFlash('success', $translator->trans('flash.success.field_deleted'));
         } catch (\Exception $e) {
             $logger->error('Error during deletion: ' . $e->getMessage());
         }
@@ -53,31 +61,34 @@ class FieldController extends AbstractController
 
 
     #[Route('/field/create', name: 'app_field_create', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $entityManager): Response
-    {
-
+    public function create(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
+    ): Response {
         if (!$this->isGranted('ROLE_ORGANIZER')) {
-            throw $this->createAccessDeniedException("organizers can't create terrain.");
+            throw $this->createAccessDeniedException($translator->trans('error.field.organizer_only'));
         }
-        //cherck if the name of the field is available in the database 
+        //cherck if the name of the field is available in the database
         $name = $request->request->get('name');
         $field = $entityManager->getRepository(Field::class)->findOneBy(['name' => $name]);
-        if ($field) {
-            $this->addFlash('error', 'Erreur : le terrain spécifié existe déjà.');
-            return $this->redirectToRoute('app_champ_edit',['id' => $championship->getId()]);
-        }
         //get the championship id from the item select in the form
         $championshipId = $request->request->get('championship');
         $championship = $entityManager->getRepository(Championship::class)->find($championshipId);
+        if ($field) {
+            $this->addFlash('error', 'Erreur : le terrain spécifié existe déjà.');
+            return $this->redirectToRoute('app_champ_edit', ['id' => $championship->getId()]);
+        }
 
         if (!$championship) {
-            $this->addFlash('error', 'Erreur : le championnat spécifié est introuvable.');
-            return $this->redirectToRoute('app_champ_edit',['id' => $championship->getId()]);
+            $this->addFlash('error', $translator->trans('flash.error.championship_not_found'));
+            return $this->redirectToRoute('app_champ_edit', ['id' => $championship->getId()]);
         }
+
         $name = $request->request->get('name');
         if (empty($name)) {
-            $this->addFlash('error', 'Erreur : le nom du terrain ne peut pas être vide.');
-            return $this->redirectToRoute('app_champ_edit',['id' => $championship->getId()]);
+            $this->addFlash('error', $translator->trans('flash.error.field_name_empty'));
+            return $this->redirectToRoute('app_champ_edit', ['id' => $championship->getId()]);
         }
 
         $field = new Field();
@@ -86,7 +97,7 @@ class FieldController extends AbstractController
         $entityManager->persist($field);
         $entityManager->flush();
 
-        $this->addFlash('success', 'Le terrain a été créé avec succès.');
-        return $this->redirectToRoute('app_champ_edit',['id' => $championship->getId()]);
+        $this->addFlash('success', $translator->trans('flash.success.field_created'));
+        return $this->redirectToRoute('app_champ_edit', ['id' => $championship->getId()]);
     }
 }

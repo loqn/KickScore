@@ -14,7 +14,7 @@ class Championship
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column (name: 'CHP_ID')]
+    #[ORM\Column(name: 'CHP_ID')]
     private ?int $id = null;
 
     #[ORM\Column(name: "CHP_NAME", length: 32, nullable: true)]
@@ -33,10 +33,10 @@ class Championship
     #[ORM\OneToMany(targetEntity: Field::class, mappedBy: 'championship')]
     private Collection $fields;
 
-    #[ORM\Column(name: 'CHP_DATE_START', type: Types::DATETIME_MUTABLE )]
+    #[ORM\Column(name: 'CHP_DATE_START', type: Types::DATETIME_MUTABLE)]
     private ?\DateTime $startDate;
 
-    #[ORM\Column(name: 'CHP_DATE_END', type: Types::DATETIME_MUTABLE )]
+    #[ORM\Column(name: 'CHP_DATE_END', type: Types::DATETIME_MUTABLE)]
     private ?\DateTime $endDate;
 
     /**
@@ -226,5 +226,4 @@ class Championship
 
         return $this;
     }
-
 }

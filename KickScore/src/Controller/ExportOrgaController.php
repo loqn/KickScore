@@ -13,27 +13,29 @@ use App\Entity\Versus;
 use Doctrine\ORM\EntityManager;
 use Symfony\Component\HttpFoundation\Request;
 
-
 class ExportOrgaController extends AbstractController
 {
     #[Route('/export_orga', name: 'export_orga')]
-    public function selectChampionship(EntityManagerInterface $entityManager, Request $request,Connection $connection): Response
+    public function selectChampionship(EntityManagerInterface $entityManager, Request $request): Response
     {
         // Récupérer tous les championnats
         $championships = $entityManager->getRepository(Championship::class)->findAll();
 
         // Vérifier si un championnat a été sélectionné
         $selectedChampionshipId = $request->request->get('championship');
-        
 
-        return $this->render('org/select_champ.html.twig', [
+
+        return $this->render(
+            'org/select_champ.html.twig',
+            [
             'championships' => $championships,
             'select' => $selectedChampionshipId,
-        ]);
+            ]
+        );
     }
 
     #[Route('/download_orga', name: 'download_orga', methods: ['POST'])]
-    public function downChamp(EntityManagerInterface $entityManager, Request $request, Connection $connection): Response
+    public function downChamp(Request $request, Connection $connection): Response
     {
         $selectedChampionshipId = $request->request->get('championship');
 
@@ -56,9 +58,12 @@ class ExportOrgaController extends AbstractController
             mat.CHP_ID = :id;
     ";
 
-        $teamCounts = $connection->fetchAssociative($checkTeamsSql, [
+        $teamCounts = $connection->fetchAssociative(
+            $checkTeamsSql,
+            [
             'id' => $selectedChampionshipId,
-        ]);
+            ]
+        );
 
         // Initialisez la requête SQL
         $sql = "
@@ -152,9 +157,12 @@ class ExportOrgaController extends AbstractController
     ";
 
         // Exécution de la requête avec les paramètres
-        $matches = $connection->fetchAllAssociative($sql, [
+        $matches = $connection->fetchAllAssociative(
+            $sql,
+            [
             'id' => $selectedChampionshipId
-        ]);
+            ]
+        );
 
         $jsonContent = json_encode($matches, JSON_PRETTY_PRINT);
 
@@ -165,5 +173,4 @@ class ExportOrgaController extends AbstractController
 
         return $response;
     }
-
 }
