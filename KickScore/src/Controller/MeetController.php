@@ -56,6 +56,10 @@ class MeetController extends AbstractController
         }
 
         $fields = $chp->getFields();
+        //set a random to set a random field for each match
+        $fieldsArray = $fields->toArray();
+        shuffle($fieldsArray);
+        $fields = new \Doctrine\Common\Collections\ArrayCollection($fieldsArray);
 
         $timeSlots = $this->generateTimeSlots($realStart, $chp->getEndDate(), 30);
         if (empty($timeSlots)) {
@@ -100,8 +104,15 @@ class MeetController extends AbstractController
 
                     if ($this->teamsCanPlayInTimeSlot($teamA, $teamB, $teamLastTimeSlot, $timeSlot)) {
                         $versus = new Versus();
-                        $versus->setBlueTeam($teamA);
-                        $versus->setGreenTeam($teamB);
+                        //atribute a random color to each team
+                        $random = rand(0, 1);
+                        if ($random == 0) {
+                            $versus->setBlueTeam($teamA);
+                            $versus->setGreenTeam($teamB);
+                        } else {
+                            $versus->setBlueTeam($teamB);
+                            $versus->setGreenTeam($teamA);
+                        }
                         $versus->setChampionship($chp);
                         $versus->setTimeSlot($timeSlot);
                         $versus->setDate($timeSlot->getStart());
