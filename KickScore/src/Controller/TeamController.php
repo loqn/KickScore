@@ -22,17 +22,21 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 class TeamController extends AbstractController
 {
     #[Route('/', name: 'app_team')]
-    public function index(EntityManagerInterface $entityManager, Request $request, TranslatorInterface $translator): Response
-    {
+    public function index(
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
+    ): Response {
         $players = $entityManager->getRepository(User::class)->findAll();
 
         if (!$this->getUser()) {
-            $this->addFlash('error',
-            $translator->trans('flash.mustconnected'));
+            $this->addFlash(
+                'error',
+                $translator->trans('flash.mustconnected')
+            );
             return $this->redirectToRoute('app_login');
         }
 
-        if($this->getUser()->getMember()) {
+        if ($this->getUser()->getMember()) {
             $this->addFlash('error', 'Vous êtes déjà membre d\'une équipe.');
             return $this->redirectToRoute('app_team_edit', ['id' => $this->getUser()->getMember()->getTeam()->getId()]);
         }
@@ -49,8 +53,11 @@ class TeamController extends AbstractController
     }
 
     #[Route('/create', name: 'app_team_create', methods: ['POST', 'GET'])]
-    public function create(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator): Response
-    {
+    public function create(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
+    ): Response {
         if ($request->getMethod() !== 'POST') {
             $this->addFlash('error', $translator->trans('flash.error.invalid_access'));
             return $this->redirectToRoute('app_error');
@@ -61,9 +68,13 @@ class TeamController extends AbstractController
             return $this->redirectToRoute('app_login');
         }
 
-        if($this->getUser()->getMember()) {
+        if ($this->getUser()->getMember()) {
             $this->addFlash('error', $translator->trans('flash.error.already_team_member'));
-            return $this->redirectToRoute('app_team_edit', ['id' => $this->getUser()->getMember()->getTeam()->getId()]);
+            return $this->redirectToRoute('app_team_edit', ['id' =>
+                $this->getUser()
+                    ->getMember()
+                    ->getTeam()
+                    ->getId()]);
         }
 
         if ($this->isGranted('ROLE_ORGANIZER')) {
@@ -80,8 +91,10 @@ class TeamController extends AbstractController
         $creator_id = $request->request->get('user_id');
         $creator = $entityManager->getRepository(User::class)->find($creator_id);
         if (empty($name)) {
-            $this->addFlash('error', 
-            $translator->trans('flash.error.team_name_empty'));
+            $this->addFlash(
+                'error',
+                $translator->trans('flash.error.team_name_empty')
+            );
             return $this->redirectToRoute('app_team');
         }
         $team = new Team();
@@ -102,14 +115,20 @@ class TeamController extends AbstractController
 
         $entityManager->persist($team);
         $entityManager->flush();
-        $this->addFlash('success', 
-        $translator->trans('createteamsucess'));
+        $this->addFlash(
+            'success',
+            $translator->trans('createteamsucess')
+        );
         return $this->redirectToRoute('app_team_edit', ['id' => $team->getId()]);
     }
 
     #[Route('/edit/add_member', name: 'app_team_add_member', methods: ['POST'])]
-    public function addMember(EntityManagerInterface $entityManager, Request $request, LoggerInterface $logger, TranslatorInterface $translator): Response
-    {
+    public function addMember(
+        EntityManagerInterface $entityManager,
+        Request $request,
+        LoggerInterface $logger,
+        TranslatorInterface $translator
+    ): Response {
         if ($this->isGranted('ROLE_ORGANIZER')) {
             $teamId = $request->request->get('team_id');
             $team = $entityManager->getRepository(Team::class)->find($teamId);
@@ -169,7 +188,9 @@ class TeamController extends AbstractController
         $entityManager->flush();
 
         if ($addedCount > 0) {
-            $this->addFlash('success',$addedCount === 1 ? $translator->trans('flash.success.member_added_single'): $translator->trans('flash.success.member_added_multiple', ['%count%' => $addedCount]));
+            $this->addFlash('success', $addedCount === 1 ?
+                $translator->trans('flash.success.member_added_single') :
+                $translator->trans('flash.success.member_added_multiple', ['%count%' => $addedCount]));
         } else {
             $this->addFlash('info', $translator->trans('flash.info.no_member_added'));
         }
@@ -180,7 +201,7 @@ class TeamController extends AbstractController
     }
 
     #[Route('/edit/{id}', name: 'app_team_edit')]
-    public function edit(Team $team, EntityManagerInterface $entityManager, Request $request,TranslatorInterface $translator): Response
+    public function edit(Team $team, EntityManagerInterface $entityManager): Response
     {
         if (!$this->isGranted('ROLE_ORGANIZER')) {
             $userTeam = $this->getUser()->getMember()?->getTeam();
@@ -217,7 +238,7 @@ class TeamController extends AbstractController
     }
 
     #[Route('/edit/remove_member/{id}', name: 'app_team_remove_member', methods: ['POST'],)]
-    public function removeMember(Member $member, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
+    public function removeMember(Member $member, EntityManagerInterface $entityManager): Response
     {
         if (!$this->isGranted('ROLE_ORGANIZER')) {
             throw $this->createAccessDeniedException('You can only remove members from your own team.');
@@ -225,7 +246,8 @@ class TeamController extends AbstractController
 
         //if the member is the creator of the team
         if ($member->getTeam()->getCreator() === $member->getUser()) {
-            $csrfToken = $this->container->get('security.csrf.token_manager')->getToken('delete' . $member->getTeam()->getId())->getValue();
+            $csrfToken = $this->container->get('security.csrf.token_manager')
+                ->getToken('delete' . $member->getTeam()->getId())->getValue();
 
             $this->addFlash('error', '
 <div class="flex flex-col md:flex-row lg:flex-row justify-between items-center gap-4 p-4 sm:p-6">
@@ -233,7 +255,10 @@ class TeamController extends AbstractController
         Retirer le créateur de l\'équipe revient à supprimer l\'équipe. Êtes-vous sûr ?
     </div>
     <div class="flex flex-col sm:flex-row md:flex-row lg:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
-        <form method="POST" action="' . $this->generateUrl('app_delete_team', ['id' => $member->getTeam()->getId()]) . '" style="display: inline;" class="w-full sm:w-auto">
+        <form method="POST" action="' . $this->generateUrl(
+                'app_delete_team',
+                ['id' => $member->getTeam()->getId()]
+            ) . '" style="display: inline;" class="w-full sm:w-auto">
             <input type="hidden" name="_token" value="' . $csrfToken . '">
             <button 
                 type="submit"
@@ -249,7 +274,10 @@ class TeamController extends AbstractController
             onmouseover="this.style.backgroundColor=\'#059669\'" 
             onmouseout="this.style.backgroundColor=\'#10b981\'" 
             class="w-full sm:w-auto md:w-auto lg:w-auto min-w-[120px] px-4 py-2 rounded-lg text-sm sm:text-base">
-            <a href="' . $this->generateUrl('app_team_edit', ['id' => $member->getTeam()->getId()]) . '">Annuler</a>
+            <a href="' . $this->generateUrl(
+                'app_team_edit',
+                ['id' => $member->getTeam()->getId()]
+            ) . '">Annuler</a>
         </button>
     </div>
 </div>
@@ -266,8 +294,12 @@ class TeamController extends AbstractController
     }
 
     #[Route('/delete/{id}', name: 'app_delete_team', methods: ['POST'])]
-    public function delete(Request $request, Team $team, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
-    {
+    public function delete(
+        Request $request,
+        Team $team,
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger
+    ): Response {
         if ($this->isCsrfTokenValid('delete' . $team->getId(), $request->getPayload()->getString('_token'))) {
             $logger->info('Starting team deletion process for team: ' . $team->getName());
 

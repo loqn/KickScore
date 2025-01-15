@@ -4,6 +4,7 @@ namespace App\Entity;
 
 use App\Repository\TeamMatchStatusRepository;
 use Doctrine\ORM\Mapping as ORM;
+
 #[ORM\Table(name: 'T_TEAM_MATCH_STATUS_TMS')]
 #[ORM\Entity(repositoryClass: TeamMatchStatusRepository::class)]
 class TeamMatchStatus
@@ -14,7 +15,7 @@ class TeamMatchStatus
     private ?int $id = null;
 
     #[ORM\ManyToOne(inversedBy: 'teamMatchStatuses')]
-    #[ORM\JoinColumn(name: 'MAT_ID', referencedColumnName: 'MAT_ID',nullable: false)]
+    #[ORM\JoinColumn(name: 'MAT_ID', referencedColumnName: 'MAT_ID', nullable: false)]
     private ?Versus $versus = null;
 
     #[ORM\ManyToOne(inversedBy: 'teamMatchStatuses')]

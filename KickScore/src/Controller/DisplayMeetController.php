@@ -15,10 +15,10 @@ class DisplayMeetController extends AbstractController
     #[Route('/display/meet', name: 'app_display_meet')]
     public function edit(Championship $championship, EntityManagerInterface $entityManager, Request $request): Response
     {
-        //get all the match of the current day 
+        //get all the match of the current day
         $matches = $entityManager->getRepository(Versus::class)->findAll();
 
-        //get the current time 
+        //get the current time
         $currentTime = new \DateTime('now');
 
         //make a list of the matches that are currently playing

@@ -1,4 +1,5 @@
 <?php
+
 // src/Controller/RankingController.php
 namespace App\Controller;
 
@@ -12,8 +13,11 @@ use Symfony\Component\Routing\Annotation\Route;
 class RankingController extends AbstractController
 {
     #[Route('/ranking', name: 'app_ranking')]
-    public function index(Request $request, ChampionshipRepository $championshipRepository, TeamRepository $teamRepository): Response
-    {
+    public function index(
+        Request $request,
+        ChampionshipRepository $championshipRepository,
+        TeamRepository $teamRepository
+    ): Response {
         $championships = $championshipRepository->findAll();
         $selectedChampionshipId = $request->query->get('championship');
         $teams = [];
@@ -23,7 +27,7 @@ class RankingController extends AbstractController
         }
 
         if ($selectedChampionshipId) {
-            $teams = $teamRepository->findTeamsByChampionship((int) $selectedChampionshipId);
+            $teams = $teamRepository->findTeamsByChampionship((int)$selectedChampionshipId);
         }
 
         return $this->render('ranking/index.html.twig', [

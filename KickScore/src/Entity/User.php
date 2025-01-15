@@ -21,11 +21,11 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[ORM\Column(name: 'USR_ID', type: 'integer')]
     private ?int $id = null;
 
-    #[ORM\Column(name: 'USR_FNAME',length: 32, nullable: true)]
+    #[ORM\Column(name: 'USR_FNAME', length: 32, nullable: true)]
     #[Groups(['user:read'])]
-    private ?string $firstName = null; 
-    
-    #[ORM\Column(name: 'USR_NAME',length: 32, nullable: true)]
+    private ?string $firstName = null;
+
+    #[ORM\Column(name: 'USR_NAME', length: 32, nullable: true)]
     #[Groups(['user:read'])]
     private ?string $name = null;
 
@@ -33,10 +33,10 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
     #[Groups(['user:read'])]
     private ?string $mail = null;
 
-    #[ORM\Column (name: 'USR_ISORG', type: 'boolean')]
+    #[ORM\Column(name: 'USR_ISORG', type: 'boolean')]
     private ?bool $isOrganizer = null;
 
-    #[ORM\Column(name: 'USR_PASSWORD',length: 255)]
+    #[ORM\Column(name: 'USR_PASSWORD', length: 255)]
     private ?string $password = null;
 
     #[ORM\OneToOne(targetEntity: Member::class, mappedBy: 'user')]

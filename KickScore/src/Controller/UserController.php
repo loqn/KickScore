@@ -63,8 +63,7 @@ final class UserController extends AbstractController
         User $user,
         EntityManagerInterface $entityManager,
         UserPasswordHasherInterface $passwordHasher
-    ): Response
-    {
+    ): Response {
         if ($request->isMethod('POST')) {
             if (!$this->isCsrfTokenValid('edit-user', $request->request->get('token'))) {
                 $this->addFlash('user_error', 'Token de sécurité invalide, veuillez réessayer.');
@@ -97,7 +96,6 @@ final class UserController extends AbstractController
 
                 $this->addFlash('user_success', 'Les modifications ont été enregistrées avec succès.');
                 return $this->redirectToRoute('app_user_index');
-
             } catch (\Exception $e) {
                 $this->addFlash('user_error', 'Une erreur est survenue lors de la modification.');
             }
@@ -109,10 +107,14 @@ final class UserController extends AbstractController
     }
 
     #[Route('/{id}', name: 'app_user_delete', methods: ['POST'])]
-    public function delete(Request $request, User $user, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
-    {
-        if ($this->isCsrfTokenValid('delete'.$user->getId(), $request->getPayload()->getString('_token'))) {
-            $logger->info('User deleted: '.$user->getName());
+    public function delete(
+        Request $request,
+        User $user,
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger
+    ): Response {
+        if ($this->isCsrfTokenValid('delete' . $user->getId(), $request->getPayload()->getString('_token'))) {
+            $logger->info('User deleted: ' . $user->getName());
             if ($user->getMember()) {
                 $member = $user->getMember();
                 $team = $member->getTeam();

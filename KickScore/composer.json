@@ -28,6 +28,7 @@
         "symfony/yaml": "7.2.*"
     },
     "require-dev": {
+        "squizlabs/php_codesniffer": "^3.11",
         "symfony/maker-bundle": "^1.61"
     },
     "config": {
@@ -60,6 +61,7 @@
         "symfony/polyfill-php82": "*"
     },
     "scripts": {
+        "phpcs": "phpcs --standard=PSR12",
         "auto-scripts": {
             "cache:clear": "symfony-cmd",
             "assets:install %PUBLIC_DIR%": "symfony-cmd"

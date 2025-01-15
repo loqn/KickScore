@@ -1,0 +1,16 @@
+stages:
+  - test
+
+image: php:8.2-cli
+
+before_script:
+  - cd KickScore
+  - curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+  - composer install
+
+phpcs:
+  stage: test
+  script:
+    - cd KickScore
+    - vendor/bin/phpcs --standard=PSR12 src/
+  allow_failure: false

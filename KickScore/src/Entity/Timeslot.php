@@ -14,7 +14,7 @@ class Timeslot
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column (name:'TSL_ID')]
+    #[ORM\Column(name:'TSL_ID')]
     private ?int $id = null;
 
     #[ORM\Column(name:'TSL_START', type: Types::DATETIME_MUTABLE)]

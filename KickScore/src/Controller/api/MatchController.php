@@ -14,17 +14,16 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 class MatchController extends AbstractController
 {
     #[Route('/search', name: 'api_search_match', methods: ['GET'])]
-    public function searchMatches(Request $request, EntityManagerInterface $entityManager,LoggerInterface $logger): JsonResponse
+    public function searchMatches(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $this->denyAccessUnlessGranted('ROLE_ORGANIZER');
 
         if ($request->query->has('q')) {
             if (strlen($request->query->get('q')) == 0) {
                 $matches = $entityManager->getRepository(Versus::class)->findAll();
-                return $this->json($matches,200, [], ['groups' => 'match:read']);
+                return $this->json($matches, 200, [], ['groups' => 'match:read']);
             }
             $matches = $entityManager->getRepository(Versus::class)->searchMatches($request->query->get('q'));
-            $logger->critical('Matches found: ' . json_encode($matches));
             return $this->json($matches, 200, [], ['groups' => 'match:read']);
         }
         return $this->json([], 200);

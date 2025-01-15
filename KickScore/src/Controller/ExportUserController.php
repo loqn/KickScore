@@ -16,11 +16,11 @@ class ExportUserController extends AbstractController
     {
             // Stocking the request
             $team = $this->getUser()->getMember()->getTeam();
-            if ($team == null) {
-                $msg ="Vous n'avez pas d'équipe.";
-                echo '<script type="text/javascript">window.alert("'.$msg.'");</script>';
-                return $this->render('root/index.html.twig');
-            }
+        if ($team == null) {
+            $msg = "Vous n'avez pas d'équipe.";
+            echo '<script type="text/javascript">window.alert("' . $msg . '");</script>';
+            return $this->render('root/index.html.twig');
+        }
             $name = $this->getUser()->getMember()->getTeam()->getName();
             $sql = "
                 SELECT 

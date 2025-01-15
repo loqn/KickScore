@@ -101,7 +101,7 @@ class ChampionshipController extends AbstractController
     }
 
     #[Route('/create', name: 'app_championship_create', methods: ['POST'])]
-    function create(Request $request, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
+    public function create(Request $request, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
     {
         if (!$this->isGranted('ROLE_ORGANIZER')) {
             throw $this->createAccessDeniedException('Only organizers can create meets.');
@@ -191,8 +191,11 @@ class ChampionshipController extends AbstractController
     }
 
     #[Route('/{id}/apply-changes', name: 'app_championship_edit', methods: ['POST'])]
-    public function champedit(Request $request, Championship $championship, EntityManagerInterface $entityManager): Response
-    {
+    public function champedit(
+        Request $request,
+        Championship $championship,
+        EntityManagerInterface $entityManager
+    ): Response {
         $newName = $request->request->get('firstName');
         if ($newName) {
             $championship->setName($newName);

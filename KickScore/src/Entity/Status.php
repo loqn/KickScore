@@ -13,7 +13,7 @@ class Status
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column (name:'STS_ID')]
+    #[ORM\Column(name:'STS_ID')]
     private ?int $id = null;
 
     #[ORM\Column(name:'STS_NAME', length: 255, nullable: true)]

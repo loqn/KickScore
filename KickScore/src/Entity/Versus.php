@@ -28,7 +28,7 @@ class Versus
     #[ORM\Column(name: 'MAT_GREENSCORE', nullable: true)]
     private ?int $greenScore = null;
 
-    #[ORM\Column(name: 'MAT_BLUESCORE' ,nullable: true)]
+    #[ORM\Column(name: 'MAT_BLUESCORE', nullable: true)]
     private ?int $blueScore = null;
 
     #[ORM\Column(name: 'MAT_DATE', type: Types::DATE_MUTABLE, nullable: true)]
