@@ -16,6 +16,11 @@ class Championship
     #[ORM\GeneratedValue]
     #[ORM\Column (name: 'CHP_ID')]
     private ?int $id = null;
+    public const TYPE_CLASSIC = 0;
+    public const TYPE_ELO = 1;
+
+    #[ORM\Column(name: 'CHP_TYPE', type: Types::SMALLINT, options: ['default' => 0])]
+    private int $type = self::TYPE_CLASSIC;
 
     #[ORM\Column(name: "CHP_NAME", length: 32, nullable: true)]
     private ?string $name = null;
@@ -225,6 +230,29 @@ class Championship
         $this->tournament = $tournament;
 
         return $this;
+    }
+
+    public function getType(): int
+    {
+        return $this->type;
+    }
+
+    public function setType(int $type): static
+    {
+        if (!in_array($type, [self::TYPE_CLASSIC, self::TYPE_ELO])) {
+            throw new \InvalidArgumentException('Invalid type value');
+        }
+        $this->type = $type;
+        return $this;
+    }
+
+    public function getTypeLabel(): string
+    {
+        return match($this->type) {
+            self::TYPE_CLASSIC => 'classic',
+            self::TYPE_ELO => 'elo',
+            default => throw new \RuntimeException('Unknown type')
+        };
     }
 
 }
