@@ -687,7 +687,18 @@
             icon.classList.toggle('rotate-180');
         }
 
-        // search bar
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
+
         document.addEventListener('DOMContentLoaded', function () {
             const searchInput = document.querySelector('#userSearch');
             const tbody = document.querySelector('tbody');
@@ -740,9 +751,9 @@
 
                 const startIndex = (currentPage - 1) * itemsPerPage + 1;
                 const endIndex = Math.min(startIndex + itemsPerPage - 1, filteredRows.length);
-                startIndexSpan.textContent = filteredRows.length > 0 ? startIndex : 0;
-                endIndexSpan.textContent = endIndex;
-                totalItemsSpan.textContent = filteredRows.length;
+                if (startIndexSpan) startIndexSpan.textContent = filteredRows.length > 0 ? startIndex : 0;
+                if (endIndexSpan) endIndexSpan.textContent = endIndex;
+                if (totalItemsSpan) totalItemsSpan.textContent = filteredRows.length;
             }
 
             function displayRows() {
@@ -764,7 +775,7 @@
                     const noResultsRow = document.createElement('tr');
                     noResultsRow.innerHTML = `
                 <td colspan="5" class="px-3 sm:px-6 py-6 text-center text-sm text-slate-600">
-                    {{'no_user_found'| trans}}
+                    {{ 'no_user_found'|trans }}
                 </td>
             `;
                     tbody.appendChild(noResultsRow);
@@ -773,27 +784,53 @@
                 updatePagination();
             }
 
-            searchInput.addEventListener('input', function (e) {
+            const searchUsersURL = '{{ path('api_search_users') }}';
+
+            const fetchUsersLike = async (q) => {
+                try {
+                    const response = await fetch(`${searchUsersURL}?q=${encodeURIComponent(q)}`, {
+                        method: 'GET',
+                    });
+                    if (!response.ok) {
+                        throw new Error('Something went wrong while fetching users from the API.');
+                    }
+                    const data = await response.json();
+                    console.log(data);
+                } catch(e) {
+                    console.error('Error fetching users', e);
+                }
+            };
+            const debouncedFilter = debounce((searchTerm) => {
                 currentPage = 1;
-                filterRows(e.target.value);
+                filterRows(searchTerm);
                 displayRows();
-            });
-
-            prevButton.addEventListener('click', function () {
-                if (currentPage > 1) {
-                    currentPage--;
-                    displayRows();
-                }
-            });
-
-            nextButton.addEventListener('click', function () {
-                const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
-                if (currentPage < totalPages) {
-                    currentPage++;
-                    displayRows();
-                }
-            });
-
+            }, 300);
+            const debouncedFetch = debounce(fetchUsersLike, 300);
+            const handleSearch = (e) => {
+                const searchTerm = e.target.value;
+                debouncedFilter(searchTerm);
+                debouncedFetch(searchTerm);
+            };
+            if (searchInput) {
+                searchInput.addEventListener('input', handleSearch);
+            }
+            if (prevButton) {
+                prevButton.addEventListener('click', function () {
+                    if (currentPage > 1) {
+                        currentPage--;
+                        displayRows();
+                    }
+                });
+            }
+            if (nextButton) {
+                nextButton.addEventListener('click', function () {
+                    const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+                    if (currentPage < totalPages) {
+                        currentPage++;
+                        displayRows();
+                    }
+                });
+            }
             filterRows('');
             displayRows();
         });
