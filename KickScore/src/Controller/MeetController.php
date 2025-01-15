@@ -18,6 +18,7 @@ use Symfony\Component\HttpFoundation\BinaryFileResponse;
 use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 //import date
 use DateTime;
+use Symfony\Contracts\Translation\TranslatorInterface;
 
 
 
@@ -25,7 +26,7 @@ use DateTime;
 class MeetController extends AbstractController
 {
     #[Route('/gen_match/{id}', name: 'app_generate_match', methods: ['POST'])]
-    public function generateMatchsForChampionship(Request $request, EntityManagerInterface $entityManager): Response
+    public function generateMatchsForChampionship(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator): Response
     {
         $chp = $entityManager->getRepository(Championship::class)->find($request->request->get('chp_id'));
 
@@ -33,15 +34,15 @@ class MeetController extends AbstractController
         $realStart = $chp->getStartDate();
 
         if ($chp->getTeams()->isEmpty()) {
-            $this->addFlash('error', 'Il n\'y a aucune équipe participante !');
+            $this->addFlash('error', $translator->trans('flash.error.no_participating_teams'));
             return $this->redirectToRoute('app_user_index');
         }
         if ($chp->getEndDate() < new \DateTime()) {
-            $this->addFlash('error', 'Impossible de générer des matchs pour un championnat déjà terminé.');
+            $this->addFlash('error',$translator->trans('flash.error.championship_already_ended'));
             return $this->redirectToRoute('app_user_index');
         }
         if ($chp->getStartDate() < new \DateTime() && !$chp->getMatches()->isEmpty()) {
-            $this->addFlash('error', 'Impossible de générer des matchs pour un championnat déjà commencé.');
+            $this->addFlash('error', $translator->trans('flash.error.championship_already_started'));
             return $this->redirectToRoute('app_user_index');
         } else if ($chp->getStartDate() < new \DateTime() && $chp->getMatches()->isEmpty()) {
             $realStart = (new \DateTime())->modify('+1 day');
@@ -51,7 +52,7 @@ class MeetController extends AbstractController
         $teamsArray = $teams->toArray();
 
         if ($chp->getFields()->isEmpty()) {
-            $this->addFlash('error', 'Il n\'y a aucun terrain disponible pour programmer des matchs dans ce championnat.');
+            $this->addFlash('error',  $translator->trans('flash.error.no_available_fields'));
             return $this->redirectToRoute('app_user_index');
         }
 
@@ -59,13 +60,13 @@ class MeetController extends AbstractController
 
         $timeSlots = $this->generateTimeSlots($realStart, $chp->getEndDate(), 30);
         if (empty($timeSlots)) {
-            $this->addFlash('error', 'Impossible de générer des créneaux horaires.');
+            $this->addFlash('error', $translator->trans('flash.error.cannot_generate_timeslots'));
             return $this->redirectToRoute('app_user_index');
         }
 
         $totalMatches = (count($teamsArray) * (count($teamsArray) - 1)) / 2;
         if (count($timeSlots) * count($fields) < $totalMatches) {
-            $this->addFlash('error', 'Pas assez de créneaux disponibles pour tous les matchs.');
+            $this->addFlash('error', $translator->trans('flash.error.not_enough_timeslots'));
             return $this->redirectToRoute('app_match_list');
         }
 
@@ -134,12 +135,12 @@ class MeetController extends AbstractController
         }
 
         if (!empty($matchQueue)) {
-            $this->addFlash('error', 'Impossible de programmer tous les matchs dans les créneaux disponibles.');
+            $this->addFlash('error', $translator->trans('flash.error.cannot_schedule_all_matches'));
             return $this->redirectToRoute('app_match_list', ['championship' => $chp->getId()]);
         }
 
         $entityManager->flush();
-        $this->addFlash('success', 'Matchs générés avec succès.');
+        $this->addFlash('success', $translator->trans('flash.success.matches_generated'));
         return $this->redirectToRoute('app_match_list', ['championship' => $chp->getId()]);
     }
 
@@ -224,7 +225,7 @@ class MeetController extends AbstractController
     }
 
     #[Route('/versus/update/{id}', name: 'update_match', methods: ['POST'])]
-    public function update(Request $request, Versus $match, EntityManagerInterface $entityManager): Response
+    public function update(Request $request, Versus $match, EntityManagerInterface $entityManager,TranslatorInterface $translator): Response
     {
         if (!$this->isGranted('ROLE_ORGANIZER')) {
             throw $this->createAccessDeniedException('Only organizers can update meets.');
@@ -235,7 +236,7 @@ class MeetController extends AbstractController
 
         //no same team
         if ($greenTeam === $blueTeam) {
-            $this->addFlash('error', 'Impossible de faire jouer une équipe contre elle-même.');
+            $this->addFlash('error', $translator->trans('flash.error.team_cannot_play_itself'));
             return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
         }
         $currentDateTime = (new \DateTime())->modify('+1 hour');
@@ -296,11 +297,11 @@ class MeetController extends AbstractController
                     break;
                 case 'IN_PROGRESS':
                     if ($currentDateTime < $match->getTimeslot()->getStart()) {
-                        $this->addFlash('error', 'Impossible de mettre un match en cours avant le début du créneau horaire.');
+                        $this->addFlash('error', $translator->trans('flash.error.match_cannot_start_before_timeslot'));
                         return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
                     }
                     if ($currentDateTime >= $match->getTimeslot()->getEnd()) {
-                        $this->addFlash('error', 'Impossible de mettre un match en cours après la fin du créneau horaire.');
+                        $this->addFlash('error',  $translator->trans('flash.error.match_cannot_start_after_timeslot'));
                         return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
                     }
                     $match->setBlueScore(0);
@@ -311,17 +312,17 @@ class MeetController extends AbstractController
                     $blueScore = $request->request->get('blueScore');
 
                     if ($currentDateTime < $match->getTimeslot()->getEnd()) {
-                        $this->addFlash('error', 'Impossible de terminer un match avant la fin du créneau horaire.');
+                        $this->addFlash('error', $translator->trans('flash.error.match_cannot_end_before_timeslot'));
                         return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
                     }
 
                     if ((!$greenScore && $greenScore != 0) || (!$blueScore && $blueScore != 0)) {
-                        $this->addFlash('error', 'Impossible de terminer un match sans score.');
+                        $this->addFlash('error', $translator->trans('flash.error.match_requires_score'));
                         return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
                     }
 
                     if($greenScore < 0 || $blueScore < 0){
-                        $this->addFlash('error', 'Impossible de mettre un score négatif.');
+                        $this->addFlash('error', $translator->trans('flash.error.negative_score_not_allowed'));
                         return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
                     }
 
@@ -339,7 +340,7 @@ class MeetController extends AbstractController
             $match->setCommentary($request->request->get('commentary'));
         }
         $entityManager->flush();
-        $this->addFlash('success', 'Match mis à jour avec succès.');
+        $this->addFlash('success',  $translator->trans('flash.success.match_updated'));
         return $this->redirectToRoute('app_match_list');
     }
 

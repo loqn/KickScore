@@ -2,6 +2,8 @@ on: 'on'
 commentary: 'Commentary'
 fieldname: 'Field name'
 addcomment: 'Add a comment'
+deletefieldsuccess: 'Field deleted successfully'
+teamexitchampionshipsuccess: 'Team successfully left the championship'
 matchstatus: 'Match status'
 form:
     firstname:
@@ -370,10 +372,24 @@ teamdashboard: 'Team dashboard'
 remove: 'Remove'
 validateupdate: 'Validate the update'
 createteamsucess: 'Team created successfully'
+error:
+    field:
+        organizer_only: "Only organizers can create fields."
+
+    championship:
+        organizer_only: "Only organizers can create championships."
+    invalid_csrf_token: "Invalid CSRF token"
+    must_be_team_member: "You must be a team member"
+    championship_not_found: "Championship not found"
 flash:
     success:
         member_added_single: "Member has been successfully added."
         member_added_multiple: "%count% members successfully added."
+        team_joined_championship: "Your team has successfully joined the championship"
+        field_created: "Field has been successfully created."
+        championship_created: "Championship successfully created."
+        matches_generated: "Matchs générés avec succès."
+        match_updated: "Match successfully updated."
     info:
         no_member_added: "No member added."
     mustconnected: 'You must be connected to create a team.'
@@ -386,11 +402,32 @@ flash:
         organizer_no_team: "Organizers cannot create teams."
         team_name_exists: "Error: a team already has this name."
         team_name_empty: "Error: team name cannot be empty."
+        team_not_found: "Error: team not found."
+        championship_name_required: "Championship name is required."
+        championship_date_conflict: "A championship is already ongoing during these dates."
+        championship_invalid_dates: "The dates are not consistent."
+        championship_not_found: "Error: specified championship not found."
+        field_name_empty: "Error: field name cannot be empty."
+        no_participating_teams: "There are no participating teams!"
+        championship_already_ended: "Cannot generate matches for an already ended championship."
+        championship_already_started: "Cannot generate matches for an already started championship."
+        no_available_fields: "There are no available fields to schedule matches in this championship."
+        cannot_generate_timeslots: "Unable to generate time slots."
+        not_enough_timeslots: "Not enough available slots for all matches."
+        cannot_schedule_all_matches: "Unable to schedule all matches in available time slots."
+        team_cannot_play_itself: "A team cannot play against itself."
+        match_cannot_start_before_timeslot: "Cannot start a match before the timeslot begins."
+        match_cannot_start_after_timeslot: "Cannot start a match after the timeslot ends."
+        match_cannot_end_before_timeslot: "Cannot end a match before the timeslot ends."
+        match_requires_score: "Cannot end a match without scores."
+        negative_score_not_allowed: "Cannot set negative scores."
         team:
             not_found: "The specified team was not found"
             creator_not_found: "The team creator was not found"
             must_login: "You must be logged in to add members."
             no_team: "You are not part of any team."
+    
+            
 
         
 exemple: "ex: Company, University, etc."
