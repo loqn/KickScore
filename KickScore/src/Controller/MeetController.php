@@ -434,12 +434,7 @@ class MeetController extends AbstractController
         }
     }
 
-    private function updateTeamResults(
-        Versus $match,
-        Team $greenTeam,
-        Team $blueTeam,
-        EntityManagerInterface $entityManager
-    ): void {
+    private function updateTeamResults(Versus $match, Team $greenTeam, Team $blueTeam, EntityManagerInterface $entityManager): void {
         $greenScore = $match->getGreenScore();
         $blueScore = $match->getBlueScore();
 
