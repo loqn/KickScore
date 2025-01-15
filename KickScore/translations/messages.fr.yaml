@@ -1,4 +1,9 @@
 on: 'sur'
+commentary: 'Commentaire'
+fieldname: 'Nom du terrain'
+addcomment: 'Ajouter un commentaire'
+registration: 'Inscription'
+matchstatus: 'Statut du match'
 gp: 'MJ'
 export: 'Exporter'
 import: 'Importer'
@@ -15,7 +20,7 @@ stayblank: "Laissez vide pour conserver le mot de passe actuel"
 confirmmdp: 'Confirmer le mot de passe'
 cancel: 'Annulé'
 modifychampionship: 'Modifier le championnat'
-newtournament: "d'un nouveau tournoi"
+newtournament: "du nouveau tournoi"
 modifyaccount: "Modifier les informations du compte"
 modifyuser: "Modifier l'utilisateur"
 user_label: 'Utilisateur'
@@ -27,12 +32,12 @@ deletefield: 'Terrain à supprimer'
 deleteteam: "Supprimer l'équipe"
 selectedfield: 'Terrain sélectionné'
 validemodify: 'Enregistrer les modifications'
-newchampion: "d'un nouveau championnat"
+newchampion: "du nouveau championnat"
 classiccreation: 'Création classique'
 generatetournament: 'Générer un tournoi'
 generatematch: 'Générer des matchs'
 tournamentname: 'Nom du tournoi'
-tournamentoptions: 'Options du tournoi'
+tournamentoption: 'Option du tournoi'
 teamlist: 'Liste des équipes'
 3match: 'Match pour la 3ème place'
 simplifymanage: "Gestion simplifiée"
@@ -343,11 +348,14 @@ page_title:
     login: "Connexion"
     register: "Inscription"
     profile: "Profil"
-    match: "Listes des compétitions"
+    match: "Listes des matchs"
     control_panel: "Gestion"
     create: "Création"
+    ranking: "Classement des équipes"
+    edit_user: "Modifier le championnat"
     not_found: "Page non trouvée"
     edit_championship: "Modifier le championnat"
+    createfield: "Création d'un terrain"
 field: 'Terrain'
 status: 'Statut'
 forfeit: 'Forfait'
@@ -386,3 +394,5 @@ flash:
 teamname: "Nom de l'équipe"
 optionnal: "optionnel"
 exemple: "ex: Entreprise, Association, etc."
+modifymatch: 'Modification des informations du match'
+matchmodify: 'Modifier le match'
