@@ -1,5 +1,5 @@
 {% extends 'base.html.twig' %}
-{% block title %}Create New Field{% endblock %}
+{% block title %}{{'page_title.createfield' | trans}}{% endblock %}
 {% block body %}
 <div class="min-h-screen bg-gray-50 flex items-center justify-center py-12 px-4 sm:px-6 lg:px-8">
     <div class="max-w-md w-full space-y-8 bg-white p-8 rounded-xl shadow-lg">
@@ -36,7 +36,7 @@
                 <!-- championship select -->
                 <div>
                     <label for="championship" class="block text-sm font-medium text-gray-700">
-                        {{{'championship' | trans}}}
+                        {{'nav.championship' | trans}}
                     </label>
                     <div class="mt-1 relative">
                         <select

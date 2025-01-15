@@ -9,6 +9,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\Translation\TranslatorInterface;
+
 
 class FieldController extends AbstractController
 {
@@ -32,10 +34,10 @@ class FieldController extends AbstractController
     }
 
     #[Route('/field/create', name: 'app_field_create', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $entityManager): Response
+    public function create(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator): Response
     {
         if (!$this->isGranted('ROLE_ORGANIZER')) {
-            throw $this->createAccessDeniedException("organizers can't create terrain.");
+            throw $this->createAccessDeniedException($translator->trans('error.field.organizer_only'));
         }
 
         //get the championship id from the item select in the form
@@ -43,13 +45,13 @@ class FieldController extends AbstractController
         $championship = $entityManager->getRepository(Championship::class)->find($championshipId);
 
         if (!$championship) {
-            $this->addFlash('error', 'Erreur : le championnat spécifié est introuvable.');
+            $this->addFlash('error', $translator->trans('flash.error.championship_not_found'));
             return $this->redirectToRoute('app_field');
         }
 
         $name = $request->request->get('name');
         if (empty($name)) {
-            $this->addFlash('error', 'Erreur : le nom du terrain ne peut pas être vide.');
+            $this->addFlash('error', $translator->trans('flash.error.field_name_empty'));
             return $this->redirectToRoute('app_field');
         }
 
@@ -59,7 +61,7 @@ class FieldController extends AbstractController
         $entityManager->persist($field);
         $entityManager->flush();
 
-        $this->addFlash('success', 'Le terrain a été créé avec succès.');
+        $this->addFlash('success', $translator->trans('flash.success.field_created'));
         return $this->redirectToRoute('app_field');
     }
 }

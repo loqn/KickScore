@@ -13,6 +13,8 @@ use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
+use Symfony\Contracts\Translation\TranslatorInterface;
+
 #[Route('/championship')]
 class ChampionshipController extends AbstractController
 {
@@ -43,10 +45,10 @@ class ChampionshipController extends AbstractController
     }
 
     #[Route('/import', name: 'app_championship_import', methods: ['POST'])]
-    public function import(Request $request, EntityManagerInterface $entityManager): Response
+    public function import(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator): Response
     {
         if (!$this->isGranted('ROLE_ORGANIZER')) {
-            throw $this->createAccessDeniedException('Only organizers can import meets.');
+            throw $this->createAccessDeniedException($translator->trans('error.championship.organizer_only'));
         }
 
         $file = $request->files->get('file');
@@ -107,41 +109,42 @@ class ChampionshipController extends AbstractController
     }
 
     #[Route('/create', name: 'app_championship_create', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $entityManager, LoggerInterface $logger): Response
+    function create(Request $request, EntityManagerInterface $entityManager, LoggerInterface $logger, TranslatorInterface $translator): Response
     {
         if (!$this->isGranted('ROLE_ORGANIZER')) {
-            throw $this->createAccessDeniedException('Only organizers can create meets.');
+            throw $this->createAccessDeniedException($translator->trans('error.championship.organizer_only'));
         }
         $name = $request->request->get('name');
         $date_start = new \DateTime($request->request->get('date_start'));
         $date_end = new \DateTime($request->request->get('date_end'));
         if (empty($name)) {
-            $this->addFlash('error', 'Le nom du championnat est obligatoire.');
+            $this->addFlash('error', $translator->trans('flash.error.championship_name_required'));
             return $this->redirectToRoute('app_championship');
         }
         $championships = $entityManager->getRepository(Championship::class)->findAll();
         if ($championships) {
             foreach ($championships as $chp) {
                 if ($chp->getStartDate() < $date_start && $chp->getEndDate() > $date_end) {
-                    $this->addFlash('error', 'Un championnat est déjà en cours sur ces dates.');
+                    $this->addFlash('error',
+                    $translator->trans('flash.error.championship_date_conflict'));
                     return $this->redirectToRoute('app_championship');
                 }
                 if ($chp->getStartDate() < $date_end && $chp->getEndDate() > $date_end) {
-                    $this->addFlash('error', 'Un championnat est déjà en cours sur ces dates.');
+                    $this->addFlash('error', $translator->trans('flash.error.championship_date_conflict'));
                     return $this->redirectToRoute('app_championship');
                 }
                 if ($chp->getStartDate() >= $date_start && $chp->getStartDate() <= $date_end) {
-                    $this->addFlash('error', 'Un championnat est déjà en cours sur ces dates.');
+                    $this->addFlash('error', $translator->trans('flash.error.championship_date_conflict'));
                     return $this->redirectToRoute('app_championship');
                 }
                 if ($chp->getEndDate() >= $date_start && $chp->getEndDate() <= $date_end) {
-                    $this->addFlash('error', 'Un championnat est déjà en cours sur ces dates.');
+                    $this->addFlash('error', $translator->trans('flash.error.championship_date_conflict'));
                     return $this->redirectToRoute('app_championship');
                 }
             }
         }
         if ($date_start >= $date_end) {
-            $this->addFlash('error', 'Les dates ne sont pas cohérentes.');
+            $this->addFlash('error',  $translator->trans('flash.error.championship_invalid_dates'));
             return $this->redirectToRoute('app_championship');
         }
         $championship = new Championship();
@@ -150,25 +153,25 @@ class ChampionshipController extends AbstractController
         $championship->setEndDate($date_end);
         $championship->setOrganizer($this->getUser());
         $entityManager->persist($championship);
-        $this->addFlash('success', 'Championnat créé avec succès.');
+        $this->addFlash('success', $translator->trans('flash.success.championship_created'));
         $logger->debug('Persisting changes.');
         $entityManager->flush();
         return $this->redirectToRoute('app_user_index');
     }
 
     #[Route('/{id}/join', name: 'join_championship', methods: ['POST'])]
-    public function joinChampionship(int $id, EntityManagerInterface $entityManager, Request $request): Response
+    public function joinChampionship(int $id, EntityManagerInterface $entityManager, Request $request, TranslatorInterface $translator): Response
     {
         if (!$this->isCsrfTokenValid('join' . $id, $request->request->get('_token'))) {
-            throw $this->createAccessDeniedException('Token CSRF invalide');
+            throw $this->createAccessDeniedException($translator->trans('error.invalid_csrf_token'));
         }
         $team = $this->getUser()->getMember()->getTeam();
         if (!$team) {
-            throw $this->createAccessDeniedException('Vous devez faire partie d\'une équipe');
+            throw $this->createAccessDeniedException($translator->trans('error.must_be_team_member'));
         }
         $championship = $entityManager->getRepository(Championship::class)->find($id);
         if (!$championship) {
-            throw $this->createNotFoundException('Championnat non trouvé');
+            throw $this->createNotFoundException($translator->trans('error.championship_not_found'));
         }
         $teamResults = new TeamResults();
         $teamResults->setTeam($team);
@@ -177,7 +180,7 @@ class ChampionshipController extends AbstractController
         $team->addChampionship($championship);
         $championship->addTeam($team);
         $entityManager->flush();
-        $this->addFlash('success', 'Votre équipe a rejoint le championnat avec succès');
+        $this->addFlash('success', $translator->trans('flash.success.team_joined_championship'));
         return $this->redirectToRoute('app_team_edit', ['id' => $team->getId()]);
     }
 
@@ -200,11 +203,8 @@ class ChampionshipController extends AbstractController
     }
 
     #[Route('/{id}/apply-changes', name: 'app_championship_edit', methods: ['POST'])]
-    public function champedit(
-        Request $request,
-        Championship $championship,
-        EntityManagerInterface $entityManager
-    ): Response {
+    public function champedit(Request $request, Championship $championship, EntityManagerInterface $entityManager,TranslatorInterface $translator): Response
+    {
         $newName = $request->request->get('firstName');
         if ($newName) {
             $championship->setName($newName);
@@ -219,7 +219,7 @@ class ChampionshipController extends AbstractController
         }
         if ($fieldToRemove) {
             $championship->removeField($fieldToRemove);
-            $this->addFlash('success', 'Le terrain a été supprimé avec succès');
+            $this->addFlash('success', $translator->trans('deletefieldsuccess'));
         }
         $entityManager->remove($fieldToRemove);
         $entityManager->persist($championship);
@@ -233,23 +233,23 @@ class ChampionshipController extends AbstractController
     }
 
     #[Route('/{id}/leave', name: 'leave_championship', methods: ['POST'])]
-    public function leaveChampionship(int $id, EntityManagerInterface $entityManager, Request $request): Response
+    public function leaveChampionship(int $id, EntityManagerInterface $entityManager, Request $request, TranslatorInterface $translator): Response
     {
         if (!$this->isCsrfTokenValid('leave' . $id, $request->request->get('_token'))) {
-            throw $this->createAccessDeniedException('Token CSRF invalide.');
+            throw $this->createAccessDeniedException($translator->trans('error.invalid_csrf_token'));
         }
         $team = $this->getUser()->getMember()->getTeam();
         if (!$team) {
-            throw $this->createAccessDeniedException('Vous devez faire partie d\'une équipe');
+            throw $this->createAccessDeniedException($translator->trans('error.must_be_team_member'));
         }
         $championship = $entityManager->getRepository(Championship::class)->find($id);
         if (!$championship) {
-            throw $this->createNotFoundException('Championnat non trouvé.');
+            throw $this->createNotFoundException($translator->trans('error.championship_not_found'));
         }
         $team->removeChampionship($championship);
         $championship->removeTeam($team);
         $entityManager->flush();
-        $this->addFlash('success', 'Votre équipe a quitté le championnat avec succès');
+        $this->addFlash('success', $translator->trans('teamexitchampionshipsuccess'));
         return $this->redirectToRoute('app_ranking');
     }
 }
