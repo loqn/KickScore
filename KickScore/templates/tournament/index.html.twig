@@ -1,64 +1,123 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello TournamentController!{% endblock %}
+{% block title %}Tournoi{% endblock %}
 
 {% block body %}
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Liste des Tournois</title>
-</head>
-<body>
+<div class="tournament-container">
     <h1>Choisissez un Tournoi</h1>
-    {{ form_start(form) }}
+
+    {{ form_start(form, {'attr': {'class': 'tournament-form'}}) }}
         {{ form_row(form.tournament) }}
     {{ form_end(form) }}
+
     {% if matches is not null and matches|length > 0 %}
-        <div class="listMatches">
-            {% for row in matches %}
-                <div class="rowMatches">
-                    {% for match in row %}
-                        <div class="matches">
-                                {% if match.blueTeam and match.greenTeam %}
-                                    {{ match.blueTeam.name }} vs {{ match.greenTeam.name }}
-                                {% else %}
-                                    <p>Match à venir</p>
-                                {% endif %}
-                            Score: {{ match.blueTeamScore }} - {{ match.greenTeamScore }}
+        <div class="tournament-bracket">
+            {% for round, matchesInRound in matches %}
+                <div class="round" data-round="{{ round }}">
+                    {% for match in matchesInRound %}
+                        <div class="match">
+                            <form method="post" action="{{ path('app_update_match_score', {id: match.id}) }}">
+                                <div class="match-content {% if match.blueTeamScore > match.greenTeamScore %}blue-win{% elseif match.greenTeamScore > match.blueTeamScore %}green-win{% endif %}">
+                                    <div class="team blue-team">
+                                        {% if match.blueTeam %}
+                                            <label>
+                                                <span class="team-name">{{ match.blueTeam.name }}</span>
+                                                <input type="number" name="blue_team_score" value="{{ match.blueTeamScore }}" min="0" class="score-input">
+                                            </label>
+                                        {% else %}
+                                            <span class="team-name">À déterminer</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="team green-team">
+                                        {% if match.greenTeam %}
+                                            <label>
+                                                <span class="team-name">{{ match.greenTeam.name }}</span>
+                                                <input type="number" name="green_team_score" value="{{ match.greenTeamScore }}" min="0" class="score-input">
+                                            </label>
+                                        {% else %}
+                                            <span class="team-name">À déterminer</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <button type="submit" class="update-button">Mettre à jour</button>
+                            </form>
                         </div>
                     {% endfor %}
                 </div>
-                
             {% endfor %}
         </div>
     {% endif %}
 
-    <form method="post" action="{{ path('app_tournament_refresh') }}">
-        <input type="hidden" name="tournament_id" value="{{ tournament.id }}">
-        <button type="submit" class="btn btn-primary">
-            Rafraîchir le Tournoi
-        </button>
-    </form>
+    {% if tournament is defined and tournament.id is defined %}
+        <form method="post" action="{{ path('app_tournament_refresh') }}" class="refresh-form">
+            <input type="hidden" name="tournament_id" value="{{ tournament.id }}">
+            <button type="submit" class="refresh-button">Rafraîchir le Tournoi</button>
+        </form>
+    {% endif %}
+</div>
 
 
-</body>
-</html>
 
-<style>
-    form, h1{
-        margin-left: 5em;
-    }
+    <style>
+        .tournament-container {
+            padding: 2em;
+        }
+        
+        .tournament-bracket {
+            display: flex;
+            justify-content: space-around;
+            margin: 2em 0;
+            gap: 2em;
+        }
 
-    .listMatches{
-        display: flex;
-        flex-direction: row;
-    }
+        .round {
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+        }
 
-    .matches{
-        border: 1px solid black;
-    }
-</style>
+        .match {
+            border: 1px solid #ddd;
+            padding: 1em;
+            min-width: 200px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
 
+        .match-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5em;
+        }
+
+        .team {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5em;
+        }
+
+        .blue-win .blue-team {
+            background-color: rgba(0,0,255,0.1);
+            font-weight: bold;
+        }
+
+        .green-win .green-team {
+            background-color: rgba(0,255,0,0.1);
+            font-weight: bold;
+        }
+
+        .refresh-button {
+            margin-top: 1em;
+            padding: 0.5em 1em;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .refresh-button:hover {
+            background-color: #0056b3;
+        }
+    </style>
 {% endblock %}

@@ -93,35 +93,6 @@ class PlayoffMatch
         return $this->nextMatches;
     }
 
-
-    /*
-    public function getPrevious(): Collection
-    {
-        return $this->previous;
-    }
-
-    public function addPrevious(self $previous): static
-    {
-        if (!$this->previous->contains($previous)) {
-            $this->previous->add($previous);
-        }
-
-        return $this;
-    }
-
-    public function removePrevious(self $previous): static
-    {
-        $this->previous->removeElement($previous);
-
-        return $this;
-    }
-
-    public function setPrevious(array $previous)
-    {
-        $this->previous = $previous;
-    }
-    */
-
     public function getTournament(): ?Tournament
     {
         return $this->tournament;
