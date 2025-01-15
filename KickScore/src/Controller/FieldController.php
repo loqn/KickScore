@@ -11,7 +11,6 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-
 class FieldController extends AbstractController
 {
     #[Route('/field', name: 'app_field')]
@@ -34,8 +33,11 @@ class FieldController extends AbstractController
     }
 
     #[Route('/field/create', name: 'app_field_create', methods: ['POST'])]
-    public function create(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator): Response
-    {
+    public function create(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
+    ): Response {
         if (!$this->isGranted('ROLE_ORGANIZER')) {
             throw $this->createAccessDeniedException($translator->trans('error.field.organizer_only'));
         }

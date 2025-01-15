@@ -12,7 +12,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-
 use Symfony\Contracts\Translation\TranslatorInterface;
 
 #[Route('/championship')]
@@ -45,8 +44,11 @@ class ChampionshipController extends AbstractController
     }
 
     #[Route('/import', name: 'app_championship_import', methods: ['POST'])]
-    public function import(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator): Response
-    {
+    public function import(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
+    ): Response {
         if (!$this->isGranted('ROLE_ORGANIZER')) {
             throw $this->createAccessDeniedException($translator->trans('error.championship.organizer_only'));
         }
@@ -109,8 +111,12 @@ class ChampionshipController extends AbstractController
     }
 
     #[Route('/create', name: 'app_championship_create', methods: ['POST'])]
-    function create(Request $request, EntityManagerInterface $entityManager, LoggerInterface $logger, TranslatorInterface $translator): Response
-    {
+    public function create(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        LoggerInterface $logger,
+        TranslatorInterface $translator
+    ): Response {
         if (!$this->isGranted('ROLE_ORGANIZER')) {
             throw $this->createAccessDeniedException($translator->trans('error.championship.organizer_only'));
         }
@@ -125,8 +131,10 @@ class ChampionshipController extends AbstractController
         if ($championships) {
             foreach ($championships as $chp) {
                 if ($chp->getStartDate() < $date_start && $chp->getEndDate() > $date_end) {
-                    $this->addFlash('error',
-                    $translator->trans('flash.error.championship_date_conflict'));
+                    $this->addFlash(
+                        'error',
+                        $translator->trans('flash.error.championship_date_conflict')
+                    );
                     return $this->redirectToRoute('app_championship');
                 }
                 if ($chp->getStartDate() < $date_end && $chp->getEndDate() > $date_end) {
@@ -144,7 +152,7 @@ class ChampionshipController extends AbstractController
             }
         }
         if ($date_start >= $date_end) {
-            $this->addFlash('error',  $translator->trans('flash.error.championship_invalid_dates'));
+            $this->addFlash('error', $translator->trans('flash.error.championship_invalid_dates'));
             return $this->redirectToRoute('app_championship');
         }
         $championship = new Championship();
@@ -160,8 +168,12 @@ class ChampionshipController extends AbstractController
     }
 
     #[Route('/{id}/join', name: 'join_championship', methods: ['POST'])]
-    public function joinChampionship(int $id, EntityManagerInterface $entityManager, Request $request, TranslatorInterface $translator): Response
-    {
+    public function joinChampionship(
+        int $id,
+        EntityManagerInterface $entityManager,
+        Request $request,
+        TranslatorInterface $translator
+    ): Response {
         if (!$this->isCsrfTokenValid('join' . $id, $request->request->get('_token'))) {
             throw $this->createAccessDeniedException($translator->trans('error.invalid_csrf_token'));
         }
@@ -203,8 +215,12 @@ class ChampionshipController extends AbstractController
     }
 
     #[Route('/{id}/apply-changes', name: 'app_championship_edit', methods: ['POST'])]
-    public function champedit(Request $request, Championship $championship, EntityManagerInterface $entityManager,TranslatorInterface $translator): Response
-    {
+    public function champedit(
+        Request $request,
+        Championship $championship,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
+    ): Response {
         $newName = $request->request->get('firstName');
         if ($newName) {
             $championship->setName($newName);
@@ -233,8 +249,12 @@ class ChampionshipController extends AbstractController
     }
 
     #[Route('/{id}/leave', name: 'leave_championship', methods: ['POST'])]
-    public function leaveChampionship(int $id, EntityManagerInterface $entityManager, Request $request, TranslatorInterface $translator): Response
-    {
+    public function leaveChampionship(
+        int $id,
+        EntityManagerInterface $entityManager,
+        Request $request,
+        TranslatorInterface $translator
+    ): Response {
         if (!$this->isCsrfTokenValid('leave' . $id, $request->request->get('_token'))) {
             throw $this->createAccessDeniedException($translator->trans('error.invalid_csrf_token'));
         }

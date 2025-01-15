@@ -20,14 +20,14 @@ use Symfony\Component\HttpFoundation\ResponseHeaderBag;
 use DateTime;
 use Symfony\Contracts\Translation\TranslatorInterface;
 
-
-
-
 class MeetController extends AbstractController
 {
     #[Route('/gen_match/{id}', name: 'app_generate_match', methods: ['POST'])]
-    public function generateMatchsForChampionship(Request $request, EntityManagerInterface $entityManager, TranslatorInterface $translator): Response
-    {
+    public function generateMatchsForChampionship(
+        Request $request,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
+    ): Response {
         $chp = $entityManager->getRepository(Championship::class)->find($request->request->get('chp_id'));
 
         //if start > now, start = tomorrow
@@ -38,7 +38,7 @@ class MeetController extends AbstractController
             return $this->redirectToRoute('app_user_index');
         }
         if ($chp->getEndDate() < new \DateTime()) {
-            $this->addFlash('error',$translator->trans('flash.error.championship_already_ended'));
+            $this->addFlash('error', $translator->trans('flash.error.championship_already_ended'));
             return $this->redirectToRoute('app_user_index');
         }
         if ($chp->getStartDate() < new \DateTime() && !$chp->getMatches()->isEmpty()) {
@@ -52,7 +52,7 @@ class MeetController extends AbstractController
         $teamsArray = $teams->toArray();
 
         if ($chp->getFields()->isEmpty()) {
-            $this->addFlash('error',  $translator->trans('flash.error.no_available_fields'));
+            $this->addFlash('error', $translator->trans('flash.error.no_available_fields'));
             return $this->redirectToRoute('app_user_index');
         }
 
@@ -233,8 +233,12 @@ class MeetController extends AbstractController
     }
 
     #[Route('/versus/update/{id}', name: 'update_match', methods: ['POST'])]
-    public function update(Request $request, Versus $match, EntityManagerInterface $entityManager,TranslatorInterface $translator): Response
-    {
+    public function update(
+        Request $request,
+        Versus $match,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
+    ): Response {
         if (!$this->isGranted('ROLE_ORGANIZER')) {
             throw $this->createAccessDeniedException('Only organizers can update meets.');
         }
@@ -313,7 +317,7 @@ class MeetController extends AbstractController
                         return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
                     }
                     if ($currentDateTime >= $match->getTimeslot()->getEnd()) {
-                        $this->addFlash('error',  $translator->trans('flash.error.match_cannot_start_after_timeslot'));
+                        $this->addFlash('error', $translator->trans('flash.error.match_cannot_start_after_timeslot'));
                         return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
                     }
                     $match->setBlueScore(0);
@@ -333,7 +337,7 @@ class MeetController extends AbstractController
                         return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
                     }
 
-                    if($greenScore < 0 || $blueScore < 0){
+                    if ($greenScore < 0 || $blueScore < 0) {
                         $this->addFlash('error', $translator->trans('flash.error.negative_score_not_allowed'));
                         return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
                     }
@@ -352,7 +356,7 @@ class MeetController extends AbstractController
             $match->setCommentary($request->request->get('commentary'));
         }
         $entityManager->flush();
-        $this->addFlash('success',  $translator->trans('flash.success.match_updated'));
+        $this->addFlash('success', $translator->trans('flash.success.match_updated'));
         return $this->redirectToRoute('app_match_list');
     }
 
