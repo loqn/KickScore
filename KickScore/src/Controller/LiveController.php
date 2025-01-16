@@ -11,12 +11,10 @@ use App\Entity\Versus;
 use App\Entity\Team;
 use App\Entity\Field;
 
-
 class LiveController extends AbstractController
 {
     #[Route('/live', name: 'app_live')]
-    public function index(EntityManagerInterface $entityManager,
-    ): Response
+    public function index(EntityManagerInterface $entityManager,): Response
     {
         //get all championships
         $championships = $entityManager->getRepository(Championship::class)->findAll();
@@ -30,7 +28,7 @@ class LiveController extends AbstractController
             'controller_name' => 'LiveController',
             'championships' => $championships,
             'matches' => $matches,
-            
+
             'teams' => $teams,
             'fields' => $fields
         ]);

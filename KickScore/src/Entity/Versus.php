@@ -89,12 +89,12 @@ class Versus
     {
         return $this->greenTeam ?? new Team('Équipe par défaut');
     }
-    
+
     public function getBlueTeam(): Team
     {
         return $this->blueTeam ?? new Team('Équipe par défaut');
     }
-    
+
 
     public function setGreenTeam(?Team $greenTeam): static
     {

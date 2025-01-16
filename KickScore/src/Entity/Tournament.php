@@ -81,7 +81,7 @@ class Tournament
     public function setChampionship(Championship $championship): static
     {
         $this->championship = $championship;
-    
+
         return $this;
     }
 
@@ -96,5 +96,4 @@ class Tournament
 
         return $this;
     }
-
 }

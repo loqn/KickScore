@@ -16,7 +16,7 @@ class PlayoffMatch
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'PLA_ID')]
     private ?int $id = null;
-    
+
     #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'previous')]
     private Collection $nextMatches;
 

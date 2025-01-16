@@ -1,4 +1,5 @@
 <?php
+
 namespace App\Form;
 
 use App\Entity\Tournament;
@@ -49,7 +50,7 @@ class TournamentType extends AbstractType
     }
 
     public function configureOptions(OptionsResolver $resolver)
-    {   
+    {
         $resolver->setDefaults([
             'data_class' => null,
             'csrf_protection' => true,
