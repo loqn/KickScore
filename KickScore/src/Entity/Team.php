@@ -6,6 +6,7 @@ use App\Repository\TeamRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Table(name: 'T_TEAM_TEA')]
 #[ORM\Entity(repositoryClass: TeamRepository::class)]
@@ -14,6 +15,7 @@ class Team
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'TEA_ID', type: "integer")]
+    #[Groups(['team:read'])]
     private ?int $id = null;
 
     #[ORM\ManyToMany(targetEntity: Championship::class, inversedBy: 'teams')]
@@ -29,6 +31,7 @@ class Team
     private Collection $championships;
 
     #[ORM\Column(name: 'TEA_NAME', length: 32)]
+    #[Groups(['team:read', 'match:read'])]
     private ?string $name = null;
 
     #[ORM\Column(name: 'TEA_STRUCTURE', length: 32, nullable: true)]
@@ -38,6 +41,7 @@ class Team
      * @var Collection<int, Member>
      */
     #[ORM\OneToMany(targetEntity: Member::class, mappedBy: 'team', cascade: ['persist'])]
+    #[Groups(['team:read'])]
     private Collection $members;
 
     /**
@@ -219,10 +223,18 @@ class Team
     public function removeTeamMatchStatus(TeamMatchStatus $teamMatchStatus): static
     {
         if ($this->teamMatchStatuses->removeElement($teamMatchStatus)) {
-            // set the owning side to null (unless already changed)
             if ($teamMatchStatus->getTeam() === $this) {
                 $teamMatchStatus->setTeam(null);
             }
+        }
+
+        return $this;
+    }
+
+    public function removeAllTeamMatchStatuses(): static
+    {
+        foreach ($this->teamMatchStatuses as $teamMatchStatus) {
+            $this->removeTeamMatchStatus($teamMatchStatus);
         }
 
         return $this;

@@ -6,6 +6,7 @@ use App\Repository\FieldRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Table(name: 'T_FIELD_FLD')]
 #[ORM\Entity(repositoryClass: FieldRepository::class)]
@@ -14,13 +15,16 @@ class Field
     #[ORM\Id]
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'FLD_ID')]
+    #[Groups(['match:read'])]
     private ?int $id = null;
 
     #[ORM\Column(name: 'FLD_NAME', length: 255) ]
+    #[Groups(['field:read', 'match:read'])]
     private ?string $name = null;
 
     #[ORM\ManyToOne(targetEntity: Championship::class, inversedBy: 'fields')]
     #[ORM\JoinColumn(name:'CHP_ID', referencedColumnName: 'CHP_ID', nullable: false)]
+    #[Groups(['field:read'])]
     private ?Championship $championship = null;
 
     /**

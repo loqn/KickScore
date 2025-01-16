@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Table(name: 'T_MATCH_MAT')]
 #[ORM\Entity(repositoryClass: VersusRepository::class)]
@@ -19,19 +20,24 @@ class Versus
 
     #[ORM\ManyToOne(targetEntity: Team::class)]
     #[ORM\JoinColumn(name: 'TEA_ID_MAT_TEAMBLUE', referencedColumnName: 'TEA_ID')]
+    #[Groups(['match:read'])]
     private ?Team $blueTeam = null;
 
     #[ORM\ManyToOne(targetEntity: Team::class)]
     #[ORM\JoinColumn(name: 'TEA_ID_MAT_TEAMGREEN', referencedColumnName: 'TEA_ID')]
+    #[Groups(['match:read'])]
     private ?Team $greenTeam = null;
 
     #[ORM\Column(name: 'MAT_GREENSCORE', nullable: true)]
+    #[Groups(['match:read'])]
     private ?int $greenScore = null;
 
     #[ORM\Column(name: 'MAT_BLUESCORE', nullable: true)]
+    #[Groups(['match:read'])]
     private ?int $blueScore = null;
 
     #[ORM\Column(name: 'MAT_DATE', type: Types::DATE_MUTABLE, nullable: true)]
+    #[Groups(['match:read'])]
     private ?\DateTimeInterface $date = null;
 
     #[ORM\ManyToOne(targetEntity: Championship::class, inversedBy: 'matches')]
@@ -50,10 +56,12 @@ class Versus
 
     #[ORM\ManyToOne(targetEntity: Timeslot::class, inversedBy: 'versuses')]
     #[ORM\JoinColumn(name: 'TSL_ID', referencedColumnName: 'TSL_ID', nullable: true)]
+    #[Groups(['match:read'])]
     private ?Timeslot $timeslot = null;
 
     #[ORM\ManyToOne(targetEntity: Field::class, inversedBy: 'versuses')]
     #[ORM\JoinColumn(name: 'FLD_ID', referencedColumnName: 'FLD_ID', nullable: true)]
+    #[Groups(['match:read'])]
     private ?Field $field = null;
 
     public function __construct()

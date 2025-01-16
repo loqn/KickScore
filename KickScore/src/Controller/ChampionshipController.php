@@ -212,17 +212,16 @@ class ChampionshipController extends AbstractController
     public function edit(Championship $championship, EntityManagerInterface $entityManager, Request $request): Response
     {
         $fields = $championship->getFields();
-        $Lchampionships = $entityManager->getRepository(Championship::class)->findAll();
         $selectedChampionshipId = $request->query->get('select');
 
         return $this->render(
             'championship/display.html.twig',
             [
-            'championships' => $championship,
+            'championship' => $championship,
             'teams' => $championship->getTeams(),
             'fields' => $fields,
-            'select' => $selectedChampionshipId,
-            'Lchampionships' => $Lchampionships
+            'matches' => $championship->getMatches(),
+            //            'select' => $selectedChampionshipId,
             ]
         );
     }
@@ -289,5 +288,15 @@ class ChampionshipController extends AbstractController
         $entityManager->flush();
         $this->addFlash('success', $translator->trans('teamexitchampionshipsuccess'));
         return $this->redirectToRoute('app_ranking');
+    }
+
+    #[Route('/{id}/update', name: 'app_championship_update', methods: ['POST'])]
+    public function update(
+        Championship $championship,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
+    ): Response {
+        return $this->redirectToRoute('app_champ_edit', ['id' => $championship->getId()]);
     }
 }

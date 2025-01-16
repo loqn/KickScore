@@ -19,5 +19,9 @@ WORKDIR /app
 COPY ./KickScore/composer.* ./
 RUN composer install --no-scripts
 
+RUN echo "./vendor/bin/phpcs --standard=PSR12 src/" > cs.sh
+RUN echo "./vendor/bin/phpcbf --standard=PSR12 src/" >> cs.sh
+RUN chmod +x cs.sh
+
 #exec php sniffer
-CMD vendor/bin/phpcs --standard=PSR12 src/ && vendor/bin/phpcbf --standard=PSR12 src/
+CMD ./cs.sh

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Doctrine\DBAL\Types\Types;
+use Symfony\Component\Serializer\Annotation\Groups;
 
 #[ORM\Table(name: 'T_CHAMPIONSHIP_CHP')]
 #[ORM\Entity(repositoryClass: ChampionshipRepository::class)]
@@ -23,6 +24,7 @@ class Championship
     private int $type = self::TYPE_CLASSIC;
 
     #[ORM\Column(name: "CHP_NAME", length: 32, nullable: true)]
+    #[Groups(['field:read'])]
     private ?string $name = null;
 
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'organizedChampionships')]

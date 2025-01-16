@@ -27,7 +27,7 @@
                     </select>
                     <select id="fieldSelect"
                             class="block w-full xl:w-auto min-w-[200px] rounded-lg border border-slate-200 bg-white px-4 py-3 pr-10 text-base text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
-                        <option value="all">{{'allfield' | trans}}</option>
+                        <option value="all">{{'allfields' | trans}}</option>
                         {% set fields = [] %}
                         {% for championship in championships %}
                             {% for match in championship.matches %}
@@ -487,7 +487,7 @@
                         <div class="flex flex-wrap gap-4">
                             <select id="scheduleFieldSelect"
                                     class="block w-full sm:w-auto rounded-lg border border-slate-200 bg-white px-4 py-2 text-sm text-slate-800 focus:border-blue-500 focus:outline-none focus:ring-2 focus:ring-blue-500/20">
-                                <option value="all">{{'allfield' | trans}}</option>
+                                <option value="all">{{'allfields' | trans}}</option>
                                 {% set fields = [] %}
                                 {% for championship in championships %}
                                     {% for match in championship.matches %}

@@ -19,7 +19,7 @@ roleorganizer: 'Rôle Organisateur'
 newpasseword: 'Nouveau mot de passe'
 stayblank: "Laissez vide pour conserver le mot de passe actuel"
 confirmmdp: 'Confirmer le mot de passe'
-cancel: 'Annulé'
+cancel: 'Annuler'
 modifychampionship: 'Modifier le championnat'
 newtournament: "du nouveau tournoi"
 modifyaccount: "Modifier les informations du compte"
@@ -34,6 +34,7 @@ deleteteam: "Supprimer l'équipe"
 selectedfield: 'Terrain sélectionné'
 validemodify: 'Enregistrer les modifications'
 newchampion: "du nouveau championnat"
+search: 'Rechercher...'
 classiccreation: 'Création classique'
 generatetournament: 'Générer un tournoi'
 generatematch: 'Générer des matchs'
@@ -85,6 +86,7 @@ matchcalendar: 'Calendrier des matchs'
 matchprogress: 'Matches en cours et à venir'
 matchinlive: 'Match en cours'
 progress: 'En cours'
+infos: 'Informations'
 form:
     firstname:
         placeholder: 'Insérer votre prénom...'
@@ -98,6 +100,7 @@ nav:
     championshipinlive: 'Championnat en cours'
     startnow: 'Commencez maintenant'
     sourcechampionship: 'Championnat source '
+    manage_tournament: "Gestion d'un tournoi"
     newchampion: "d'un nouveau championnat"
     firstname: 'Prénom'
     lastname: 'Nom'
@@ -117,6 +120,9 @@ nav:
     manage_users: 'Gestion des utilisateurs'
     manage_championships: 'Gestion des championnats'
     manage_teams: 'Gestion des équipes'
+    manage_infos: 'Gestion des informations'
+    manage_fields: 'Gestion des terrains'
+    manage_matches: 'Gestion des matchs'
     managechampionship: 'Gérer vos championnats'
     withsimplicity: 'avec simplicité'
     explainkickscore: "KickScore vous accompagne dans l'organisation de vos tournois de RoboCup avec des outils modernes et intuitifs."
@@ -343,7 +349,26 @@ listview: "Vue liste"
 planningview: "Vue planning"
 quit: "Quitter"
 join: "Rejoindre"
-timslot: "Créneau"
+timeslot: "Créneau"
+description : 'Description'
+matches: 'Matchs'
+start_date: 'Date de début'
+end_date: 'Date de fin'
+accepted_timeslots: "Créneaux acceptés"
+
+field_list:
+    title: "Liste des terrains"
+    subtitle: "Gérez les terrains du championnat."
+
+confirm_delete:
+    title: "Suppression"
+    field: "Êtes-vous sûr de vouloir supprimer ce terrain ?"
+
+create_field: "Créer un terrain"
+field_creation: "Création d'un terrain pour le championnat"
+
+matchlist: "Liste des matchs"
+
 page_title:
     home: "Accueil"
     login: "Connexion"
@@ -426,9 +451,16 @@ flash:
             creator_not_found: "Le créateur de l'équipe n'a pas été trouvé"
             must_login: "Vous devez être connecté pour ajouter des membres."
             no_team: "Vous ne faites partie d'aucune équipe."
-        
-            
-    
+
+name: "Nom"
+save: "Enregistrer"
+tournament_management: "Gestion du tournoi"
+create_tournament: "Créer un tournoi"
+remove_creator_warning: "Attention : vous êtes sur le point de supprimer le créateur de l'équipe. Voulez-vous vraiment continuer ?"
+delete_team: "Supprimer l'équipe"
+no_team_found: "Aucune équipe n'a été trouvée."
+no_field_found: "Aucun terrain n'a été trouvé."
+no_match_found: "Aucun match n'a été trouvé."
 teamname: "Nom de l'équipe"
 optionnal: "optionnel"
 exemple: "ex: Entreprise, Association, etc."

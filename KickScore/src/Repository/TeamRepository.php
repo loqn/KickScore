@@ -16,28 +16,23 @@ class TeamRepository extends ServiceEntityRepository
         parent::__construct($registry, Team::class);
     }
 
-    /**
-     * @return Team[] Returns an array of Team objects
-     */
-    public function findByExampleField($value): array
+    public function searchTeams(?string $query, ?int $championshipId): array
     {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->orderBy('t.id', 'ASC')
-            ->setMaxResults(10)
-            ->getQuery()
-            ->getResult();
+        $qb = $this->createQueryBuilder('t');
+
+        if (!empty($query)) {
+            $qb->where('t.name LIKE :query')
+                ->setParameter('query', '%' . $query . '%');
+        }
+
+        if ($championshipId) {
+            $qb->andWhere(':championship MEMBER OF t.championships')
+                ->setParameter('championship', $championshipId);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
-    public function findOneBySomeField($value): ?Team
-    {
-        return $this->createQueryBuilder('t')
-            ->andWhere('t.exampleField = :val')
-            ->setParameter('val', $value)
-            ->getQuery()
-            ->getOneOrNullResult();
-    }
     public function findAllTeamsByPoints()
     {
         return $this->createQueryBuilder('t')

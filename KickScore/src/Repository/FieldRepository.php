@@ -16,6 +16,23 @@ class FieldRepository extends ServiceEntityRepository
         parent::__construct($registry, Field::class);
     }
 
+    public function searchFields(string $query, int $championshipId): array
+    {
+        $qb = $this->createQueryBuilder('f');
+
+        if (!empty($query)) {
+            $qb->where('f.name LIKE :query')
+                ->setParameter('query', '%' . $query . '%');
+        }
+
+        if ($championshipId) {
+            $qb->andWhere('f.championship = :championship')
+                ->setParameter('championship', $championshipId);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
     //    /**
     //     * @return Field[] Returns an array of Field objects
     //     */
