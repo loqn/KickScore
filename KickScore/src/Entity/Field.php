@@ -24,6 +24,7 @@ class Field
 
     #[ORM\ManyToOne(targetEntity: Championship::class, inversedBy: 'fields')]
     #[ORM\JoinColumn(name:'CHP_ID', referencedColumnName: 'CHP_ID', nullable: false)]
+    #[Groups(['field:read'])]
     private ?Championship $championship = null;
 
     /**

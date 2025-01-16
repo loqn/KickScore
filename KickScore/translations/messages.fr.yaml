@@ -100,6 +100,7 @@ nav:
     championshipinlive: 'Championnat en cours'
     startnow: 'Commencez maintenant'
     sourcechampionship: 'Championnat source '
+    manage_tournament: "Gestion d'un tournoi"
     newchampion: "d'un nouveau championnat"
     firstname: 'Prénom'
     lastname: 'Nom'
@@ -450,9 +451,16 @@ flash:
             creator_not_found: "Le créateur de l'équipe n'a pas été trouvé"
             must_login: "Vous devez être connecté pour ajouter des membres."
             no_team: "Vous ne faites partie d'aucune équipe."
-        
-            
-    
+
+name: "Nom"
+save: "Enregistrer"
+tournament_management: "Gestion du tournoi"
+create_tournament: "Créer un tournoi"
+remove_creator_warning: "Attention : vous êtes sur le point de supprimer le créateur de l'équipe. Voulez-vous vraiment continuer ?"
+delete_team: "Supprimer l'équipe"
+no_team_found: "Aucune équipe n'a été trouvée."
+no_field_found: "Aucun terrain n'a été trouvé."
+no_match_found: "Aucun match n'a été trouvé."
 teamname: "Nom de l'équipe"
 optionnal: "optionnel"
 exemple: "ex: Entreprise, Association, etc."

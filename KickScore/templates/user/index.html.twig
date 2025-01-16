@@ -660,7 +660,6 @@
     </div>
 
     <script>
-
         window.toggleChampionshipModal = function() {
             const modal = document.getElementById('championshipModal');
             if (modal.classList.contains('hidden')) {
@@ -685,24 +684,6 @@
             menu.classList.toggle('hidden');
         }
 
-        document.addEventListener('click', (event) => {
-            if (!event.target.closest('.relative')) {
-                const allDropdowns = document.querySelectorAll('[id^="dropdown-"]');
-                const actionMenus = document.querySelectorAll('[id^="action-menu-"]');
-
-                allDropdowns.forEach(dropdown => {
-                    dropdown.classList.add('hidden');
-                });
-
-                actionMenus.forEach(menu => {
-                    const button = menu.previousElementSibling;
-                    if (!menu.contains(event.target) && !button.contains(event.target)) {
-                        menu.classList.add('hidden');
-                    }
-                });
-            }
-        });
-
         function toggleDropdown(dropdownId) {
             const dropdown = document.getElementById(dropdownId);
             const allDropdowns = document.querySelectorAll('[id^="dropdown-"]');
@@ -715,57 +696,6 @@
 
             dropdown.classList.toggle('hidden');
         }
-
-        document.addEventListener('click', (event) => {
-            if (!event.target.closest('.relative')) {
-                const allDropdowns = document.querySelectorAll('[id^="dropdown-"]');
-                allDropdowns.forEach(dropdown => {
-                    dropdown.classList.add('hidden');
-                });
-            }
-        });
-
-        const tabs = {
-            users: document.getElementById('tab_users'),
-            championships: document.getElementById('tab_championships'),
-            teams: document.getElementById('tab_teams')
-        };
-
-        const panels = {
-            users: document.getElementById('panel_users'),
-            championships: document.getElementById('panel_championships'),
-            teams: document.getElementById('panel_teams')
-        };
-
-        const subtitle = document.getElementById('subtitle');
-
-        function activateTab(tabId) {
-            Object.values(tabs).forEach(tab => {
-                tab.classList.remove('text-blue-900', 'border-blue-900', 'bg-white');
-                tab.classList.add('text-slate-500', 'border-transparent');
-            });
-            tabs[tabId].classList.add('text-blue-900', 'border-blue-900', 'bg-white');
-            tabs[tabId].classList.remove('text-slate-500', 'border-transparent');
-
-            Object.values(panels).forEach(panel => panel.classList.add('hidden'));
-            panels[tabId].classList.remove('hidden');
-
-            const subtitles = {
-                users: "{{ 'nav.manage_users' | trans }}",
-                championships: "{{ 'nav.manage_championships' | trans }}",
-                teams: "{{ 'nav.manage_teams' | trans }}"
-            };
-            subtitle.textContent = subtitles[tabId];
-
-            localStorage.setItem('activeTab', tabId);
-        }
-
-        const savedTab = localStorage.getItem('activeTab') || 'users';
-        activateTab(savedTab);
-
-        Object.keys(tabs).forEach(tabId => {
-            tabs[tabId].addEventListener('click', () => activateTab(tabId));
-        });
 
         function toggleChampionship(id) {
             const content = document.getElementById(id);
@@ -793,7 +723,88 @@
             };
         }
 
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
+            const tabs = {
+                users: document.getElementById('tab_users'),
+                championships: document.getElementById('tab_championships'),
+                teams: document.getElementById('tab_teams')
+            };
+
+            const panels = {
+                users: document.getElementById('panel_users'),
+                championships: document.getElementById('panel_championships'),
+                teams: document.getElementById('panel_teams')
+            };
+
+            const subtitle = document.getElementById('subtitle');
+
+            const validateElements = () => {
+                const missingElements = [];
+                Object.entries(tabs).forEach(([key, element]) => {
+                    if (!element) missingElements.push(`tab_${key}`);
+                });
+                Object.entries(panels).forEach(([key, element]) => {
+                    if (!element) missingElements.push(`panel_${key}`);
+                });
+                if (!subtitle) missingElements.push('subtitle');
+
+                if (missingElements.length > 0) {
+                    console.error('Missing elements:', missingElements);
+                    return false;
+                }
+                return true;
+            };
+
+            function activateTab(tabId) {
+                if (!validateElements()) return;
+
+                if (!tabs[tabId]) {
+                    console.error(`Invalid tab ID: ${tabId}`);
+                    tabId = 'users'; // Fallback to default tab
+                }
+
+                Object.values(tabs).forEach(tab => {
+                    if (tab) {
+                        tab.classList.remove('text-blue-900', 'border-blue-900', 'bg-white');
+                        tab.classList.add('text-slate-500', 'border-transparent');
+                    }
+                });
+
+                tabs[tabId].classList.add('text-blue-900', 'border-blue-900', 'bg-white');
+                tabs[tabId].classList.remove('text-slate-500', 'border-transparent');
+
+                Object.values(panels).forEach(panel => {
+                    if (panel) {
+                        panel.classList.add('hidden');
+                    }
+                });
+
+                if (panels[tabId]) {
+                    panels[tabId].classList.remove('hidden');
+                }
+
+                const subtitles = {
+                    users: "{{ 'nav.manage_users' | trans }}",
+                    championships: "{{ 'nav.manage_championships' | trans }}",
+                    teams: "{{ 'nav.manage_teams' | trans }}"
+                };
+
+                if (subtitle && subtitles[tabId]) {
+                    subtitle.textContent = subtitles[tabId];
+                }
+
+                localStorage.setItem('activeTab', tabId);
+            }
+
+            if (validateElements()) {
+                const savedTab = localStorage.getItem('activeTab') || 'users';
+                activateTab(savedTab);
+
+                Object.keys(tabs).forEach(tabId => {
+                    tabs[tabId].addEventListener('click', () => activateTab(tabId));
+                });
+            }
+
             const searchInput = document.querySelector('#userSearch');
             const tbody = document.querySelector('tbody');
             const paginationContainer = document.querySelector('#pagination');
@@ -803,53 +814,47 @@
             const endIndexSpan = document.querySelector('#endIndex');
             const totalItemsSpan = document.querySelector('#totalItems');
 
-            //championship modal
             const btnManual = document.getElementById('btn_manual');
             const btnImport = document.getElementById('btn_import');
             const formManual = document.getElementById('championship_manual');
             const formImport = document.getElementById('championship_import');
 
-            btnManual.addEventListener('click', (e) => {
-                e.preventDefault();
-                formManual.classList.remove('hidden');
-                formImport.classList.add('hidden');
-
-                btnManual.classList.add('bg-blue-900', 'text-white');
-                btnManual.classList.remove('bg-slate-50', 'text-slate-700');
-
-                btnImport.classList.remove('bg-blue-900', 'text-white');
-                btnImport.classList.add('bg-slate-50', 'text-slate-700');
-            });
-
-            btnImport.addEventListener('click', (e) => {
-                e.preventDefault();
-                formImport.classList.remove('hidden');
-                formManual.classList.add('hidden');
-
-                btnImport.classList.add('bg-blue-900', 'text-white');
-                btnImport.classList.remove('bg-slate-50', 'text-slate-700');
-
-                btnManual.classList.remove('bg-blue-900', 'text-white');
-                btnManual.classList.add('bg-slate-50', 'text-slate-700');
-            });
-
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape') {
-                    const modal = document.getElementById('championshipModal');
-                    if (!modal.classList.contains('hidden')) {
-                        toggleChampionshipModal();
-                    }
-                }
-            });
-
             const itemsPerPage = 8;
             let currentPage = 1;
             let filteredRows = [];
 
+            if (btnManual && btnImport) {
+                btnManual.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    formManual.classList.remove('hidden');
+                    formImport.classList.add('hidden');
+
+                    btnManual.classList.add('bg-blue-900', 'text-white');
+                    btnManual.classList.remove('bg-slate-50', 'text-slate-700');
+
+                    btnImport.classList.remove('bg-blue-900', 'text-white');
+                    btnImport.classList.add('bg-slate-50', 'text-slate-700');
+                });
+
+                btnImport.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    formImport.classList.remove('hidden');
+                    formManual.classList.add('hidden');
+
+                    btnImport.classList.add('bg-blue-900', 'text-white');
+                    btnImport.classList.remove('bg-slate-50', 'text-slate-700');
+
+                    btnManual.classList.remove('bg-blue-900', 'text-white');
+                    btnManual.classList.add('bg-slate-50', 'text-slate-700');
+                });
+            }
+
             function filterRows(searchTerm) {
+                if (!tbody) return [];
+
                 const rows = Array.from(tbody.querySelectorAll('tr')).filter(row => !row.querySelector('td[colspan]'));
 
-                filteredRows = searchTerm ? rows.filter(row => {
+                return searchTerm ? rows.filter(row => {
                     const name = row.querySelector('td:first-child')?.textContent || '';
                     const firstName = row.querySelector('td:nth-child(2)')?.textContent || '';
                     const email = row.querySelector('td:nth-child(3)')?.textContent || '';
@@ -858,11 +863,11 @@
                         text.toLowerCase().includes(searchTerm.toLowerCase())
                     );
                 }) : rows;
-
-                return filteredRows;
             }
 
             function updatePagination() {
+                if (!paginationContainer) return;
+
                 const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
                 paginationContainer.innerHTML = '';
 
@@ -879,17 +884,20 @@
                     paginationContainer.appendChild(button);
                 }
 
-                prevButton.disabled = currentPage === 1;
-                nextButton.disabled = currentPage === totalPages;
+                if (prevButton) prevButton.disabled = currentPage === 1;
+                if (nextButton) nextButton.disabled = currentPage === totalPages;
 
                 const startIndex = (currentPage - 1) * itemsPerPage + 1;
                 const endIndex = Math.min(startIndex + itemsPerPage - 1, filteredRows.length);
+
                 if (startIndexSpan) startIndexSpan.textContent = filteredRows.length > 0 ? startIndex : 0;
                 if (endIndexSpan) endIndexSpan.textContent = endIndex;
                 if (totalItemsSpan) totalItemsSpan.textContent = filteredRows.length;
             }
 
             function displayRows() {
+                if (!tbody) return;
+
                 const start = (currentPage - 1) * itemsPerPage;
                 const end = start + itemsPerPage;
 
@@ -917,55 +925,86 @@
                 updatePagination();
             }
 
-            const searchUsersURL = '{{ path('api_search_users') }}';
+            if (searchInput && tbody) {
+                const searchUsersURL = '{{ path('api_search_users') }}';
 
-            const fetchUsersLike = async (q) => {
-                try {
-                    const response = await fetch(`${searchUsersURL}?q=${encodeURIComponent(q)}`, {
-                        method: 'GET',
+                const fetchUsersLike = async (q) => {
+                    try {
+                        const response = await fetch(`${searchUsersURL}?q=${encodeURIComponent(q)}`, {
+                            method: 'GET',
+                        });
+                        if (!response.ok) {
+                            throw new Error('Something went wrong while fetching users from the API.');
+                        }
+                        const data = await response.json();
+                        console.log(data);
+                    } catch(e) {
+                        console.error('Error fetching users', e);
+                    }
+                };
+
+                const debouncedFilter = debounce((searchTerm) => {
+                    currentPage = 1;
+                    filteredRows = filterRows(searchTerm);
+                    displayRows();
+                }, 300);
+
+                const debouncedFetch = debounce(fetchUsersLike, 300);
+
+                searchInput.addEventListener('input', (e) => {
+                    const searchTerm = e.target.value;
+                    debouncedFilter(searchTerm);
+                    debouncedFetch(searchTerm);
+                });
+
+                if (prevButton) {
+                    prevButton.addEventListener('click', () => {
+                        if (currentPage > 1) {
+                            currentPage--;
+                            displayRows();
+                        }
                     });
-                    if (!response.ok) {
-                        throw new Error('Something went wrong while fetching users from the API.');
-                    }
-                    const data = await response.json();
-                    console.log(data);
-                } catch(e) {
-                    console.error('Error fetching users', e);
                 }
-            };
-            const debouncedFilter = debounce((searchTerm) => {
-                currentPage = 1;
-                filterRows(searchTerm);
+
+                if (nextButton) {
+                    nextButton.addEventListener('click', () => {
+                        const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
+                        if (currentPage < totalPages) {
+                            currentPage++;
+                            displayRows();
+                        }
+                    });
+                }
+
+                filteredRows = filterRows('');
                 displayRows();
-            }, 300);
-            const debouncedFetch = debounce(fetchUsersLike, 300);
-            const handleSearch = (e) => {
-                const searchTerm = e.target.value;
-                debouncedFilter(searchTerm);
-                debouncedFetch(searchTerm);
-            };
-            if (searchInput) {
-                searchInput.addEventListener('input', handleSearch);
             }
-            if (prevButton) {
-                prevButton.addEventListener('click', function () {
-                    if (currentPage > 1) {
-                        currentPage--;
-                        displayRows();
+
+            document.addEventListener('click', (event) => {
+                if (!event.target.closest('.relative')) {
+                    const allDropdowns = document.querySelectorAll('[id^="dropdown-"]');
+                    allDropdowns.forEach(dropdown => {
+                        dropdown.classList.add('hidden');
+                    });
+
+                    const actionMenus = document.querySelectorAll('[id^="action-menu-"]');
+                    actionMenus.forEach(menu => {
+                        const button = menu.previousElementSibling;
+                        if (!menu.contains(event.target) && !button.contains(event.target)) {
+                            menu.classList.add('hidden');
+                        }
+                    });
+                }
+            });
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    const modal = document.getElementById('championshipModal');
+                    if (modal && !modal.classList.contains('hidden')) {
+                        toggleChampionshipModal();
                     }
-                });
-            }
-            if (nextButton) {
-                nextButton.addEventListener('click', function () {
-                    const totalPages = Math.ceil(filteredRows.length / itemsPerPage);
-                    if (currentPage < totalPages) {
-                        currentPage++;
-                        displayRows();
-                    }
-                });
-            }
-            filterRows('');
-            displayRows();
+                }
+            });
         });
     </script>
 {% endblock %}

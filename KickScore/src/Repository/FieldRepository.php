@@ -16,15 +16,21 @@ class FieldRepository extends ServiceEntityRepository
         parent::__construct($registry, Field::class);
     }
 
-    public function searchFields($value): array
+    public function searchFields(string $query, int $championshipId): array
     {
-        return $this->createQueryBuilder('f')
-            ->andWhere('f.name LIKE :val')
-            ->setParameter('val', '%' . $value . '%')
-            ->orderBy('f.id', 'ASC')
-            ->getQuery()
-            ->getResult()
-        ;
+        $qb = $this->createQueryBuilder('f');
+
+        if (!empty($query)) {
+            $qb->where('f.name LIKE :query')
+                ->setParameter('query', '%' . $query . '%');
+        }
+
+        if ($championshipId) {
+            $qb->andWhere('f.championship = :championship')
+                ->setParameter('championship', $championshipId);
+        }
+
+        return $qb->getQuery()->getResult();
     }
 
     //    /**

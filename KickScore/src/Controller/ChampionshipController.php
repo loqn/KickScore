@@ -272,4 +272,15 @@ class ChampionshipController extends AbstractController
         $this->addFlash('success', $translator->trans('teamexitchampionshipsuccess'));
         return $this->redirectToRoute('app_ranking');
     }
+
+    #[Route('/{id}/update', name: 'app_championship_update', methods: ['POST'])]
+    public function update(
+        Championship $championship,
+        Request $request,
+        EntityManagerInterface $entityManager,
+        TranslatorInterface $translator
+    ): Response
+    {
+        return $this->redirectToRoute('app_champ_edit', ['id' => $championship->getId()]);
+    }
 }

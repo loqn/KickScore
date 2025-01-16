@@ -13,11 +13,13 @@ use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 
-#[Route('/api/')]
+#[Route('/api')]
 class SearchController extends AbstractController
 {
     #[Route('/users', name: 'api_search_users', methods: ['GET'])]
+    #[IsGranted('ROLE_ORGANIZER')]
     public function search(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $this->denyAccessUnlessGranted('ROLE_ORGANIZER');
@@ -34,6 +36,7 @@ class SearchController extends AbstractController
     }
 
     #[Route('/matches', name: 'api_search_match', methods: ['GET'])]
+    #[IsGranted('ROLE_ORGANIZER')]
     public function searchMatches(Request $request, EntityManagerInterface $entityManager): JsonResponse
     {
         $this->denyAccessUnlessGranted('ROLE_ORGANIZER');
@@ -49,36 +52,30 @@ class SearchController extends AbstractController
 
 
     #[Route('/teams', name: 'api_teams_search', methods: ['GET'])]
+    #[IsGranted('ROLE_ORGANIZER')]
     public function searchTeams(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ORGANIZER');
-        if ($request->query->has('q')) {
-            if ($request->request->has('chp')) {
-                $teams = $entityManager->getRepository(Championship::class)->find($request->query->get('chp'))->getTeams();
-                return $this->json($teams, 200, [], ['groups' => 'team:read']);
-            }
 
-            $teams = $entityManager->getRepository(Championship::class)->searchTeams($request->query->get('q'));
-            return $this->json($teams, 200, [], ['groups' => 'team:read']);
-        }
-        $teams = $entityManager->getRepository(Team::class)->findAll();
+        $query = $request->query->get('q', '');
+        $championshipId = $request->query->get('chp');
+
+        $teams = $entityManager->getRepository(Team::class)->searchTeams($query, $championshipId);
+
         return $this->json($teams, 200, [], ['groups' => 'team:read']);
     }
 
     #[Route('/fields', name: 'api_fields_search', methods: ['GET'])]
+    #[IsGranted('ROLE_ORGANIZER')]
     public function searchFields(Request $request, EntityManagerInterface $entityManager): Response
     {
         $this->denyAccessUnlessGranted('ROLE_ORGANIZER');
-        if ($request->query->has('q')) {
-            if ($request->request->has('chp')) {
-                $fields = $entityManager->getRepository(Championship::class)->find($request->request->get('chp'))->getFields();
-                return $this->json($fields, 200, [], ['groups' => 'field:read']);
-            }
 
-            $fields = $entityManager->getRepository(Championship::class)->searchFields($request->query->get('q'));
-            return $this->json($fields, 200, [], ['groups' => 'field:read']);
-        }
-        $fields = $entityManager->getRepository(Field::class)->findAll();
+        $query = $request->query->get('q', '');
+        $championshipId = $request->query->get('chp');
+
+        $fields = $entityManager->getRepository(Field::class)->searchFields($query, $championshipId);
+
         return $this->json($fields, 200, [], ['groups' => 'field:read']);
     }
 }

@@ -16,6 +16,23 @@ class TeamRepository extends ServiceEntityRepository
         parent::__construct($registry, Team::class);
     }
 
+    public function searchTeams(?string $query, ?int $championshipId): array
+    {
+        $qb = $this->createQueryBuilder('t');
+
+        if (!empty($query)) {
+            $qb->where('t.name LIKE :query')
+                ->setParameter('query', '%' . $query . '%');
+        }
+
+        if ($championshipId) {
+            $qb->andWhere(':championship MEMBER OF t.championships')
+                ->setParameter('championship', $championshipId);
+        }
+
+        return $qb->getQuery()->getResult();
+    }
+
     public function findAllTeamsByPoints()
     {
         return $this->createQueryBuilder('t')

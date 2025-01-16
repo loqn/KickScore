@@ -140,6 +140,7 @@ nav:
     firstname: 'First name'
     sourcechampionship: 'Source championship'
     newchampion: "of a new championship"
+    manage_tournament: "Manage tournament"
     home: 'Home'
     ranking: 'Ranking'
     matches: 'Match list'
@@ -357,7 +358,7 @@ manageuserchamp: "Manage Users and Championships"
 users: "Users"
 manage: "Manage"
 championships: "Championships"
-generatematch: "Generate a match"
+generatematch: "Generate matches"
 registration: "Registration"
 noteamfound: "No team found"
 championship: "Championship"
@@ -369,6 +370,8 @@ planningview: "Planning view"
 quit: "Quit"
 join: "Join"
 optionnal: "optionnal"
+tournament_management: "Tournament management"
+create_tournament: "Create a tournament"
 teamname_label: "Name"
 timeslot: "Time slot"
 page_title:
@@ -452,10 +455,14 @@ flash:
             creator_not_found: "The team creator was not found"
             must_login: "You must be logged in to add members."
             no_team: "You are not part of any team."
-    
-            
 
-        
+name: "Name"
+save: "Save"
+remove_creator_warning: "Warning: You are about to remove the team creator. Are you sure?"
+delete_team: "Delete team"
+no_team_found: "No team found."
+no_field_found: "No field found."
+no_match_found: "No match found."
 exemple: "ex: Company, University, etc."
 modifymath: "Modify the match informations"
 matchmodify: "Match modification"

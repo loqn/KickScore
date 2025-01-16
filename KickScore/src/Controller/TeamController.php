@@ -2,15 +2,13 @@
 
 namespace App\Controller;
 
-use App\Entity\Championship;
 use App\Entity\Member;
 use App\Entity\Team;
+use App\Entity\TeamMatchStatus;
 use App\Entity\TeamResults;
 use App\Entity\User;
 use App\Entity\Versus;
-use App\Repository\TeamRepository;
 use Symfony\Contracts\Translation\TranslatorInterface;
-use Doctrine\Common\Collections\ArrayCollection;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
@@ -19,13 +17,15 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 #[Route('/team')]
+#[IsGranted('IS_AUTHENTICATED_FULLY')]
 class TeamController extends AbstractController
 {
     #[Route('/', name: 'app_team')]
     public function index(
         EntityManagerInterface $entityManager,
-        TranslatorInterface $translator
-    ): Response {
+        TranslatorInterface    $translator
+    ): Response
+    {
         $players = $entityManager->getRepository(User::class)->findAll();
 
         if (!$this->getUser()) {
@@ -54,10 +54,11 @@ class TeamController extends AbstractController
 
     #[Route('/create', name: 'app_team_create', methods: ['POST', 'GET'])]
     public function create(
-        Request $request,
+        Request                $request,
         EntityManagerInterface $entityManager,
-        TranslatorInterface $translator
-    ): Response {
+        TranslatorInterface    $translator
+    ): Response
+    {
         if ($request->getMethod() !== 'POST') {
             $this->addFlash('error', $translator->trans('flash.error.invalid_access'));
             return $this->redirectToRoute('app_error');
@@ -125,10 +126,11 @@ class TeamController extends AbstractController
     #[Route('/edit/add_member', name: 'app_team_add_member', methods: ['POST'])]
     public function addMember(
         EntityManagerInterface $entityManager,
-        Request $request,
-        LoggerInterface $logger,
-        TranslatorInterface $translator
-    ): Response {
+        Request                $request,
+        LoggerInterface        $logger,
+        TranslatorInterface    $translator
+    ): Response
+    {
         if ($this->isGranted('ROLE_ORGANIZER')) {
             $teamId = $request->request->get('team_id');
             $team = $entityManager->getRepository(Team::class)->find($teamId);
@@ -238,7 +240,7 @@ class TeamController extends AbstractController
     }
 
     #[Route('/edit/remove_member/{id}', name: 'app_team_remove_member', methods: ['POST'],)]
-    public function removeMember(Member $member, EntityManagerInterface $entityManager): Response
+    public function removeMember(Member $member, EntityManagerInterface $entityManager, TranslatorInterface $translator): Response
     {
         if (!$this->isGranted('ROLE_ORGANIZER')) {
             throw $this->createAccessDeniedException('You can only remove members from your own team.');
@@ -250,38 +252,38 @@ class TeamController extends AbstractController
                 ->getToken('delete' . $member->getTeam()->getId())->getValue();
 
             $this->addFlash('error', '
-<div class="flex flex-col md:flex-row lg:flex-row justify-between items-center gap-4 p-4 sm:p-6">
-    <div class="text-center md:text-left lg:text-left text-sm sm:text-base max-w-xl">
-        Retirer le créateur de l\'équipe revient à supprimer l\'équipe. Êtes-vous sûr ?
-    </div>
-    <div class="flex flex-col sm:flex-row md:flex-row lg:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
-        <form method="POST" action="' . $this->generateUrl(
-                'app_delete_team',
-                ['id' => $member->getTeam()->getId()]
-            ) . '" style="display: inline;" class="w-full sm:w-auto">
-            <input type="hidden" name="_token" value="' . $csrfToken . '">
-            <button 
-                type="submit"
-                style="background-color: #991b1b; color: white; transition: background-color 0.3s ease;" 
-                onmouseover="this.style.backgroundColor=\'#7f1d1d\'" 
-                onmouseout="this.style.backgroundColor=\'#991b1b\'" 
-                class="w-full sm:w-auto md:w-auto lg:w-auto min-w-[120px] px-4 py-2 rounded-lg text-sm sm:text-base">
-                Supprimer l\'équipe
-            </button>
-        </form>
-        <button 
-            style="background-color: #10b981; color: white; transition: background-color 0.3s ease;" 
-            onmouseover="this.style.backgroundColor=\'#059669\'" 
-            onmouseout="this.style.backgroundColor=\'#10b981\'" 
-            class="w-full sm:w-auto md:w-auto lg:w-auto min-w-[120px] px-4 py-2 rounded-lg text-sm sm:text-base">
-            <a href="' . $this->generateUrl(
-                'app_team_edit',
-                ['id' => $member->getTeam()->getId()]
-            ) . '">Annuler</a>
-        </button>
-    </div>
-</div>
-');
+                <div class="flex flex-col md:flex-row lg:flex-row justify-between items-center gap-4 p-4 sm:p-6">
+                    <div class="text-center md:text-left lg:text-left text-sm sm:text-base max-w-xl">
+                        ' . $translator->trans("remove_creator_warning") . '
+                    </div>
+                    <div class="flex flex-col sm:flex-row md:flex-row lg:flex-row gap-3 sm:gap-4 w-full sm:w-auto">
+                        <form method="POST" action="' . $this->generateUrl(
+                    'app_delete_team',
+                    ['id' => $member->getTeam()->getId()]
+                ) . '" style="display: inline;" class="w-full sm:w-auto">
+                            <input type="hidden" name="_token" value="' . $csrfToken . '">
+                            <button 
+                                type="submit"
+                                style="background-color: #991b1b; color: white; transition: background-color 0.3s ease;" 
+                                onmouseover="this.style.backgroundColor=\'#7f1d1d\'" 
+                                onmouseout="this.style.backgroundColor=\'#991b1b\'" 
+                                class="w-full sm:w-auto md:w-auto lg:w-auto min-w-[120px] px-4 py-2 rounded-lg text-sm sm:text-base">
+                                ' . $translator->trans("delete_team") . '
+                            </button>
+                        </form>
+                        <button 
+                            style="background-color: #10b981; color: white; transition: background-color 0.3s ease;" 
+                            onmouseover="this.style.backgroundColor=\'#059669\'" 
+                            onmouseout="this.style.backgroundColor=\'#10b981\'" 
+                            class="w-full sm:w-auto md:w-auto lg:w-auto min-w-[120px] px-4 py-2 rounded-lg text-sm sm:text-base">
+                            <a href="' . $this->generateUrl(
+                    'app_team_edit',
+                    ['id' => $member->getTeam()->getId()]
+                ) . '">' . $translator->trans("cancel") . '</a>
+                        </button>
+                    </div>
+                </div>
+                ');
 
             return $this->redirectToRoute('app_team_edit', ['id' => $member->getTeam()->getId()]);
         }
@@ -295,45 +297,62 @@ class TeamController extends AbstractController
 
     #[Route('/delete/{id}', name: 'app_delete_team', methods: ['POST'])]
     public function delete(
-        Request $request,
-        Team $team,
+        Request                $request,
+        Team                   $team,
         EntityManagerInterface $entityManager,
-        LoggerInterface $logger
-    ): Response {
+        LoggerInterface        $logger
+    ): Response
+    {
         if ($this->isCsrfTokenValid('delete' . $team->getId(), $request->getPayload()->getString('_token'))) {
             $logger->info('Starting team deletion process for team: ' . $team->getName());
 
             try {
-                $versusAsGreen = $entityManager->getRepository(Versus::class)->findBy([
-                    'greenTeam' => $team
-                ]);
-                foreach ($versusAsGreen as $versus) {
-                    $versus->setGreenTeam(null);
-                    $entityManager->remove($versus);
+                foreach ($team->getChampionships() as $championship) {
+                    $championship->removeTeam($team);
+                    $team->removeChampionship($championship);
+                    $entityManager->persist($championship);
                 }
 
-                $versusAsBlue = $entityManager->getRepository(Versus::class)->findBy([
-                    'blueTeam' => $team
-                ]);
-                foreach ($versusAsBlue as $versus) {
-                    $versus->setBlueTeam(null);
-                    $entityManager->remove($versus);
+                foreach ($team->getTournaments() as $tournament) {
+                    $tournament->removeTeam($team);
+                    $team->removeTournament($tournament);
+                    $entityManager->persist($tournament);
                 }
 
-                $entityManager->flush();
+                foreach ($team->getTeamResults() as $result) {
+                    $result->setTeam(null);
+                    $result->setChampionship(null);
+                    $entityManager->remove($result);
+                }
 
                 foreach ($team->getMembers() as $member) {
                     if ($user = $member->getUser()) {
-                        $member->setUser(null);
                         $user->setMember(null);
+                        $member->setUser(null);
                         $entityManager->persist($user);
                     }
-                    $team->removeMember($member);
+                    $member->setTeam(null);
                     $entityManager->remove($member);
                 }
 
-                foreach ($team->getTeamResults() as $teamResult) {
-                    $entityManager->remove($teamResult);
+                $matches = $entityManager->getRepository(Versus::class)->findBy([
+                    'greenTeam' => $team
+                ]);
+                $blueMatches = $entityManager->getRepository(Versus::class)->findBy([
+                    'blueTeam' => $team
+                ]);
+                $matches = array_merge($matches, $blueMatches);
+
+                foreach ($matches as $match) {
+                    $matchStatuses = $entityManager->getRepository(TeamMatchStatus::class)->findBy([
+                        'versus' => $match
+                    ]);
+
+                    foreach ($matchStatuses as $status) {
+                        $entityManager->remove($status);
+                    }
+
+                    $entityManager->remove($match);
                 }
 
                 $entityManager->remove($team);
@@ -346,16 +365,9 @@ class TeamController extends AbstractController
             }
         }
 
+        if ($this->isGranted("ROLE_ORGANIZER")) {
+            return $this->redirectToRoute('app_user_index');
+        }
         return $this->redirectToRoute('app_team', [], Response::HTTP_SEE_OTHER);
-    }
-
-    #[Route('/teams/ranking', name: 'app_teams_ranking')]
-    public function ranking(TeamRepository $teamRepository): Response
-    {
-        $teams = $teamRepository->findAllTeamsByPoints();
-
-        return $this->render('team/ranking.html.twig', [
-            'teams' => $teams
-        ]);
     }
 }
