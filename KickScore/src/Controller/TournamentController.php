@@ -29,7 +29,6 @@ class TournamentController extends AbstractController
         $this->arrayTournament = array_fill(0, 4, []);
         $form->handleRequest($request);
     
-        // Cas 1: Formulaire soumis (génération initiale ou sélection d'un tournoi)
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $tournamentId = $data['tournament'];
@@ -47,7 +46,6 @@ class TournamentController extends AbstractController
             } else {
                 $final = $this->tournament->getFinal();
                 if ($final === null) {
-                    // Génération initiale du tournoi
                     $finalMatch = new PlayoffMatch();
                     $finalMatch->setTournament($this->tournament);
                     $this->tournament->setFinal($finalMatch);
@@ -65,18 +63,15 @@ class TournamentController extends AbstractController
                     $this->entityManager->persist($this->tournament);
                     $this->entityManager->flush();
                 } else {
-                    // Tournoi existant, juste afficher l'arbre
                     if ($this->tournament->getFinal() !== null) {
                         $this->tournamentInArray(3, $this->tournament->getFinal());
                     }
                 }
             }
         }
-        // Cas 2: Redirection après mise à jour de score
         else if ($request->get('tournament_id')) {
             $this->tournament = $tournamentRepository->find($request->get('tournament_id'));
             
-            // La condition était mal formée, corrigeons-la
             if ($this->tournament && $this->tournament->getFinal()) {
                 $this->tournamentInArray(3, $this->tournament->getFinal());
             }
@@ -276,10 +271,9 @@ class TournamentController extends AbstractController
         if (!$tournament) {
             throw $this->createNotFoundException('Tournoi introuvable pour ce match.');
         }
-    
-        // Redirection avec le bon paramètre
+
         return $this->redirectToRoute('app_tournament', [
-            'tournament_id' => $tournament->getId() // Changé de 'id' à 'tournament_id'
+            'tournament_id' => $tournament->getId() 
         ]);
     }
 }

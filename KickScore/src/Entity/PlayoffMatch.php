@@ -16,15 +16,6 @@ class PlayoffMatch
     #[ORM\GeneratedValue]
     #[ORM\Column(name: 'PLA_ID')]
     private ?int $id = null;
-
-    /*
-    #[ORM\ManyToMany(targetEntity: self::class, inversedBy: 'nextMatches')]
-    #[ORM\JoinTable(name: 'T_PLAYOFF_MATCH_PREVIOUS_PMP',
-        joinColumns: [new ORM\JoinColumn(name: 'PMP_SOURCE_ID', referencedColumnName: 'PLA_ID')],
-        inverseJoinColumns: [new ORM\JoinColumn(name: 'PMP_TARGET_ID', referencedColumnName: 'PLA_ID')]
-    )]
-    private Collection $previous;
-    */
     
     #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'previous')]
     private Collection $nextMatches;
@@ -80,7 +71,6 @@ class PlayoffMatch
     private ?self $PreviousMatchTwo = null;
     public function __construct()
     {
-        //$this->previous = new ArrayCollection();
         $this->nextMatches = new ArrayCollection();
     }
 
@@ -101,12 +91,10 @@ class PlayoffMatch
 
     public function setTournament(?Tournament $tournament): static
     {
-        // unset the owning side of the relation if necessary
         if ($tournament === null && $this->tournament !== null) {
             $this->tournament->setFinal(null);
         }
 
-        // set the owning side of the relation if necessary
         if ($tournament !== null && $tournament->getFinal() !== $this) {
             $tournament->setFinal($this);
         }
