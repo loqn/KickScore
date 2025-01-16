@@ -29,7 +29,8 @@ class PlayoffMatch
     #[ORM\ManyToMany(targetEntity: self::class, mappedBy: 'previous')]
     private Collection $nextMatches;
 
-    #[ORM\OneToOne(mappedBy: 'final', cascade: ['persist', 'remove'])]
+    #[ORM\ManyToOne(targetEntity: Tournament::class)]
+    #[ORM\JoinColumn(name: 'TRM_ID', referencedColumnName: 'TRM_ID', nullable: true)]
     private ?Tournament $tournament = null;
 
     #[ORM\Column(nullable: true)]

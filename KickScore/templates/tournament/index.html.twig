@@ -10,7 +10,7 @@
         {{ form_row(form.tournament) }}
     {{ form_end(form) }}
 
-    {% if matches is not null and matches|length > 0 %}
+    {% if matches is defined and matches is not null and matches|length > 0 %}
         <div class="tournament-bracket">
             {% for round, matchesInRound in matches %}
                 <div class="round" data-round="{{ round }}">

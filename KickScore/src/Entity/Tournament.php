@@ -28,10 +28,7 @@ class Tournament
     #[ORM\JoinColumn(name: 'CHP_ID', referencedColumnName: 'CHP_ID', nullable: false)]
     private ?Championship $championship = null;
 
-    //private ?BinaryVersus $final = null;
-    private Versus $smallFinal;
-
-    #[ORM\OneToOne(inversedBy: 'tournament', cascade: ['persist', 'remove'])]
+    #[ORM\OneToOne(targetEntity: PlayoffMatch::class, cascade: ['persist', 'remove'])]
     #[ORM\JoinColumn(name: 'PLA_ID', referencedColumnName: 'PLA_ID', nullable: true)]
     private ?PlayoffMatch $final = null;
 
@@ -87,50 +84,17 @@ class Tournament
     
         return $this;
     }
-/*
-    public function setInitMatches(int $depth, PlayoffMatch $match, array $matches)
+
+    public function getFinal(): ?PlayoffMatch
     {
-
-        if ($depth > 1)
-        {
-            return $this->setInitMatches($depth-1, $match->getPrevious()[0], $matches) + 
-            $this->setInitMatches($depth-1, $match->getPrevious()[1], $matches);
-        }
-        $match = array_pop($matches);
-        
-        $match = new Versus;
-        $randomKey = array_rand($this->teams);
-        $match->setBlueTeam($this->teams[$randomKey]);
-        unset($this->versus[$this->teams[$randomKey]]);
-
-        $randomKey = array_rand($this->teams);
-        $match->setGreenTeam($this->teams[$randomKey]);
-        unset($this->versus[$this->teams[$randomKey]]);
-        
-        return $matches[] = $match;
+        return $this->final;
     }
-*/
 
-/*
-    public function __construct(int $depth, array $teams, array $versus)
+    public function setFinal(?PlayoffMatch $final): static
     {
-        $this->final = new BinaryVersus();
-        $this->teams = $teams;
-        $this->$versus;        
-        $this->refreshTournament($final);
+        $this->final = $final;
+
+        return $this;
     }
-*/
-
-public function getFinal(): ?PlayoffMatch
-{
-    return $this->final;
-}
-
-public function setFinal(?PlayoffMatch $final): static
-{
-    $this->final = $final;
-
-    return $this;
-}
 
 }
