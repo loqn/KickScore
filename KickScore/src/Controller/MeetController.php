@@ -346,6 +346,42 @@ class MeetController extends AbstractController
                 $match->setGlobalStatus($globalStatus);
             }
         }
+
+        $timeslot = new Timeslot();
+        
+        // Get the time from the form and convert to DateTime
+        $start = $request->request->get('timeslotStart');
+        $end = $request->request->get('timeslotEnd');
+
+        try {
+            $startDateTime = new \DateTime($start);
+            $endDateTime = new \DateTime($end);
+            if ($startDateTime->format('Y-m-d') !== $endDateTime->format('Y-m-d')) {
+                $this->addFlash('error', 'The start and end date must be on the same day.');
+                return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
+            }
+
+            //check if there is not a match at this time and on the same terrain
+            $matchAtSameTime = $entityManager->getRepository(Versus::class)->findOneBy
+            (['field' => $match->getField(), 'timeslot' => $timeslot]);
+            if ($matchAtSameTime && $matchAtSameTime->getId() !== $match->getId()) {
+                $this->addFlash('error', 'There is already a match at this time and on the same field.');
+                return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
+            }
+
+        } catch (\Exception $e) {
+            $this->addFlash('error', 'Invalid date format.');
+            return $this->redirectToRoute('edit_match', ['id' => $match->getId()]);
+        }
+
+        $timeslot->setStart($startDateTime);
+        $timeslot->setEnd($endDateTime);
+
+        $entityManager->persist($timeslot);
+
+        $match->setTimeSlot($timeslot);
+                
+
         if ($request->request->has('commentary')) {
             $match->setCommentary($request->request->get('commentary'));
         }
