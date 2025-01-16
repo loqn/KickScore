@@ -34,10 +34,6 @@ class PlayoffMatch
     #[ORM\JoinColumn(name: 'pla_status_id', referencedColumnName: 'STS_ID')]
     private ?Status $PLA_Status = null;
 
-    #[ORM\OneToOne(cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(name: 'pla_time_slot_id', referencedColumnName: 'TSL_ID')]
-    private ?TimeSlot $PLA_TimeSlot = null;
-
     #[ORM\ManyToOne]
     #[ORM\JoinColumn(name: 'green_team_id', referencedColumnName: 'TEA_ID')]
     private ?Team $GreenTeam = null;
@@ -136,18 +132,6 @@ class PlayoffMatch
     public function setPLAStatus(?Status $PLA_Status): static
     {
         $this->PLA_Status = $PLA_Status;
-
-        return $this;
-    }
-
-    public function getPLATimeSlot(): ?TimeSlot
-    {
-        return $this->PLA_TimeSlot;
-    }
-
-    public function setPLATimeSlot(?TimeSlot $PLA_TimeSlot): static
-    {
-        $this->PLA_TimeSlot = $PLA_TimeSlot;
 
         return $this;
     }

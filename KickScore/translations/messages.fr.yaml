@@ -86,6 +86,8 @@ matchcalendar: 'Calendrier des matchs'
 matchprogress: 'Matches en cours et à venir'
 matchinlive: 'Match en cours'
 progress: 'En cours'
+allteams: "Toutes les équipes"
+allchampionships: "Tous les championnats"
 infos: 'Informations'
 form:
     firstname:

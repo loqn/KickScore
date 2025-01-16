@@ -128,7 +128,8 @@ confirm_delete:
 matchlist: "Matches list"
 
 create_field: "Create a field"
-
+allteams: "All teams"
+allchampionships: "All championships"
 nav:
     startdate: 'Start date'
     enddate: 'End date'
