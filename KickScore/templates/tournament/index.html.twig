@@ -1,0 +1,193 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Tournoi{% endblock %}
+
+{% block body %}
+<div class="tournament-container">
+    <h1>Choisissez un Tournoi</h1>
+
+    {{ form_start(form, {'attr': {'class': 'tournament-form'}}) }}
+        {{ form_row(form.tournament, {
+            'label': false
+        }) }}
+    {{ form_end(form) }}
+
+    {% if matches is defined and matches is not null and matches|length > 0 %}
+        <div class="tournament-bracket">
+            {% for round, matchesInRound in matches %}
+                <div class="round" data-round="{{ round }}">
+                    {% for match in matchesInRound %}
+                        <div class="match">
+                            <form method="post" action="{{ path('app_update_match_score', {id: match.id}) }}">
+                                <div class="match-content {% if match.blueTeamScore > match.greenTeamScore %}blue-win{% elseif match.greenTeamScore > match.blueTeamScore %}green-win{% endif %}">
+                                    <div class="team blue-team">
+                                        {% if match.blueTeam %}
+                                            <label>
+                                                <span class="team-name">{{ match.blueTeam.name }}</span>
+                                                <input type="number" name="blue_team_score" value="{{ match.blueTeamScore }}" min="0" class="score-input">
+                                            </label>
+                                        {% else %}
+                                            <span class="team-name">À déterminer</span>
+                                        {% endif %}
+                                    </div>
+                                    <div class="team green-team">
+                                        {% if match.greenTeam %}
+                                            <label>
+                                                <span class="team-name">{{ match.greenTeam.name }}</span>
+                                                <input type="number" name="green_team_score" value="{{ match.greenTeamScore }}" min="0" class="score-input">
+                                            </label>
+                                        {% else %}
+                                            <span class="team-name">À déterminer</span>
+                                        {% endif %}
+                                    </div>
+                                </div>
+                                <button type="submit" class="update-button">Valider scores</button>
+                            </form>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% endfor %}
+        </div>
+    {% endif %}
+
+    {% if tournament is defined and tournament.id is defined and tournament.id is not null %}
+        <form method="post" action="{{ path('app_tournament_refresh') }}" class="refresh-form">
+            <input type="hidden" name="tournament_id" value="{{ tournament.id }}">
+            <button type="submit" class="refresh-button">Rafraîchir le Tournoi</button>
+        </form>
+    {% endif %}
+</div>
+
+
+
+    <style>
+        form, h1{
+            margin-left: 2em;
+        }
+
+        .tournament-container {
+            padding: 2em;
+        }
+        
+        .tournament-bracket {
+            display: flex;
+            justify-content: space-around;
+            margin: 2em 0;
+            gap: 2em;
+        }
+
+        .round {
+            display: flex;
+            flex-direction: column;
+            gap: 1em;
+        }
+
+        .match {
+            border: 1px solid #ddd;
+            padding: 1em;
+            min-width: 200px;
+            background: white;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .match-content {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5em;
+        }
+
+        .team {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.5em;
+        }
+
+        .blue-win .blue-team {
+            background-color: rgba(0,0,255,0.1);
+            font-weight: bold;
+        }
+
+        .green-win .green-team {
+            background-color: rgba(0,255,0,0.1);
+            font-weight: bold;
+        }
+
+        .refresh-button {
+            margin-top: 1em;
+            padding: 0.5em 1em;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .refresh-button:hover {
+            background-color: #0056b3;
+        }
+
+        .tournament-form button[type="submit"] {
+            padding: 0.5em 1em;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            margin-top: 1em;
+            transition: background-color 0.3s ease;
+        }
+
+        .tournament-form button[type="submit"]:hover {
+            background-color: #0056b3;
+        }
+
+        .tournament-form select {
+            padding: 0.5em;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            margin-right: 1em;
+            min-width: 200px;
+        }
+
+        .tournament-form button[type="submit"] {
+        padding: 0.5em 1em;
+        background-color: #007bff;
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        margin-top: 1em;
+        transition: background-color 0.3s ease;
+    }
+
+    .tournament-form button[type="submit"]:hover {
+        background-color: #0056b3;
+    }
+
+    .update-button {
+        width: 100%;
+        margin-top: 0.8em;
+        padding: 0.5em 1em;
+        background-color: #28a745; 
+        color: white;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-size: 0.9em;
+    }
+
+    .update-button:hover {
+        background-color: #218838;
+        transform: translateY(-1px);  
+        box-shadow: 0 2px 4px rgba(0,0,0,0.2);
+    }
+
+    .match .score-input {
+        width: 60px;
+        padding: 0.3em;
+        border: 1px solid #ddd;
+        border-radius: 3px;
+    }
+    </style>
+{% endblock %}

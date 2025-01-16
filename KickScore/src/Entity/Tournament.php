@@ -3,8 +3,6 @@
 namespace App\Entity;
 
 use App\Repository\TournamentRepository;
-use Doctrine\Common\Collections\ArrayCollection;
-use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use Doctrine\ORM\Mapping as ORM;
 
@@ -14,70 +12,63 @@ class Tournament
 {
     #[ORM\Id]
     #[ORM\GeneratedValue]
-    #[ORM\Column(name: 'TRM_ID', type: 'integer')]
+    #[ORM\Column(name: 'TRM_ID')]
     private ?int $id = null;
 
-    #[ORM\Column(name:'TRM_NAME', length: 255, nullable: true)]
-    private ?string $name = null;
+    #[ORM\Column(length: 255)]
+    private ?string $TRM_NAME = null;
 
-    #[ORM\Column(name:'TRM_START', type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $startDate = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $TRM_START = null;
 
-    #[ORM\Column(name:'TRM_END', type: Types::DATETIME_MUTABLE)]
-    private ?\DateTimeInterface $endDate = null;
+    #[ORM\Column(type: Types::DATETIME_MUTABLE)]
+    private ?\DateTimeInterface $TRM_END = null;
 
-    #[ORM\OneToOne(inversedBy: 'tournament', cascade: ['persist', 'remove'])]
-    #[ORM\JoinColumn(name:'CHP_ID', referencedColumnName: 'CHP_ID', nullable: false)]
+    #[ORM\OneToOne(targetEntity: Championship::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'CHP_ID', referencedColumnName: 'CHP_ID', nullable: false)]
     private ?Championship $championship = null;
 
-    /**
-     * @var Collection<int, Team>
-     */
-    #[ORM\ManyToMany(targetEntity: Team::class, mappedBy: 'tournaments')]
-    private Collection $teams;
-
-    public function __construct()
-    {
-        $this->teams = new ArrayCollection();
-    }
+    #[ORM\OneToOne(targetEntity: PlayoffMatch::class, cascade: ['persist', 'remove'])]
+    #[ORM\JoinColumn(name: 'PLA_ID', referencedColumnName: 'PLA_ID', nullable: true)]
+    private ?PlayoffMatch $final = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getName(): ?string
+    public function getTRMNAME(): ?string
     {
-        return $this->name;
+        return $this->TRM_NAME;
     }
 
-    public function setName(?string $name): static
+    public function setTRMNAME(string $TRM_NAME): static
     {
-        $this->name = $name;
+        $this->TRM_NAME = $TRM_NAME;
 
         return $this;
     }
 
-    public function getStartDate(): ?\DateTimeInterface
+    public function getTRMSTART(): ?\DateTimeInterface
     {
-        return $this->startDate;
+        return $this->TRM_START;
     }
 
-    public function setStartDate(\DateTimeInterface $startDate): static
+    public function setTRMSTART(\DateTimeInterface $TRM_START): static
     {
-        $this->startDate = $startDate;
+        $this->TRM_START = $TRM_START;
 
         return $this;
     }
 
-    public function getEndDate(): ?\DateTimeInterface
+    public function getTRMEND(): ?\DateTimeInterface
     {
-        return $this->endDate;
+        return $this->TRM_END;
     }
 
-    public function setEndDate(\DateTimeInterface $endDate): static
+    public function setTRMEND(\DateTimeInterface $TRM_END): static
     {
-        $this->endDate = $endDate;
+        $this->TRM_END = $TRM_END;
 
         return $this;
     }
@@ -90,31 +81,20 @@ class Tournament
     public function setChampionship(Championship $championship): static
     {
         $this->championship = $championship;
+    
+        return $this;
+    }
+
+    public function getFinal(): ?PlayoffMatch
+    {
+        return $this->final;
+    }
+
+    public function setFinal(?PlayoffMatch $final): static
+    {
+        $this->final = $final;
 
         return $this;
     }
 
-    /**
-     * @return Collection<int, Team>
-     */
-    public function getTeams(): Collection
-    {
-        return $this->teams;
-    }
-
-    public function addTeam(Team $team): static
-    {
-        if (!$this->teams->contains($team)) {
-            $this->teams->add($team);
-        }
-
-        return $this;
-    }
-
-    public function removeTeam(Team $team): static
-    {
-        $this->teams->removeElement($team);
-
-        return $this;
-    }
 }
