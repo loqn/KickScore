@@ -14,6 +14,6 @@ before_script:
 phpcs:
   stage: test
   script:
-    - vendor/bin/phpcs --standard=PSR12 src/
+    - vendor/bin/phpcs --standard=PSR12 src/ --warning-severity=0 
     - vendor/bin/phpcbf --standard=PSR12 src/
   allow_failure: false

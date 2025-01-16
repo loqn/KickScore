@@ -51,6 +51,39 @@ class ChampionshipRepository extends ServiceEntityRepository
         return array_values($teams);
     }
 
+    public function searchTeams(string $s): array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c, t')
+            ->join('c.teams', 't')
+            ->where('t.name LIKE :s')
+            ->setParameter('s', '%' . $s . '%')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function searchFields(string $s): array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c, f')
+            ->join('c.fields', 'f')
+            ->where('f.name LIKE :s')
+            ->setParameter('s', '%' . $s . '%')
+            ->getQuery()
+            ->getResult();
+    }
+
+    public function searchMatches(string $s): array
+    {
+        return $this->createQueryBuilder('c')
+            ->select('c, m')
+            ->join('c.matches', 'm')
+            ->where('m.name LIKE :s')
+            ->setParameter('s', '%' . $s . '%')
+            ->getQuery()
+            ->getResult();
+    }
+
     //    /**
     //     * @return championship[] Returns an array of championship objects
     //     */

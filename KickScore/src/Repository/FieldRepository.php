@@ -16,6 +16,17 @@ class FieldRepository extends ServiceEntityRepository
         parent::__construct($registry, Field::class);
     }
 
+    public function searchFields($value): array
+    {
+        return $this->createQueryBuilder('f')
+            ->andWhere('f.name LIKE :val')
+            ->setParameter('val', '%' . $value . '%')
+            ->orderBy('f.id', 'ASC')
+            ->getQuery()
+            ->getResult()
+        ;
+    }
+
     //    /**
     //     * @return Field[] Returns an array of Field objects
     //     */

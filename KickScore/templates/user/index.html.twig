@@ -302,14 +302,96 @@
 
                         {% if is_granted('ROLE_ORGANIZER') %}
                             <div class="flex flex-col md:flex-row gap-2 md:gap-4">
-                                <a href="{{ path('app_championship') }}"
+                                <a href="#"
+                                   onclick="toggleChampionshipModal()"
                                    class="px-4 md:px-6 py-2 md:py-3 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium shadow-sm text-center">
                                     {{ 'championship_list.new_championship' | trans }}
                                 </a>
-                                <a href="{{ path('app_field') }}"
-                                   class="px-4 md:px-6 py-2 md:py-3 bg-slate-700 text-white rounded-lg hover:bg-slate-600 transition-colors font-medium shadow-sm text-center">
-                                    {{ 'championship_list.new_field' | trans }}
-                                </a>
+                                <!-- modal -->
+                                <div id="championshipModal" class="fixed inset-0 hidden z-50">
+                                    <!-- overlay -->
+                                    <div class="absolute inset-0 bg-black bg-opacity-50 backdrop-blur-sm" onclick="toggleChampionshipModal()"></div>
+
+                                    <!-- content -->
+                                    <div class="fixed inset-0 z-50 overflow-y-auto">
+                                        <div class="flex min-h-full items-center justify-center p-4">
+                                            <div class="relative w-full max-w-md transform overflow-hidden rounded-xl bg-white shadow-2xl transition-all">
+                                                <!-- head -->
+                                                <div class="flex items-center justify-between border-b border-gray-200 p-4">
+                                                    <h3 class="text-2xl font-bold text-slate-800">
+                                                        {{'nav.creation' | trans}}
+                                                        <span class="block mt-1 text-blue-900 text-lg font-medium">
+                                                            {{'nav.newchampion' | trans}}
+                                                        </span>
+                                                    </h3>
+                                                    <button type="button"
+                                                            onclick="toggleChampionshipModal()"
+                                                            class="rounded-md p-1 text-gray-400 hover:text-gray-500 hover:bg-gray-100 transition-colors">
+                                                        <svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12" />
+                                                        </svg>
+                                                    </button>
+                                                </div>
+
+                                                <!-- body -->
+                                                <div class="p-6">
+                                                    <div class="space-y-6">
+                                                        <div class="bg-white rounded-lg border border-slate-100 p-6">
+                                                            <div class="flex flex-col space-y-4">
+                                                                <button id="btn_manual"
+                                                                        class="w-full py-3 px-4 rounded-lg text-slate-700 bg-slate-50 hover:bg-slate-100 transition-colors font-medium text-center">
+                                                                    {{'nav.createmanually' | trans}}
+                                                                </button>
+                                                                <button id="btn_import"
+                                                                        class="w-full py-3 px-4 rounded-lg text-slate-700 bg-slate-50 hover:bg-slate-100 transition-colors font-medium text-center">
+                                                                    {{'nav.importfile' | trans}}
+                                                                </button>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- classic -->
+                                                        <form id="championship_manual" method="post" action="{{ path('app_championship_create') }}"
+                                                              class="hidden space-y-6">
+                                                            <input type="hidden" name="addType" value="CHAMPIONSHIP">
+                                                            <div class="space-y-1">
+                                                                <label for="name" class="text-sm font-medium text-slate-700">{{'nav.name' | trans}}</label>
+                                                                <input type="text" id="name" name="name"
+                                                                       placeholder="{{'nav.nameofchampionship' | trans}}"
+                                                                       class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
+                                                            </div>
+                                                            <div class="space-y-1">
+                                                                <label for="dateInput" class="text-sm font-medium text-slate-700">{{'nav.startdate' | trans}}</label>
+                                                                <input type="datetime-local" id="dateInput" name="date_start"
+                                                                       class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
+                                                                <label for="dateEndInput" class="text-sm font-medium text-slate-700">{{'nav.enddate' | trans}}</label>
+                                                                <input type="datetime-local" id="dateEndInput" name="date_end"
+                                                                       class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
+                                                            </div>
+                                                            <button type="submit"
+                                                                    class="w-full px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
+                                                                {{'championship_management.create' | trans}}
+                                                            </button>
+                                                        </form>
+
+                                                        <!-- import -->
+                                                        <form id="championship_import" method="post" action="{{ path('app_championship_import') }}"
+                                                              class="hidden space-y-6" enctype="multipart/form-data">
+                                                            <div class="space-y-1">
+                                                                <label for="file" class="text-sm font-medium text-slate-700">{{'fileimport' | trans}}</label>
+                                                                <input type="file" id="file" name="file" required
+                                                                       class="w-full px-4 py-3 rounded-lg border border-slate-200 focus:ring-2 focus:ring-blue-900 focus:border-blue-900 transition-colors">
+                                                            </div>
+                                                            <button type="submit"
+                                                                    class="w-full px-8 py-4 bg-blue-900 text-white rounded-lg hover:bg-blue-800 transition-colors font-medium text-lg shadow-sm">
+                                                                {{'championship_management.import' | trans}}
+                                                            </button>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         {% endif %}
                     </div>
@@ -578,6 +660,18 @@
     </div>
 
     <script>
+
+        window.toggleChampionshipModal = function() {
+            const modal = document.getElementById('championshipModal');
+            if (modal.classList.contains('hidden')) {
+                modal.classList.remove('hidden');
+                document.body.style.overflow = 'hidden';
+            } else {
+                modal.classList.add('hidden');
+                document.body.style.overflow = 'auto';
+            }
+        }
+
         function toggleActionMenu(menuId) {
             const menu = document.getElementById(menuId);
             const allMenus = document.querySelectorAll('[id^="action-menu-"]');
@@ -708,6 +802,45 @@
             const startIndexSpan = document.querySelector('#startIndex');
             const endIndexSpan = document.querySelector('#endIndex');
             const totalItemsSpan = document.querySelector('#totalItems');
+
+            //championship modal
+            const btnManual = document.getElementById('btn_manual');
+            const btnImport = document.getElementById('btn_import');
+            const formManual = document.getElementById('championship_manual');
+            const formImport = document.getElementById('championship_import');
+
+            btnManual.addEventListener('click', (e) => {
+                e.preventDefault();
+                formManual.classList.remove('hidden');
+                formImport.classList.add('hidden');
+
+                btnManual.classList.add('bg-blue-900', 'text-white');
+                btnManual.classList.remove('bg-slate-50', 'text-slate-700');
+
+                btnImport.classList.remove('bg-blue-900', 'text-white');
+                btnImport.classList.add('bg-slate-50', 'text-slate-700');
+            });
+
+            btnImport.addEventListener('click', (e) => {
+                e.preventDefault();
+                formImport.classList.remove('hidden');
+                formManual.classList.add('hidden');
+
+                btnImport.classList.add('bg-blue-900', 'text-white');
+                btnImport.classList.remove('bg-slate-50', 'text-slate-700');
+
+                btnManual.classList.remove('bg-blue-900', 'text-white');
+                btnManual.classList.add('bg-slate-50', 'text-slate-700');
+            });
+
+            document.addEventListener('keydown', function(event) {
+                if (event.key === 'Escape') {
+                    const modal = document.getElementById('championshipModal');
+                    if (!modal.classList.contains('hidden')) {
+                        toggleChampionshipModal();
+                    }
+                }
+            });
 
             const itemsPerPage = 8;
             let currentPage = 1;

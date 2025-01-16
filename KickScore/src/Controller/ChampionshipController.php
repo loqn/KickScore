@@ -200,17 +200,16 @@ class ChampionshipController extends AbstractController
     public function edit(Championship $championship, EntityManagerInterface $entityManager, Request $request): Response
     {
         $fields = $championship->getFields();
-        $Lchampionships = $entityManager->getRepository(Championship::class)->findAll();
         $selectedChampionshipId = $request->query->get('select');
 
         return $this->render(
             'championship/display.html.twig',
             [
-            'championships' => $championship,
+            'championship' => $championship,
             'teams' => $championship->getTeams(),
             'fields' => $fields,
-            'select' => $selectedChampionshipId,
-            'Lchampionships' => $Lchampionships
+            'matches' => $championship->getMatches(),
+            //            'select' => $selectedChampionshipId,
             ]
         );
     }
