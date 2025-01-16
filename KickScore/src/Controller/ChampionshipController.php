@@ -120,13 +120,17 @@ class ChampionshipController extends AbstractController
         if (!$this->isGranted('ROLE_ORGANIZER')) {
             throw $this->createAccessDeniedException($translator->trans('error.championship.organizer_only'));
         }
+
         $name = $request->request->get('name');
         $date_start = new \DateTime($request->request->get('date_start'));
         $date_end = new \DateTime($request->request->get('date_end'));
+        $type = (int) $request->request->get('type', Championship::TYPE_CLASSIC);
+
         if (empty($name)) {
             $this->addFlash('error', $translator->trans('flash.error.championship_name_required'));
             return $this->redirectToRoute('app_championship');
         }
+
         $championships = $entityManager->getRepository(Championship::class)->findAll();
         if ($championships) {
             foreach ($championships as $chp) {
@@ -159,6 +163,7 @@ class ChampionshipController extends AbstractController
         $championship->setName($name);
         $championship->setStartDate($date_start);
         $championship->setEndDate($date_end);
+        $championship->setType($type);
         $championship->setOrganizer($this->getUser());
         $entityManager->persist($championship);
         $this->addFlash('success', $translator->trans('flash.success.championship_created'));
@@ -185,12 +190,19 @@ class ChampionshipController extends AbstractController
         if (!$championship) {
             throw $this->createNotFoundException($translator->trans('error.championship_not_found'));
         }
+        $championship = $entityManager->getRepository(Championship::class)->find($id);
+
         $teamResults = new TeamResults();
         $teamResults->setTeam($team);
         $teamResults->setChampionship($championship);
         $entityManager->persist($teamResults);
         $team->addChampionship($championship);
         $championship->addTeam($team);
+        if ($championship->getType() === Championship::TYPE_CLASSIC) {
+            $teamResults->setPoints(0);
+        } else { // TYPE_ELO
+            $teamResults->setPoints(1000);
+        }
         $entityManager->flush();
         $this->addFlash('success', $translator->trans('flash.success.team_joined_championship'));
         return $this->redirectToRoute('app_team_edit', ['id' => $team->getId()]);
@@ -269,6 +281,11 @@ class ChampionshipController extends AbstractController
         }
         $team->removeChampionship($championship);
         $championship->removeTeam($team);
+        $teamResults = $entityManager->getRepository(TeamResults::class)->findOneBy([
+            'team' => $team,
+            'championship' => $championship
+        ]);
+        $entityManager->persist($championship);
         $entityManager->flush();
         $this->addFlash('success', $translator->trans('teamexitchampionshipsuccess'));
         return $this->redirectToRoute('app_ranking');
