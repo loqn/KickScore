@@ -25,22 +25,11 @@ class TournamentController extends AbstractController
         $form = $this->createForm(TournamentType::class);
         $form->get('action_type')->setData('default');
         $this->entityManager = $entityManager;
-        $matches = null;
         $this->tournament = new Tournament;
-        $form->handleRequest($request);
         $this->arrayTournament = array_fill(0, 4, []);
+        $form->handleRequest($request);
     
-        // Récupérer le paramètre 'tournament_id' de l'URL ou de la requête
-        $tournamentId = $request->get('tournament_id');
-        
-        if ($tournamentId) {
-            $this->tournament = $tournamentRepository->find($tournamentId);
-    
-            if (!$this->tournament) {
-                throw $this->createNotFoundException('Tournoi introuvable.');
-            }
-        }
-        
+        // Cas 1: Formulaire soumis (génération initiale ou sélection d'un tournoi)
         if ($form->isSubmitted() && $form->isValid()) {
             $data = $form->getData();
             $tournamentId = $data['tournament'];
@@ -52,36 +41,47 @@ class TournamentController extends AbstractController
     
             $actionType = $form->get('action_type')->getData();
             if ($actionType === 'refresh') {
-                // Logique de rafraîchissement ici
+                if ($this->tournament->getFinal()) {
+                    $this->tournamentInArray(3, $this->tournament->getFinal());
+                }
             } else {
                 $final = $this->tournament->getFinal();
-    
                 if ($final === null) {
+                    // Génération initiale du tournoi
                     $finalMatch = new PlayoffMatch();
                     $finalMatch->setTournament($this->tournament);
                     $this->tournament->setFinal($finalMatch);
-    
+                    
                     $teams = $this->getBestTeams(16);
                     $matches = $this->makeMatches($teams);
                     $this->tournament->setFinal($this->setupTournament(3, $finalMatch, $matches));
                     $this->saveFullTournament($finalMatch);
                     $this->arrayTournament[0] = $matches;
-    
+                    
                     if ($this->tournament->getFinal() !== null) {
                         $this->tournamentInArray(3, $this->tournament->getFinal());
                     }
-    
+                    
                     $this->entityManager->persist($this->tournament);
                     $this->entityManager->flush();
                 } else {
+                    // Tournoi existant, juste afficher l'arbre
                     if ($this->tournament->getFinal() !== null) {
                         $this->tournamentInArray(3, $this->tournament->getFinal());
                     }
                 }
             }
         }
+        // Cas 2: Redirection après mise à jour de score
+        else if ($request->get('tournament_id')) {
+            $this->tournament = $tournamentRepository->find($request->get('tournament_id'));
+            
+            // La condition était mal formée, corrigeons-la
+            if ($this->tournament && $this->tournament->getFinal()) {
+                $this->tournamentInArray(3, $this->tournament->getFinal());
+            }
+        }
     
-        // Passer les données nécessaires à la vue
         return $this->render('tournament/index.html.twig', [
             'form' => $form->createView(),
             'matches' => $this->arrayTournament,
@@ -257,34 +257,29 @@ class TournamentController extends AbstractController
         PlayoffMatchRepository $matchRepository
     ): Response {
         $this->entityManager = $entityManager;
-        $this->arrayTournament = array_fill(0, 4, []);
-
+    
         $match = $matchRepository->find($id);
         if (!$match) {
             throw $this->createNotFoundException('Match introuvable.');
         }
-
+    
         $blueTeamScore = (int) $request->request->get('blue_team_score');
         $greenTeamScore = (int) $request->request->get('green_team_score');
-
+    
         $match->setBlueTeamScore($blueTeamScore);
         $match->setGreenTeamScore($greenTeamScore);
-
+    
         $entityManager->persist($match);
         $entityManager->flush();
-
+    
         $tournament = $match->getTournament();
         if (!$tournament) {
             throw $this->createNotFoundException('Tournoi introuvable pour ce match.');
         }
-
-        if ($tournament->getFinal() !== null) {
-            $this->tournamentInArray(3, $tournament->getFinal());
-            $this->entityManager->flush();
-        }
-
+    
+        // Redirection avec le bon paramètre
         return $this->redirectToRoute('app_tournament', [
-            'id' => $tournament->getId(),
+            'tournament_id' => $tournament->getId() // Changé de 'id' à 'tournament_id'
         ]);
     }
 }
