@@ -17,32 +17,6 @@ use Symfony\Contracts\Translation\TranslatorInterface;
 #[Route('/championship')]
 class ChampionshipController extends AbstractController
 {
-    #[Route('/', name: 'app_championship')]
-    public function index(EntityManagerInterface $entityManager): Response
-    {
-        if (!$this->isGranted('ROLE_ORGANIZER')) {
-            throw $this->createAccessDeniedException('Only organizers can view meets.');
-        }
-        $championships = $entityManager->getRepository(Championship::class)->findAll();
-
-        $finishedChampionships = array_filter(
-            $championships,
-            function (Championship $championship) {
-                return $championship->getEndDate() < new \DateTime();
-            }
-        );
-        $teams = $entityManager->getRepository(Team::class)->findAll();
-        return $this->render(
-            'championship/index.html.twig',
-            [
-            'controller_name' => 'MeetController',
-            'championships' => $championships,
-            'finishedChampionships' => $finishedChampionships,
-            'teams' => $teams,
-            ]
-        );
-    }
-
     #[Route('/import', name: 'app_championship_import', methods: ['POST'])]
     public function import(
         Request $request,

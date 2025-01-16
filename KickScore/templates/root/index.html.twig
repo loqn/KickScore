@@ -122,11 +122,6 @@
 
                     <div class="pt-10 flex flex-wrap gap-4 justify-center">
                         {% if is_granted('ROLE_ORGANIZER') %}
-                            <a href="{{ path('app_championship') }}"
-                               class="group relative px-8 py-4 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition-all duration-300 font-medium text-lg shadow-md hover:shadow-xl">
-                                <span class="relative z-10">{{ 'championship_management.create' | trans }}</span>
-                                <div class="absolute inset-0 h-full w-full bg-gradient-to-r from-blue-800 to-blue-900 rounded-xl opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-0"></div>
-                            </a>
                             <a href="{{ path('app_user_index') }}"
                                class="group relative px-8 py-4 bg-blue-900 text-white rounded-xl hover:bg-blue-800 transition-all duration-300 font-medium text-lg shadow-md hover:shadow-xl">
                                 <span class="relative z-10">{{ 'nav.controlepanel' | trans }}</span>
