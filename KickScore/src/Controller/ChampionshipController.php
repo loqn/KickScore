@@ -170,6 +170,7 @@ class ChampionshipController extends AbstractController
             throw $this->createNotFoundException('Championnat non trouvé');
         }
         $championship = $entityManager->getRepository(Championship::class)->find($id);
+        
         $teamResults = new TeamResults();
         $teamResults->setTeam($team);
         $teamResults->setChampionship($championship);
@@ -248,9 +249,6 @@ class ChampionshipController extends AbstractController
             'team' => $team,
             'championship' => $championship
         ]);
-        if($teamResults){
-            $teamResults->setPoints(0);
-        }
         $entityManager->persist($championship);
         $entityManager->flush();
         $this->addFlash('success', 'Votre équipe a quitté le championnat avec succès');
