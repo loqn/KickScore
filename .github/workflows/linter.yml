@@ -26,13 +26,14 @@ jobs:
           docker-php-ext-install zip
 
       - name: Setup project
+        working-directory: KickScore
         run: |
-          cd KickScore
           curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
           chown -R $(id -u):$(id -g) .
           composer install
 
       - name: Run PHP CodeSniffer
+        working-directory: KickScore
         run: |
           vendor/bin/phpcs --standard=PSR12 src/ --warning-severity=0
           vendor/bin/phpcbf --standard=PSR12 src/
