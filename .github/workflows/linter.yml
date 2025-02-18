@@ -1,0 +1,39 @@
+name: CI:linter
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: PHP Linter
+    runs-on: ubuntu-latest
+
+    container:
+      image: php:8.2-cli
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          apt-get update && apt-get install -y git zip unzip libzip-dev
+          docker-php-ext-install zip
+
+      - name: Setup project
+        run: |
+          cd KickScore
+          curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+          chown -R $(id -u):$(id -g) .
+          composer install
+
+      - name: Run PHP CodeSniffer
+        run: |
+          vendor/bin/phpcs --standard=PSR12 src/ --warning-severity=0
+          vendor/bin/phpcbf --standard=PSR12 src/
+
