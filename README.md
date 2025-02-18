@@ -1,62 +1,51 @@
-# SAE 3.1 - KickScore
+<img src="KickScore/public/favicon.ico" width="50px">
 
-## Petit manuel de lancement
+# KickScore
 
-Après clonage de l'application, il faut faire `composer install` pour installer l'ensemble des bundles de Symfony nécessaires à l'application, et `npm install` pour installer les modules Node (Webpack Encore, Tailwind).
+## Quick Start Guide
 
-Pour le `.env` manquant, il sera fourni.
+After cloning the application, run `composer install` to install all necessary Symfony bundles and `npm install` to install Node modules (Webpack Encore, Tailwind).
 
-Puisque l'application de base utilise Webpack Encore pour compiler le JavaScript et le CSS de Tailwind, il faut premièrement lancer la commande :
+The missing `.env` file will be provided.
+
+Since the base application uses Webpack Encore to compile JavaScript and Tailwind CSS, you first need to run the following command:
+
 ```sh
 user@host$~/KickScore/ npm run build
 [...]
 user@host$~/KickScore/ symfony serve
 ```
 
-À chaque modification du CSS (dans `/assets`) ou du JavaScript, il faudra recompiler pour intégrer les éventuels changements.
+Each time you modify the CSS (in `/assets`) or JavaScript, you must recompile to apply the changes.
 
-Le serveur Symfony ira automatiquement récupérer les changements dans `/public` sans avoir besoin d'être relancé.
+The Symfony server will automatically retrieve changes from `/public` without needing a restart.
 
+---
 
+## Coding Conventions - PHP Code
 
-## Tests de cohérence de la base
+All PHP code is processed through a linter and formatted according to [PSR12](https://www.php-fig.org/psr/psr-12/) conventions.
 
-A la racine du projet, vous trouverez le fichier `testCoherence.sql` qui contient les tests vérifiant que les données sont bien cohérentes avec les contraintes d'intégrité.
+---
 
-Lancez les commandes suivantes pour exécuter les tests : 
-```sh
-user@host$~/KickScore/ export MYSQL_PWD=XmXp2QKR
-user@host$~/KickScore/ mysql -u etu_matchabrier -h info-titania etu_matchabrier < testCoherence.sql
-```
+## Coding Conventions - SQL Stored Procedures
 
-## Conventions de codage, code PHP
+- **Keywords in uppercase**: `IF`, `THEN`, `ENDIF`, `DECLARE`, `LOOP`  
+- **Attributes and logical operators in lowercase**  
+  → Creates contrast and improves readability
 
-Afin de rendre le code aéré et moins lourd visuellement, nous avons séparé les méthodes d'un saut de ligne.
-Le code est exclusivemement en anglais, mis à part certains textes quin apparaîtront sur l'application.
-Afin de rendre le code le plus maintenable possible, nous avons attribué un à trois commentaires pour chaque méthode.
-Nous avons, dans le but d'uniformiser notre programme, utilisé la convention de nommage Camel Case pour chaque méthode et pour chaque attribut.
-Nous avons également placé rigoureusement des exceptions afin d'éviter le logiciel de planter.
+### Spacing:
+- Between conditions
+- Between loops
+- After the start and end of loops
+- Two lines above each procedure
+- After the `BEGIN` of procedures  
+  → Improves code clarity
 
-## Convention de codage, procédure stockée en SQL
-
-IF, THEN, ENDIF, DECLARE, LOOP en majucule // Attributs et opérateurs logiques en minuscule 
--> Créer du contraste et améliore la lisibilité
-
-Espaces : 
- - Entre chaque condition
- - Entre chaque boucle
- - Après le début et la fin des boucles
- - Deux en haut de chaque procédure
- - Après le début du begin des procédures
- -> Aérer le code
-
-Code et commentaires en anglais
--> Améliorer la maintenabilité
-
-1 à 3 commentaires par fonction / méthode
--> Améliorer la maintenabilité sans surcharger
-
-Camel case
--> Eviter les caractères spéciaux et unifier la convention de nommage
-
-
+### Additional Conventions:
+- **Code and comments in English**  
+  → Enhances maintainability
+- **1 to 3 comments per function/method**  
+  → Improves maintainability without overloading the code
+- **Camel case**  
+  → Avoids special characters and unifies naming conventions
